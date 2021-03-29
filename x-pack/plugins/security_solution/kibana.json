@@ -12,6 +12,7 @@
     "data",
     "dataEnhanced",
     "embeddable",
+    "eventLog",
     "features",
     "taskManager",
     "inspector",
