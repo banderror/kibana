@@ -28,9 +28,9 @@ import type {
   RelatedIntegrationArray,
   RequiredFieldArray,
   SetupGuide,
+  RuleAuthorArray,
 } from '../../../../../common/detection_engine/rule_schema';
 import type {
-  Author,
   BuildingBlockType,
   License,
   RuleNameOverride,
@@ -217,7 +217,7 @@ export interface DefineStepRuleJson {
 }
 
 export interface AboutStepRuleJson {
-  author: Author;
+  author: RuleAuthorArray;
   building_block_type?: BuildingBlockType;
   exceptions_list?: List[];
   name: string;

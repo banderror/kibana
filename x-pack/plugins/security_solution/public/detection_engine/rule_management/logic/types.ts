@@ -27,11 +27,12 @@ import {
   RelatedIntegrationArray,
   RequiredFieldArray,
   SetupGuide,
+  RuleAuthorArray,
+  TimestampField,
 } from '../../../../common/detection_engine/rule_schema';
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
 import {
   alias_purpose as savedObjectResolveAliasPurpose,
-  author,
   building_block_type,
   data_view_id,
   event_category_override,
@@ -40,7 +41,6 @@ import {
   rule_name_override,
   threshold,
   tiebreaker_field,
-  timestamp_field,
   timestamp_override,
   timestamp_override_fallback_disabled,
 } from '../../../../common/detection_engine/schemas/common';
@@ -97,7 +97,7 @@ const MetaRule = t.intersection([
 // TODO: make a ticket
 export const RuleSchema = t.intersection([
   t.type({
-    author,
+    author: RuleAuthorArray,
     created_at: t.string,
     created_by: t.string,
     description: t.string,
@@ -157,7 +157,7 @@ export const RuleSchema = t.intersection([
     timeline_title: t.string,
     timestamp_override,
     timestamp_override_fallback_disabled,
-    timestamp_field,
+    timestamp_field: TimestampField,
     event_category_override,
     tiebreaker_field,
     note: t.string,

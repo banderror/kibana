@@ -40,20 +40,22 @@ import {
 
 import type { SanitizedRuleConfig } from '@kbn/alerting-plugin/common';
 import {
+  IsRuleEnabled,
+  IsRuleImmutable,
   RelatedIntegrationArray,
   RequiredFieldArray,
+  RuleAuthorArray,
+  RuleDescription,
+  RuleName,
+  RuleSignatureId,
   SetupGuide,
+  TimestampField,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
-  author,
   buildingBlockTypeOrUndefined,
-  description,
-  enabled,
   namespaceOrUndefined,
   noteOrUndefined,
   false_positives,
-  rule_id,
-  immutable,
   dataViewIdOrUndefined,
   indexOrUndefined,
   licenseOrUndefined,
@@ -61,7 +63,6 @@ import {
   timelineIdOrUndefined,
   timelineTitleOrUndefined,
   metaOrUndefined,
-  name,
   query,
   queryOrUndefined,
   filtersOrUndefined,
@@ -70,7 +71,6 @@ import {
   timestampOverrideOrUndefined,
   to,
   references,
-  timestampFieldOrUndefined,
   eventCategoryOverrideOrUndefined,
   tiebreakerFieldOrUndefined,
   savedIdOrUndefined,
@@ -88,15 +88,15 @@ const nonEqlLanguages = t.keyof({ kuery: null, lucene: null });
 
 export const baseRuleParams = t.exact(
   t.type({
-    author,
+    author: RuleAuthorArray,
     buildingBlockType: buildingBlockTypeOrUndefined,
-    description,
+    description: RuleDescription,
     namespace: namespaceOrUndefined,
     note: noteOrUndefined,
     falsePositives: false_positives,
     from,
-    ruleId: rule_id,
-    immutable,
+    ruleId: RuleSignatureId,
+    immutable: IsRuleImmutable,
     license: licenseOrUndefined,
     outputIndex: output_index,
     timelineId: timelineIdOrUndefined,
@@ -129,7 +129,7 @@ const eqlSpecificRuleParams = t.type({
   index: indexOrUndefined,
   query,
   filters: filtersOrUndefined,
-  timestampField: timestampFieldOrUndefined,
+  timestampField: t.union([TimestampField, t.undefined]),
   eventCategoryOverride: eventCategoryOverrideOrUndefined,
   dataViewId: dataViewIdOrUndefined,
   tiebreakerField: tiebreakerFieldOrUndefined,
@@ -276,14 +276,14 @@ export const allRuleTypes = t.union([
 ]);
 
 export const internalRuleCreate = t.type({
-  name,
+  name: RuleName,
   tags,
   alertTypeId: allRuleTypes,
   consumer: t.literal(SERVER_APP_ID),
   schedule: t.type({
     interval: t.string,
   }),
-  enabled,
+  enabled: IsRuleEnabled,
   actions: actionsCamel,
   params: ruleParams,
   throttle: throttleOrNull,
@@ -292,7 +292,7 @@ export const internalRuleCreate = t.type({
 export type InternalRuleCreate = t.TypeOf<typeof internalRuleCreate>;
 
 export const internalRuleUpdate = t.type({
-  name,
+  name: RuleName,
   tags,
   schedule: t.type({
     interval: t.string,

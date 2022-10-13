@@ -7,26 +7,19 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import * as t from 'io-ts';
 import {
   IsoDateString,
   NonEmptyString,
   PositiveInteger,
   PositiveIntegerGreaterThanZero,
-  UUID,
   LimitedSizeArray,
 } from '@kbn/securitysolution-io-ts-types';
-import * as t from 'io-ts';
-
-export const author = t.array(t.string);
-export type Author = t.TypeOf<typeof author>;
 
 export const building_block_type = t.string;
 export type BuildingBlockType = t.TypeOf<typeof building_block_type>;
 
 export const buildingBlockTypeOrUndefined = t.union([building_block_type, t.undefined]);
-
-export const description = NonEmptyString;
-export type Description = t.TypeOf<typeof description>;
 
 // outcome is a property of the saved object resolve api
 // will tell us info about the rule after 8.0 migrations
@@ -42,18 +35,13 @@ export const alias_purpose = t.union([
   t.literal('savedObjectConversion'),
   t.literal('savedObjectImport'),
 ]);
-export const enabled = t.boolean;
-export type Enabled = t.TypeOf<typeof enabled>;
+
 export const event_category_override = t.string;
 export const eventCategoryOverrideOrUndefined = t.union([event_category_override, t.undefined]);
 
 export const tiebreaker_field = t.string;
 
 export const tiebreakerFieldOrUndefined = t.union([tiebreaker_field, t.undefined]);
-
-export const timestamp_field = t.string;
-
-export const timestampFieldOrUndefined = t.union([timestamp_field, t.undefined]);
 
 export const false_positives = t.array(t.string);
 
@@ -75,24 +63,6 @@ export type Filters = t.TypeOf<typeof filters>; // Filters are not easily type-a
 
 export const filtersOrUndefined = t.union([filters, t.undefined]);
 export type FiltersOrUndefined = t.TypeOf<typeof filtersOrUndefined>;
-
-export const immutable = t.boolean;
-export type Immutable = t.TypeOf<typeof immutable>;
-
-// Note: Never make this a strict uuid, we allow the rule_id to be any string at the moment
-// in case we encounter 3rd party rule systems which might be using auto incrementing numbers
-// or other different things.
-export const rule_id = t.string;
-export type RuleId = t.TypeOf<typeof rule_id>;
-
-export const ruleIdOrUndefined = t.union([rule_id, t.undefined]);
-export type RuleIdOrUndefined = t.TypeOf<typeof ruleIdOrUndefined>;
-
-export const id = UUID;
-export type Id = t.TypeOf<typeof id>;
-
-export const idOrUndefined = t.union([id, t.undefined]);
-export type IdOrUndefined = t.TypeOf<typeof idOrUndefined>;
 
 export const index = t.array(t.string);
 export type Index = t.TypeOf<typeof index>;
@@ -117,8 +87,6 @@ export const license = t.string;
 export type License = t.TypeOf<typeof license>;
 
 export const licenseOrUndefined = t.union([license, t.undefined]);
-
-export const objects = t.array(t.type({ rule_id }));
 
 export const output_index = t.string;
 
@@ -159,9 +127,6 @@ export const meta = t.object;
 export type Meta = t.TypeOf<typeof meta>;
 export const metaOrUndefined = t.union([meta, t.undefined]);
 export type MetaOrUndefined = t.TypeOf<typeof metaOrUndefined>;
-
-export const name = NonEmptyString;
-export type Name = t.TypeOf<typeof name>;
 
 export const rule_name_override = t.string;
 export type RuleNameOverride = t.TypeOf<typeof rule_name_override>;

@@ -31,13 +31,23 @@ import { version } from '@kbn/securitysolution-io-ts-types';
 
 import { RuleExecutionSummary } from '../../rule_monitoring';
 import { ResponseActionArray } from '../../rule_response_actions/schemas';
-import { RelatedIntegrationArray, RequiredFieldArray, SetupGuide } from '../../rule_schema';
 import {
-  id,
+  IsRuleEnabled,
+  IsRuleImmutable,
+  RelatedIntegrationArray,
+  RequiredFieldArray,
+  RuleAuthorArray,
+  RuleDescription,
+  RuleName,
+  RuleObjectId,
+  RuleSignatureId,
+  SetupGuide,
+  TimestampField,
+} from '../../rule_schema';
+import {
   index,
   data_view_id,
   filters,
-  timestamp_field,
   event_category_override,
   tiebreaker_field,
   building_block_type,
@@ -49,11 +59,7 @@ import {
   rule_name_override,
   timestamp_override,
   timestamp_override_fallback_disabled,
-  author,
-  description,
   false_positives,
-  rule_id,
-  immutable,
   output_index,
   query,
   to,
@@ -61,10 +67,8 @@ import {
   saved_id,
   threshold,
   anomaly_threshold,
-  name,
   tags,
   interval,
-  enabled,
   outcome,
   alias_target_id,
   alias_purpose,
@@ -161,8 +165,8 @@ interface APIParams<
 
 const baseParams = {
   required: {
-    name,
-    description,
+    name: RuleName,
+    description: RuleDescription,
     risk_score,
     severity,
   },
@@ -185,10 +189,10 @@ const baseParams = {
   defaultable: {
     tags,
     interval,
-    enabled,
+    enabled: IsRuleEnabled,
     throttle,
     actions,
-    author,
+    author: RuleAuthorArray,
     false_positives,
     from,
     // maxSignals not used in ML rules but probably should be used
@@ -214,20 +218,20 @@ export { baseCreateParams };
 // to create the full schema for each route.
 export const sharedCreateSchema = t.intersection([
   baseCreateParams,
-  t.exact(t.partial({ rule_id })),
+  t.exact(t.partial({ rule_id: RuleSignatureId })),
 ]);
 export type SharedCreateSchema = t.TypeOf<typeof sharedCreateSchema>;
 
 export const sharedUpdateSchema = t.intersection([
   baseCreateParams,
-  t.exact(t.partial({ rule_id })),
-  t.exact(t.partial({ id })),
+  t.exact(t.partial({ rule_id: RuleSignatureId })),
+  t.exact(t.partial({ id: RuleObjectId })),
 ]);
 export type SharedUpdateSchema = t.TypeOf<typeof sharedUpdateSchema>;
 
 export const sharedPatchSchema = t.intersection([
   basePatchParams,
-  t.exact(t.partial({ rule_id, id })),
+  t.exact(t.partial({ rule_id: RuleSignatureId, id: RuleObjectId })),
 ]);
 
 // START type specific parameter definitions
@@ -242,7 +246,7 @@ const eqlRuleParams = {
     index,
     data_view_id,
     filters,
-    timestamp_field,
+    timestamp_field: TimestampField,
     event_category_override,
     tiebreaker_field,
   },
@@ -483,9 +487,9 @@ export const updateRulesSchema = t.intersection([createTypeSpecific, sharedUpdat
 export type UpdateRulesSchema = t.TypeOf<typeof updateRulesSchema>;
 
 const responseRequiredFields = {
-  id,
-  rule_id,
-  immutable,
+  id: RuleObjectId,
+  rule_id: RuleSignatureId,
+  immutable: IsRuleImmutable,
   updated_at,
   updated_by,
   created_at,
