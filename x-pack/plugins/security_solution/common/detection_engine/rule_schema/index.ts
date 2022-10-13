@@ -5,6 +5,6 @@
  * 2.0.
  */
 
-export * from './pagination';
-export * from './schemas';
-export * from './sorting';
+export * from './model/rule_params/related_integrations';
+export * from './model/rule_params/required_fields';
+export * from './model/rule_params/setup_guide';

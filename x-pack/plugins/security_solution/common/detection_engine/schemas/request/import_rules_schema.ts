@@ -8,17 +8,8 @@
 import * as t from 'io-ts';
 
 import { OnlyFalseAllowed } from '@kbn/securitysolution-io-ts-types';
-import {
-  rule_id,
-  id,
-  created_at,
-  updated_at,
-  created_by,
-  updated_by,
-  RelatedIntegrationArray,
-  RequiredFieldArray,
-  SetupGuide,
-} from '../common';
+import { RelatedIntegrationArray, RequiredFieldArray, SetupGuide } from '../../rule_schema';
+import { rule_id, id, created_at, updated_at, created_by, updated_by } from '../common';
 import { baseCreateParams, createTypeSpecific } from './rule_schemas';
 
 /**

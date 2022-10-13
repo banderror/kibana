@@ -40,6 +40,11 @@ import {
 
 import type { SanitizedRuleConfig } from '@kbn/alerting-plugin/common';
 import {
+  RelatedIntegrationArray,
+  RequiredFieldArray,
+  SetupGuide,
+} from '../../../../../common/detection_engine/rule_schema';
+import {
   author,
   buildingBlockTypeOrUndefined,
   description,
@@ -72,9 +77,6 @@ import {
   saved_id,
   thresholdNormalized,
   anomaly_threshold,
-  RelatedIntegrationArray,
-  RequiredFieldArray,
-  SetupGuide,
   newTermsFields,
   historyWindowStart,
   timestampOverrideFallbackDisabledOrUndefined,

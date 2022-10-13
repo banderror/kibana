@@ -23,6 +23,11 @@ import type { NamespaceType } from '@kbn/securitysolution-io-ts-list-types';
 import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 import * as t from 'io-ts';
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
+import {
+  RelatedIntegrationArray,
+  RequiredFieldArray,
+  SetupGuide,
+} from '../../../../common/detection_engine/rule_schema';
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
 import {
   alias_purpose as savedObjectResolveAliasPurpose,
@@ -32,10 +37,7 @@ import {
   event_category_override,
   license,
   outcome as savedObjectResolveOutcome,
-  RelatedIntegrationArray,
-  RequiredFieldArray,
   rule_name_override,
-  SetupGuide,
   threshold,
   tiebreaker_field,
   timestamp_field,

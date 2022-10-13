@@ -25,14 +25,16 @@ import type { FieldValueQueryBar } from '../../../components/rules/query_bar';
 import type { FieldValueTimeline } from '../../../components/rules/pick_timeline';
 import type { FieldValueThreshold } from '../../../components/rules/threshold_input';
 import type {
+  RelatedIntegrationArray,
+  RequiredFieldArray,
+  SetupGuide,
+} from '../../../../../common/detection_engine/rule_schema';
+import type {
   Author,
   BuildingBlockType,
   License,
-  RelatedIntegrationArray,
-  RequiredFieldArray,
   RuleNameOverride,
   SortOrder,
-  SetupGuide,
   TimestampOverride,
 } from '../../../../../common/detection_engine/schemas/common';
 import type { EqlOptionsSelected } from '../../../../../common/search_strategy';

@@ -9,7 +9,8 @@ import * as t from 'io-ts';
 
 import { version } from '@kbn/securitysolution-io-ts-types';
 
-import { rule_id, RelatedIntegrationArray, RequiredFieldArray, SetupGuide } from '../common';
+import { RelatedIntegrationArray, RequiredFieldArray, SetupGuide } from '../../rule_schema';
+import { rule_id } from '../common';
 import { baseCreateParams, createTypeSpecific } from './rule_schemas';
 
 /**

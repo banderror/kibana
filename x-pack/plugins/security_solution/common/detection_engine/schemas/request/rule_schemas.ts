@@ -30,6 +30,8 @@ import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 import { version } from '@kbn/securitysolution-io-ts-types';
 
 import { RuleExecutionSummary } from '../../rule_monitoring';
+import { ResponseActionArray } from '../../rule_response_actions/schemas';
+import { RelatedIntegrationArray, RequiredFieldArray, SetupGuide } from '../../rule_schema';
 import {
   id,
   index,
@@ -71,13 +73,9 @@ import {
   created_at,
   created_by,
   namespace,
-  RelatedIntegrationArray,
-  RequiredFieldArray,
-  SetupGuide,
   newTermsFields,
   historyWindowStart,
 } from '../common';
-import { ResponseActionArray } from '../../rule_response_actions/schemas';
 
 export const createSchema = <
   Required extends t.Props,
