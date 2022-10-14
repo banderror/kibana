@@ -6,12 +6,8 @@
  */
 
 import * as t from 'io-ts';
+import { NonEmptyString } from '@kbn/securitysolution-io-ts-types';
 
-/**
- * Any instructions for the user for setting up their environment in order to start receiving
- * source events for a given rule.
- *
- * It's a multiline text. Markdown is supported.
- */
-export type SetupGuide = t.TypeOf<typeof SetupGuide>;
-export const SetupGuide = t.string;
+// -------------------------------------------------------------------------------------------------
+// Attributes specific to Threshold rules
+

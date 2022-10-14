@@ -5,18 +5,19 @@
  * 2.0.
  */
 
+import { get } from 'lodash/fp';
+
 import type {
   RiskScore,
-  RiskScoreMappingOrUndefined,
-} from '@kbn/securitysolution-io-ts-alerting-types';
-import { get } from 'lodash/fp';
+  RiskScoreMapping,
+} from '../../../../../common/detection_engine/rule_schema';
 import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SignalSource } from '../types';
 
 export interface BuildRiskScoreFromMappingProps {
   eventSource: SignalSource;
   riskScore: RiskScore;
-  riskScoreMapping: RiskScoreMappingOrUndefined;
+  riskScoreMapping: RiskScoreMapping | undefined;
 }
 
 export interface BuildRiskScoreFromMappingReturn {

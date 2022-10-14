@@ -8,11 +8,10 @@
 import { get } from 'lodash/fp';
 
 import type {
-  Severity,
+  SeverityMapping,
   SeverityMappingItem,
-  SeverityMappingOrUndefined,
-} from '@kbn/securitysolution-io-ts-alerting-types';
-import { severity as SeverityIOTS } from '@kbn/securitysolution-io-ts-alerting-types';
+} from '../../../../../common/detection_engine/rule_schema';
+import { Severity } from '../../../../../common/detection_engine/rule_schema';
 import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SearchTypes } from '../../../../../common/detection_engine/types';
 import type { SignalSource } from '../types';
@@ -20,7 +19,7 @@ import type { SignalSource } from '../types';
 export interface BuildSeverityFromMappingProps {
   eventSource: SignalSource;
   severity: Severity;
-  severityMapping: SeverityMappingOrUndefined;
+  severityMapping: SeverityMapping | undefined;
 }
 
 export interface BuildSeverityFromMappingReturn {
@@ -66,7 +65,7 @@ export const buildSeverityFromMapping = ({
     }
   });
 
-  if (severityMatch != null && SeverityIOTS.is(severityMatch.severity)) {
+  if (severityMatch != null && Severity.is(severityMatch.severity)) {
     return overriddenSeverity(severityMatch.severity, severityMatch.field);
   }
 

@@ -7,9 +7,6 @@
 
 import type { Type } from '@kbn/securitysolution-io-ts-alerting-types';
 import {
-  risk_score_mapping,
-  severity,
-  severity_mapping,
   threats,
   threat_filters,
   threat_index,
@@ -24,10 +21,17 @@ import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 import * as t from 'io-ts';
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
 import {
+  EventCategoryOverride,
   RelatedIntegrationArray,
   RequiredFieldArray,
-  SetupGuide,
+  RiskScore,
+  RiskScoreMapping,
   RuleAuthorArray,
+  RuleLicense,
+  SetupGuide,
+  Severity,
+  SeverityMapping,
+  TiebreakerField,
   TimestampField,
 } from '../../../../common/detection_engine/rule_schema';
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
@@ -35,12 +39,9 @@ import {
   alias_purpose as savedObjectResolveAliasPurpose,
   building_block_type,
   data_view_id,
-  event_category_override,
-  license,
   outcome as savedObjectResolveOutcome,
   rule_name_override,
   threshold,
-  tiebreaker_field,
   timestamp_override,
   timestamp_override_fallback_disabled,
 } from '../../../../common/detection_engine/schemas/common';
@@ -112,11 +113,11 @@ export const RuleSchema = t.intersection([
     references: t.array(t.string),
     related_integrations: RelatedIntegrationArray,
     required_fields: RequiredFieldArray,
-    risk_score: t.number,
-    risk_score_mapping,
+    risk_score: RiskScore,
+    risk_score_mapping: RiskScoreMapping,
     rule_id: t.string,
-    severity,
-    severity_mapping,
+    severity: Severity,
+    severity_mapping: SeverityMapping,
     setup: SetupGuide,
     tags: t.array(t.string),
     type,
@@ -137,7 +138,7 @@ export const RuleSchema = t.intersection([
     index: t.array(t.string),
     data_view_id,
     language: t.string,
-    license,
+    license: RuleLicense,
     meta: MetaRule,
     machine_learning_job_id: t.array(t.string),
     new_terms_fields: t.array(t.string),
@@ -157,9 +158,9 @@ export const RuleSchema = t.intersection([
     timeline_title: t.string,
     timestamp_override,
     timestamp_override_fallback_disabled,
+    event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,
-    event_category_override,
-    tiebreaker_field,
+    tiebreaker_field: TiebreakerField,
     note: t.string,
     exceptions_list: listArray,
     uuid: t.string,

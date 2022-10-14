@@ -8,13 +8,10 @@
 import type { List } from '@kbn/securitysolution-io-ts-list-types';
 
 import type {
-  RiskScoreMapping,
   ThreatIndex,
   ThreatMapping,
   Threats,
   Type,
-  SeverityMapping,
-  Severity,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { DataViewBase, Filter } from '@kbn/es-query';
 import type { RuleAction } from '@kbn/alerting-plugin/common';
@@ -27,12 +24,15 @@ import type { FieldValueThreshold } from '../../../components/rules/threshold_in
 import type {
   RelatedIntegrationArray,
   RequiredFieldArray,
-  SetupGuide,
+  RiskScoreMapping,
   RuleAuthorArray,
+  RuleLicense,
+  SetupGuide,
+  Severity,
+  SeverityMapping,
 } from '../../../../../common/detection_engine/rule_schema';
 import type {
   BuildingBlockType,
-  License,
   RuleNameOverride,
   SortOrder,
   TimestampOverride,
@@ -222,7 +222,7 @@ export interface AboutStepRuleJson {
   exceptions_list?: List[];
   name: string;
   description: string;
-  license: License;
+  license: RuleLicense;
   severity: string;
   severity_mapping: SeverityMapping;
   risk_score: number;

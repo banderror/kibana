@@ -36,13 +36,6 @@ export const alias_purpose = t.union([
   t.literal('savedObjectImport'),
 ]);
 
-export const event_category_override = t.string;
-export const eventCategoryOverrideOrUndefined = t.union([event_category_override, t.undefined]);
-
-export const tiebreaker_field = t.string;
-
-export const tiebreakerFieldOrUndefined = t.union([tiebreaker_field, t.undefined]);
-
 export const false_positives = t.array(t.string);
 
 export const file_name = t.string;
@@ -83,26 +76,12 @@ export type Query = t.TypeOf<typeof query>;
 export const queryOrUndefined = t.union([query, t.undefined]);
 export type QueryOrUndefined = t.TypeOf<typeof queryOrUndefined>;
 
-export const license = t.string;
-export type License = t.TypeOf<typeof license>;
-
-export const licenseOrUndefined = t.union([license, t.undefined]);
-
 export const output_index = t.string;
 
 export const saved_id = t.string;
 
 export const savedIdOrUndefined = t.union([saved_id, t.undefined]);
 export type SavedIdOrUndefined = t.TypeOf<typeof savedIdOrUndefined>;
-
-export const timeline_id = t.string;
-export type TimelineId = t.TypeOf<typeof timeline_id>;
-
-export const timelineIdOrUndefined = t.union([timeline_id, t.undefined]);
-
-export const timeline_title = t.string;
-
-export const timelineTitleOrUndefined = t.union([timeline_title, t.undefined]);
 
 export const timestamp_override = t.string;
 export type TimestampOverride = t.TypeOf<typeof timestamp_override>;
@@ -254,12 +233,7 @@ export const timelines_updated = PositiveInteger;
 export const timelines_not_installed = PositiveInteger;
 export const timelines_not_updated = PositiveInteger;
 
-export const note = t.string;
-export type Note = t.TypeOf<typeof note>;
-
 export const namespaceOrUndefined = t.union([namespace, t.undefined]);
-
-export const noteOrUndefined = t.union([note, t.undefined]);
 
 export const indexRecord = t.record(
   t.string,

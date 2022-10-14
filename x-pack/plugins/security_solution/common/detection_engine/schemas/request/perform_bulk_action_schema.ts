@@ -6,15 +6,16 @@
  */
 
 import * as t from 'io-ts';
-import { NonEmptyArray, TimeDuration, enumeration } from '@kbn/securitysolution-io-ts-types';
 
+import { NonEmptyArray, TimeDuration, enumeration } from '@kbn/securitysolution-io-ts-types';
 import {
   action_group as actionGroup,
   action_params as actionParams,
   action_id as actionId,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 
-import { queryOrUndefined, tags, index, timeline_id, timeline_title } from '../common/schemas';
+import { TimelineTemplateId, TimelineTemplateTitle } from '../../rule_schema';
+import { queryOrUndefined, tags, index } from '../common/schemas';
 
 export enum BulkAction {
   'enable' = 'enable',
@@ -82,8 +83,8 @@ export type BulkActionEditPayloadIndexPatterns = t.TypeOf<
 const bulkActionEditPayloadTimeline = t.type({
   type: t.literal(BulkActionEditType.set_timeline),
   value: t.type({
-    timeline_id,
-    timeline_title,
+    timeline_id: TimelineTemplateId,
+    timeline_title: TimelineTemplateTitle,
   }),
 });
 
