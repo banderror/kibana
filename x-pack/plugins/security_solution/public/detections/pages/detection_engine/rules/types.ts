@@ -22,6 +22,7 @@ import type { FieldValueQueryBar } from '../../../components/rules/query_bar';
 import type { FieldValueTimeline } from '../../../components/rules/pick_timeline';
 import type { FieldValueThreshold } from '../../../components/rules/threshold_input';
 import type {
+  BuildingBlockType,
   RelatedIntegrationArray,
   RequiredFieldArray,
   RiskScoreMapping,
@@ -33,10 +34,7 @@ import type {
   SeverityMapping,
   TimestampOverride,
 } from '../../../../../common/detection_engine/rule_schema';
-import type {
-  BuildingBlockType,
-  SortOrder,
-} from '../../../../../common/detection_engine/schemas/common';
+import type { SortOrder } from '../../../../../common/detection_engine/schemas/common';
 import type { EqlOptionsSelected } from '../../../../../common/search_strategy';
 import type {
   RuleResponseAction,

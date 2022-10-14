@@ -14,8 +14,13 @@ import {
   action_id as actionId,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 
-import { RuleTagArray, TimelineTemplateId, TimelineTemplateTitle } from '../../rule_schema';
-import { queryOrUndefined, index } from '../common/schemas';
+import {
+  IndexPatternArray,
+  RuleTagArray,
+  TimelineTemplateId,
+  TimelineTemplateTitle,
+} from '../../rule_schema';
+import { queryOrUndefined } from '../common/schemas';
 
 export enum BulkAction {
   'enable' = 'enable',
@@ -71,7 +76,7 @@ const bulkActionEditPayloadIndexPatterns = t.intersection([
       t.literal(BulkActionEditType.delete_index_patterns),
       t.literal(BulkActionEditType.set_index_patterns),
     ]),
-    value: index,
+    value: IndexPatternArray,
   }),
   t.exact(t.partial({ overwrite_data_views: t.boolean })),
 ]);

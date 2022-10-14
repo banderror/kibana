@@ -9,7 +9,6 @@ import * as t from 'io-ts';
 
 import type { Type } from '@kbn/securitysolution-io-ts-alerting-types';
 import {
-  threats,
   threat_filters,
   threat_index,
   threat_indicator_path,
@@ -19,14 +18,16 @@ import {
   type,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { NamespaceType } from '@kbn/securitysolution-io-ts-list-types';
-import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
 import {
+  BuildingBlockType,
   EventCategoryOverride,
+  ExceptionListArray,
   InvestigationGuide,
   IsRuleEnabled,
   IsRuleImmutable,
+  MaxSignals,
   RelatedIntegrationArray,
   RequiredFieldArray,
   RiskScore,
@@ -51,6 +52,7 @@ import {
   SetupGuide,
   Severity,
   SeverityMapping,
+  ThreatArray,
   TiebreakerField,
   TimelineTemplateId,
   TimelineTemplateTitle,
@@ -60,11 +62,7 @@ import {
 } from '../../../../common/detection_engine/rule_schema';
 
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
-import {
-  building_block_type,
-  data_view_id,
-  threshold,
-} from '../../../../common/detection_engine/schemas/common';
+import { data_view_id, threshold } from '../../../../common/detection_engine/schemas/common';
 import type {
   CreateRulesSchema,
   PatchRulesSchema,
@@ -129,7 +127,7 @@ export const RuleSchema = t.intersection([
     interval: RuleInterval,
     immutable: IsRuleImmutable,
     name: RuleName,
-    max_signals: t.number,
+    max_signals: MaxSignals,
     references: RuleReferenceArray,
     related_integrations: RelatedIntegrationArray,
     required_fields: RequiredFieldArray,
@@ -142,7 +140,7 @@ export const RuleSchema = t.intersection([
     tags: RuleTagArray,
     type,
     to: RuleIntervalTo,
-    threat: threats,
+    threat: ThreatArray,
     updated_at: t.string,
     updated_by: t.string,
     actions: t.array(action),
@@ -152,7 +150,7 @@ export const RuleSchema = t.intersection([
     outcome: SavedObjectResolveOutcome,
     alias_target_id: SavedObjectResolveAliasTargetId,
     alias_purpose: SavedObjectResolveAliasPurpose,
-    building_block_type,
+    building_block_type: BuildingBlockType,
     anomaly_threshold: t.number,
     filters: t.array(t.unknown),
     index: t.array(t.string),
@@ -182,7 +180,7 @@ export const RuleSchema = t.intersection([
     timestamp_field: TimestampField,
     tiebreaker_field: TiebreakerField,
     note: InvestigationGuide,
-    exceptions_list: listArray,
+    exceptions_list: ExceptionListArray,
     uuid: t.string,
     version: RuleVersion,
     execution_summary: RuleExecutionSummary,

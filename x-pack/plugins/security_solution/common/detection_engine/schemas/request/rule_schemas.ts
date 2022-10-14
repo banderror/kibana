@@ -8,7 +8,6 @@
 import * as t from 'io-ts';
 
 import {
-  actions,
   machine_learning_job_id,
   threat_filters,
   threat_query,
@@ -17,23 +16,27 @@ import {
   threat_indicator_path,
   concurrent_searches,
   items_per_search,
-  threats,
-  max_signals,
-  throttle,
 } from '@kbn/securitysolution-io-ts-alerting-types';
-import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 
 import { RuleExecutionSummary } from '../../rule_monitoring';
 import { ResponseActionArray } from '../../rule_response_actions/schemas';
 import {
+  AlertsIndex,
+  AlertsIndexNamespace,
+  BuildingBlockType,
   EventCategoryOverride,
+  ExceptionListArray,
+  IndexPatternArray,
   InvestigationGuide,
   IsRuleEnabled,
   IsRuleImmutable,
+  MaxSignals,
   RelatedIntegrationArray,
   RequiredFieldArray,
   RiskScore,
   RiskScoreMapping,
+  RuleActionArray,
+  RuleActionThrottle,
   RuleAuthorArray,
   RuleDescription,
   RuleFalsePositiveArray,
@@ -55,6 +58,7 @@ import {
   SetupGuide,
   Severity,
   SeverityMapping,
+  ThreatArray,
   TiebreakerField,
   TimelineTemplateId,
   TimelineTemplateTitle,
@@ -63,11 +67,8 @@ import {
   TimestampOverrideFallbackDisabled,
 } from '../../rule_schema';
 import {
-  index,
   data_view_id,
   filters,
-  building_block_type,
-  output_index,
   query,
   saved_id,
   threshold,
@@ -76,7 +77,6 @@ import {
   updated_by,
   created_at,
   created_by,
-  namespace,
   newTermsFields,
   historyWindowStart,
 } from '../common';
@@ -189,9 +189,9 @@ const baseParams = {
     // Misc attributes
     license: RuleLicense,
     note: InvestigationGuide,
-    building_block_type,
-    output_index,
-    namespace,
+    building_block_type: BuildingBlockType,
+    output_index: AlertsIndex,
+    namespace: AlertsIndexNamespace,
   },
   defaultable: {
     // Main attributes
@@ -206,17 +206,17 @@ const baseParams = {
     from: RuleIntervalFrom,
     to: RuleIntervalTo,
     // Rule actions
-    actions,
-    throttle,
+    actions: RuleActionArray,
+    throttle: RuleActionThrottle,
     // Rule exceptions
-    exceptions_list: listArray,
+    exceptions_list: ExceptionListArray,
     // Misc attributes
     author: RuleAuthorArray,
     false_positives: RuleFalsePositiveArray,
     references: RuleReferenceArray,
     // maxSignals not used in ML rules but probably should be used
-    max_signals,
-    threat: threats,
+    max_signals: MaxSignals,
+    threat: ThreatArray,
   },
 };
 const {
@@ -256,7 +256,7 @@ const eqlRuleParams = {
     query,
   },
   optional: {
-    index,
+    index: IndexPatternArray,
     data_view_id,
     filters,
     event_category_override: EventCategoryOverride,
@@ -281,7 +281,7 @@ const threatMatchRuleParams = {
     threat_index,
   },
   optional: {
-    index,
+    index: IndexPatternArray,
     data_view_id,
     filters,
     saved_id,
@@ -307,7 +307,7 @@ const queryRuleParams = {
     type: t.literal('query'),
   },
   optional: {
-    index,
+    index: IndexPatternArray,
     data_view_id,
     filters,
     saved_id,
@@ -334,7 +334,7 @@ const savedQueryRuleParams = {
   optional: {
     // Having language, query, and filters possibly defined adds more code confusion and probably user confusion
     // if the saved object gets deleted for some reason
-    index,
+    index: IndexPatternArray,
     data_view_id,
     query,
     filters,
@@ -359,7 +359,7 @@ const thresholdRuleParams = {
     threshold,
   },
   optional: {
-    index,
+    index: IndexPatternArray,
     data_view_id,
     filters,
     saved_id,
@@ -401,7 +401,7 @@ const newTermsRuleParams = {
     history_window_start: historyWindowStart,
   },
   optional: {
-    index,
+    index: IndexPatternArray,
     data_view_id,
     filters,
   },

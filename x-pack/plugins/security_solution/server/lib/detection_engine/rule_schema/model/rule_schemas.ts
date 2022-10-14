@@ -16,11 +16,8 @@ import {
   concurrentSearchesOrUndefined,
   itemsPerSearchOrUndefined,
   threatIndicatorPathOrUndefined,
-  threats,
   throttleOrNull,
-  max_signals,
 } from '@kbn/securitysolution-io-ts-alerting-types';
-import { listArray } from '@kbn/securitysolution-io-ts-list-types';
 import {
   SIGNALS_ID,
   EQL_RULE_TYPE_ID,
@@ -34,10 +31,16 @@ import {
 
 import type { SanitizedRuleConfig } from '@kbn/alerting-plugin/common';
 import {
+  AlertsIndex,
+  AlertsIndexNamespace,
+  BuildingBlockType,
   EventCategoryOverride,
+  ExceptionListArray,
+  IndexPatternArray,
   InvestigationGuide,
   IsRuleEnabled,
   IsRuleImmutable,
+  MaxSignals,
   RelatedIntegrationArray,
   RequiredFieldArray,
   RiskScore,
@@ -58,6 +61,7 @@ import {
   SetupGuide,
   Severity,
   SeverityMapping,
+  ThreatArray,
   TiebreakerField,
   TimelineTemplateId,
   TimelineTemplateTitle,
@@ -66,11 +70,7 @@ import {
   TimestampOverrideFallbackDisabled,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
-  buildingBlockTypeOrUndefined,
-  namespaceOrUndefined,
   dataViewIdOrUndefined,
-  indexOrUndefined,
-  output_index,
   query,
   queryOrUndefined,
   filtersOrUndefined,
@@ -89,21 +89,21 @@ const nonEqlLanguages = t.keyof({ kuery: null, lucene: null });
 export const baseRuleParams = t.exact(
   t.type({
     author: RuleAuthorArray,
-    buildingBlockType: buildingBlockTypeOrUndefined,
+    buildingBlockType: t.union([BuildingBlockType, t.undefined]),
     description: RuleDescription,
-    namespace: namespaceOrUndefined,
+    namespace: t.union([AlertsIndexNamespace, t.undefined]),
     note: t.union([InvestigationGuide, t.undefined]),
     falsePositives: RuleFalsePositiveArray,
     from: RuleIntervalFrom,
     ruleId: RuleSignatureId,
     immutable: IsRuleImmutable,
     license: t.union([RuleLicense, t.undefined]),
-    outputIndex: output_index,
+    outputIndex: AlertsIndex,
     timelineId: t.union([TimelineTemplateId, t.undefined]),
     timelineTitle: t.union([TimelineTemplateTitle, t.undefined]),
     meta: t.union([RuleMetadata, t.undefined]),
     // maxSignals not used in ML rules but probably should be used
-    maxSignals: max_signals,
+    maxSignals: MaxSignals,
     riskScore: RiskScore,
     riskScoreMapping: RiskScoreMapping,
     ruleNameOverride: t.union([RuleNameOverride, t.undefined]),
@@ -111,11 +111,11 @@ export const baseRuleParams = t.exact(
     severityMapping: SeverityMapping,
     timestampOverride: t.union([TimestampOverride, t.undefined]),
     timestampOverrideFallbackDisabled: t.union([TimestampOverrideFallbackDisabled, t.undefined]),
-    threat: threats,
+    threat: ThreatArray,
     to: RuleIntervalTo,
     references: RuleReferenceArray,
     version: RuleVersion,
-    exceptionsList: listArray,
+    exceptionsList: ExceptionListArray,
     relatedIntegrations: t.union([RelatedIntegrationArray, t.undefined]),
     requiredFields: t.union([RequiredFieldArray, t.undefined]),
     setup: t.union([SetupGuide, t.undefined]),
@@ -126,7 +126,7 @@ export type BaseRuleParams = t.TypeOf<typeof baseRuleParams>;
 const eqlSpecificRuleParams = t.type({
   type: t.literal('eql'),
   language: t.literal('eql'),
-  index: indexOrUndefined,
+  index: t.union([IndexPatternArray, t.undefined]),
   dataViewId: dataViewIdOrUndefined,
   query,
   filters: filtersOrUndefined,
@@ -141,7 +141,7 @@ export type EqlRuleParams = t.TypeOf<typeof eqlRuleParams>;
 const threatSpecificRuleParams = t.type({
   type: t.literal('threat_match'),
   language: nonEqlLanguages,
-  index: indexOrUndefined,
+  index: t.union([IndexPatternArray, t.undefined]),
   query,
   filters: filtersOrUndefined,
   savedId: savedIdOrUndefined,
@@ -163,7 +163,7 @@ const querySpecificRuleParams = t.exact(
   t.type({
     type: t.literal('query'),
     language: nonEqlLanguages,
-    index: indexOrUndefined,
+    index: t.union([IndexPatternArray, t.undefined]),
     query,
     filters: filtersOrUndefined,
     savedId: savedIdOrUndefined,
@@ -180,7 +180,7 @@ const savedQuerySpecificRuleParams = t.type({
   // Having language, query, and filters possibly defined adds more code confusion and probably user confusion
   // if the saved object gets deleted for some reason
   language: nonEqlLanguages,
-  index: indexOrUndefined,
+  index: t.union([IndexPatternArray, t.undefined]),
   dataViewId: dataViewIdOrUndefined,
   query: queryOrUndefined,
   filters: filtersOrUndefined,
@@ -200,7 +200,7 @@ export type UnifiedQueryRuleParams = t.TypeOf<typeof unifiedQueryRuleParams>;
 const thresholdSpecificRuleParams = t.type({
   type: t.literal('threshold'),
   language: nonEqlLanguages,
-  index: indexOrUndefined,
+  index: t.union([IndexPatternArray, t.undefined]),
   query,
   filters: filtersOrUndefined,
   savedId: savedIdOrUndefined,
@@ -228,7 +228,7 @@ const newTermsSpecificRuleParams = t.type({
   query,
   newTermsFields,
   historyWindowStart,
-  index: indexOrUndefined,
+  index: t.union([IndexPatternArray, t.undefined]),
   filters: filtersOrUndefined,
   language: nonEqlLanguages,
   dataViewId: dataViewIdOrUndefined,

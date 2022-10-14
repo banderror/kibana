@@ -16,19 +16,11 @@ import {
   LimitedSizeArray,
 } from '@kbn/securitysolution-io-ts-types';
 
-export const building_block_type = t.string;
-export type BuildingBlockType = t.TypeOf<typeof building_block_type>;
-
-export const buildingBlockTypeOrUndefined = t.union([building_block_type, t.undefined]);
-
 export const file_name = t.string;
 export type FileName = t.TypeOf<typeof file_name>;
 
 export const exclude_export_details = t.boolean;
 export type ExcludeExportDetails = t.TypeOf<typeof exclude_export_details>;
-
-export const namespace = t.string;
-export type Namespace = t.TypeOf<typeof namespace>;
 
 /**
  * TODO: Right now the filters is an "unknown", when it could more than likely
@@ -47,16 +39,11 @@ export const data_view_id = t.string;
 
 export const dataViewIdOrUndefined = t.union([data_view_id, t.undefined]);
 
-export const indexOrUndefined = t.union([index, t.undefined]);
-export type IndexOrUndefined = t.TypeOf<typeof indexOrUndefined>;
-
 export const query = t.string;
 export type Query = t.TypeOf<typeof query>;
 
 export const queryOrUndefined = t.union([query, t.undefined]);
 export type QueryOrUndefined = t.TypeOf<typeof queryOrUndefined>;
-
-export const output_index = t.string;
 
 export const saved_id = t.string;
 
@@ -174,8 +161,6 @@ export const timelines_installed = PositiveInteger;
 export const timelines_updated = PositiveInteger;
 export const timelines_not_installed = PositiveInteger;
 export const timelines_not_updated = PositiveInteger;
-
-export const namespaceOrUndefined = t.union([namespace, t.undefined]);
 
 export const indexRecord = t.record(
   t.string,

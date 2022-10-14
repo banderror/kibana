@@ -15,14 +15,15 @@ import { getExceptionFilterFromExceptions } from '@kbn/securitysolution-list-api
 import { buildEsQuery } from '@kbn/es-query';
 import { KibanaServices } from '../../../../common/lib/kibana';
 
-import type { Query, Index } from '../../../../../common/detection_engine/schemas/common';
+import type { Query } from '../../../../../common/detection_engine/schemas/common';
+import type { IndexPatternArray } from '../../../../../common/detection_engine/rule_schema';
 import type { ESBoolQuery } from '../../../../../common/typed_json';
 
 export const getEsQueryFilter = async (
   query: Query,
   language: Language,
   filters: unknown,
-  index: Index,
+  index: IndexPatternArray,
   lists: Array<ExceptionListItemSchema | CreateExceptionListItemSchema>,
   excludeExceptions: boolean = true
 ): Promise<ESBoolQuery> => {
