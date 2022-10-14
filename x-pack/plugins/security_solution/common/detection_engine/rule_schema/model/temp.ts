@@ -50,3 +50,9 @@ export const ThreatArray = t.array(threat);
  */
 export type IndexPatternArray = t.TypeOf<typeof IndexPatternArray>;
 export const IndexPatternArray = t.array(t.string);
+
+/**
+ * TODO: https://github.com/elastic/kibana/pull/142950 Add description
+ */
+export type DataViewId = t.TypeOf<typeof DataViewId>;
+export const DataViewId = t.string;

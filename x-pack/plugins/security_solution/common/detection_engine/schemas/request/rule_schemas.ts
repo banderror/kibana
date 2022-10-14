@@ -24,6 +24,7 @@ import {
   AlertsIndex,
   AlertsIndexNamespace,
   BuildingBlockType,
+  DataViewId,
   EventCategoryOverride,
   ExceptionListArray,
   IndexPatternArray,
@@ -67,7 +68,6 @@ import {
   TimestampOverrideFallbackDisabled,
 } from '../../rule_schema';
 import {
-  data_view_id,
   filters,
   query,
   saved_id,
@@ -257,7 +257,7 @@ const eqlRuleParams = {
   },
   optional: {
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     filters,
     event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,
@@ -282,7 +282,7 @@ const threatMatchRuleParams = {
   },
   optional: {
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     filters,
     saved_id,
     threat_filters,
@@ -308,7 +308,7 @@ const queryRuleParams = {
   },
   optional: {
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     filters,
     saved_id,
     response_actions: ResponseActionArray,
@@ -335,7 +335,7 @@ const savedQueryRuleParams = {
     // Having language, query, and filters possibly defined adds more code confusion and probably user confusion
     // if the saved object gets deleted for some reason
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     query,
     filters,
     response_actions: ResponseActionArray,
@@ -360,7 +360,7 @@ const thresholdRuleParams = {
   },
   optional: {
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     filters,
     saved_id,
   },
@@ -402,7 +402,7 @@ const newTermsRuleParams = {
   },
   optional: {
     index: IndexPatternArray,
-    data_view_id,
+    data_view_id: DataViewId,
     filters,
   },
   defaultable: {

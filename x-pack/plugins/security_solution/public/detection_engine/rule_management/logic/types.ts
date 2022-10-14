@@ -22,8 +22,10 @@ import type { NamespaceType } from '@kbn/securitysolution-io-ts-list-types';
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
 import {
   BuildingBlockType,
+  DataViewId,
   EventCategoryOverride,
   ExceptionListArray,
+  IndexPatternArray,
   InvestigationGuide,
   IsRuleEnabled,
   IsRuleImmutable,
@@ -62,7 +64,7 @@ import {
 } from '../../../../common/detection_engine/rule_schema';
 
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
-import { data_view_id, threshold } from '../../../../common/detection_engine/schemas/common';
+import { threshold } from '../../../../common/detection_engine/schemas/common';
 import type {
   CreateRulesSchema,
   PatchRulesSchema,
@@ -153,8 +155,8 @@ export const RuleSchema = t.intersection([
     building_block_type: BuildingBlockType,
     anomaly_threshold: t.number,
     filters: t.array(t.unknown),
-    index: t.array(t.string),
-    data_view_id,
+    index: IndexPatternArray,
+    data_view_id: DataViewId,
     language: t.string,
     license: RuleLicense,
     meta: MetaRule,

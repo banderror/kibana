@@ -34,6 +34,7 @@ import {
   AlertsIndex,
   AlertsIndexNamespace,
   BuildingBlockType,
+  DataViewId,
   EventCategoryOverride,
   ExceptionListArray,
   IndexPatternArray,
@@ -70,7 +71,6 @@ import {
   TimestampOverrideFallbackDisabled,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
-  dataViewIdOrUndefined,
   query,
   queryOrUndefined,
   filtersOrUndefined,
@@ -127,7 +127,7 @@ const eqlSpecificRuleParams = t.type({
   type: t.literal('eql'),
   language: t.literal('eql'),
   index: t.union([IndexPatternArray, t.undefined]),
-  dataViewId: dataViewIdOrUndefined,
+  dataViewId: t.union([DataViewId, t.undefined]),
   query,
   filters: filtersOrUndefined,
   eventCategoryOverride: t.union([EventCategoryOverride, t.undefined]),
@@ -153,7 +153,7 @@ const threatSpecificRuleParams = t.type({
   threatIndicatorPath: threatIndicatorPathOrUndefined,
   concurrentSearches: concurrentSearchesOrUndefined,
   itemsPerSearch: itemsPerSearchOrUndefined,
-  dataViewId: dataViewIdOrUndefined,
+  dataViewId: t.union([DataViewId, t.undefined]),
 });
 export const threatRuleParams = t.intersection([baseRuleParams, threatSpecificRuleParams]);
 export type ThreatSpecificRuleParams = t.TypeOf<typeof threatSpecificRuleParams>;
@@ -167,7 +167,7 @@ const querySpecificRuleParams = t.exact(
     query,
     filters: filtersOrUndefined,
     savedId: savedIdOrUndefined,
-    dataViewId: dataViewIdOrUndefined,
+    dataViewId: t.union([DataViewId, t.undefined]),
     responseActions: ResponseActionRuleParamsOrUndefined,
   })
 );
@@ -181,7 +181,7 @@ const savedQuerySpecificRuleParams = t.type({
   // if the saved object gets deleted for some reason
   language: nonEqlLanguages,
   index: t.union([IndexPatternArray, t.undefined]),
-  dataViewId: dataViewIdOrUndefined,
+  dataViewId: t.union([DataViewId, t.undefined]),
   query: queryOrUndefined,
   filters: filtersOrUndefined,
   savedId: saved_id,
@@ -205,7 +205,7 @@ const thresholdSpecificRuleParams = t.type({
   filters: filtersOrUndefined,
   savedId: savedIdOrUndefined,
   threshold: thresholdNormalized,
-  dataViewId: dataViewIdOrUndefined,
+  dataViewId: t.union([DataViewId, t.undefined]),
 });
 export const thresholdRuleParams = t.intersection([baseRuleParams, thresholdSpecificRuleParams]);
 export type ThresholdSpecificRuleParams = t.TypeOf<typeof thresholdSpecificRuleParams>;
@@ -231,7 +231,7 @@ const newTermsSpecificRuleParams = t.type({
   index: t.union([IndexPatternArray, t.undefined]),
   filters: filtersOrUndefined,
   language: nonEqlLanguages,
-  dataViewId: dataViewIdOrUndefined,
+  dataViewId: t.union([DataViewId, t.undefined]),
 });
 export const newTermsRuleParams = t.intersection([baseRuleParams, newTermsSpecificRuleParams]);
 export type NewTermsSpecificRuleParams = t.TypeOf<typeof newTermsSpecificRuleParams>;

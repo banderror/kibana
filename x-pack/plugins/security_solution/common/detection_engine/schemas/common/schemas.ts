@@ -32,13 +32,6 @@ export type Filters = t.TypeOf<typeof filters>; // Filters are not easily type-a
 export const filtersOrUndefined = t.union([filters, t.undefined]);
 export type FiltersOrUndefined = t.TypeOf<typeof filtersOrUndefined>;
 
-export const index = t.array(t.string);
-export type Index = t.TypeOf<typeof index>;
-
-export const data_view_id = t.string;
-
-export const dataViewIdOrUndefined = t.union([data_view_id, t.undefined]);
-
 export const query = t.string;
 export type Query = t.TypeOf<typeof query>;
 
