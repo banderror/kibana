@@ -45,8 +45,8 @@ export const RuleVersion = version;
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description
  */
-export type RuleTags = t.TypeOf<typeof RuleTags>;
-export const RuleTags = t.array(t.string); // should be non-empty strings?
+export type RuleTagArray = t.TypeOf<typeof RuleTagArray>;
+export const RuleTagArray = t.array(t.string); // should be non-empty strings?
 
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description

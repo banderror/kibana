@@ -9,7 +9,6 @@ import * as t from 'io-ts';
 
 import {
   actions,
-  from,
   machine_learning_job_id,
   threat_filters,
   threat_query,
@@ -39,6 +38,8 @@ import {
   RuleDescription,
   RuleFalsePositiveArray,
   RuleInterval,
+  RuleIntervalFrom,
+  RuleIntervalTo,
   RuleLicense,
   RuleMetadata,
   RuleName,
@@ -46,7 +47,7 @@ import {
   RuleObjectId,
   RuleReferenceArray,
   RuleSignatureId,
-  RuleTags,
+  RuleTagArray,
   RuleVersion,
   SavedObjectResolveAliasPurpose,
   SavedObjectResolveAliasTargetId,
@@ -68,7 +69,6 @@ import {
   building_block_type,
   output_index,
   query,
-  to,
   saved_id,
   threshold,
   anomaly_threshold,
@@ -196,15 +196,15 @@ const baseParams = {
   defaultable: {
     // Main attributes
     version: RuleVersion,
-    tags: RuleTags,
+    tags: RuleTagArray,
     enabled: IsRuleEnabled,
     // Field overrides
     risk_score_mapping: RiskScoreMapping,
     severity_mapping: SeverityMapping,
     // Rule schedule
     interval: RuleInterval,
-    from,
-    to,
+    from: RuleIntervalFrom,
+    to: RuleIntervalTo,
     // Rule actions
     actions,
     throttle,

@@ -9,7 +9,6 @@ import * as t from 'io-ts';
 
 import {
   actionsCamel,
-  from,
   machine_learning_job_id_normalized,
   threat_mapping,
   threat_index,
@@ -46,13 +45,15 @@ import {
   RuleAuthorArray,
   RuleDescription,
   RuleFalsePositiveArray,
+  RuleIntervalFrom,
+  RuleIntervalTo,
   RuleLicense,
   RuleMetadata,
   RuleName,
   RuleNameOverride,
   RuleReferenceArray,
   RuleSignatureId,
-  RuleTags,
+  RuleTagArray,
   RuleVersion,
   SetupGuide,
   Severity,
@@ -73,7 +74,6 @@ import {
   query,
   queryOrUndefined,
   filtersOrUndefined,
-  to,
   savedIdOrUndefined,
   saved_id,
   thresholdNormalized,
@@ -94,7 +94,7 @@ export const baseRuleParams = t.exact(
     namespace: namespaceOrUndefined,
     note: t.union([InvestigationGuide, t.undefined]),
     falsePositives: RuleFalsePositiveArray,
-    from,
+    from: RuleIntervalFrom,
     ruleId: RuleSignatureId,
     immutable: IsRuleImmutable,
     license: t.union([RuleLicense, t.undefined]),
@@ -112,7 +112,7 @@ export const baseRuleParams = t.exact(
     timestampOverride: t.union([TimestampOverride, t.undefined]),
     timestampOverrideFallbackDisabled: t.union([TimestampOverrideFallbackDisabled, t.undefined]),
     threat: threats,
-    to,
+    to: RuleIntervalTo,
     references: RuleReferenceArray,
     version: RuleVersion,
     exceptionsList: listArray,
@@ -277,7 +277,7 @@ export const allRuleTypes = t.union([
 
 export const internalRuleCreate = t.type({
   name: RuleName,
-  tags: RuleTags,
+  tags: RuleTagArray,
   alertTypeId: allRuleTypes,
   consumer: t.literal(SERVER_APP_ID),
   schedule: t.type({
@@ -293,7 +293,7 @@ export type InternalRuleCreate = t.TypeOf<typeof internalRuleCreate>;
 
 export const internalRuleUpdate = t.type({
   name: RuleName,
-  tags: RuleTags,
+  tags: RuleTagArray,
   schedule: t.type({
     interval: t.string,
   }),

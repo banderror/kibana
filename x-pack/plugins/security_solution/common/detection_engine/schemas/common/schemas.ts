@@ -75,10 +75,6 @@ export type Status = t.TypeOf<typeof status>;
 
 export const conflicts = t.keyof({ abort: null, proceed: null });
 
-// TODO: Create a regular expression type or custom date math part type here
-export const to = t.string;
-export type To = t.TypeOf<typeof to>;
-
 export const queryFilter = t.string;
 export type QueryFilter = t.TypeOf<typeof queryFilter>;
 
