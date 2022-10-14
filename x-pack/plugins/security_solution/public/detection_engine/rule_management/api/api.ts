@@ -21,8 +21,8 @@ import type {
   FullResponseSchema,
   PreviewResponse,
 } from '../../../../common/detection_engine/schemas/request';
-import type { BulkActionEditPayload } from '../../../../common/detection_engine/schemas/request/perform_bulk_action_schema';
-import { BulkAction } from '../../../../common/detection_engine/schemas/request/perform_bulk_action_schema';
+import type { BulkActionEditPayload } from '../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
+import { BulkAction } from '../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
 import type { RulesReferencedByExceptionListsSchema } from '../../../../common/detection_engine/schemas/response';
 import { KibanaServices } from '../../../common/lib/kibana';
 import * as i18n from '../../../detections/pages/detection_engine/rules/translations';

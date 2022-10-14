@@ -11,7 +11,7 @@ import { getPatchRulesSchemaMock } from './patch_rules_schema.mock';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
-import { getListArrayMock } from '../types/lists.mock';
+import { getListArrayMock } from '../../../../schemas/types/lists.mock';
 
 describe('patch_rules_schema', () => {
   test('[id] does validate', () => {

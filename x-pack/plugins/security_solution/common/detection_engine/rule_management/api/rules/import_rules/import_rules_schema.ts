@@ -14,9 +14,9 @@ import {
   RuleObjectId,
   RuleSignatureId,
   SetupGuide,
-} from '../../rule_schema';
-import { created_at, updated_at, created_by, updated_by } from '../common';
-import { baseCreateParams, createTypeSpecific } from './rule_schemas';
+} from '../../../../rule_schema';
+import { created_at, updated_at, created_by, updated_by } from '../../../../schemas/common';
+import { baseCreateParams, createTypeSpecific } from '../../../../schemas/request/rule_schemas';
 
 /**
  * Differences from this and the createRulesSchema are

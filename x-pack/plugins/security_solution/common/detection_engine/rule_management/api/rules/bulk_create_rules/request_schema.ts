@@ -6,7 +6,8 @@
  */
 
 import * as t from 'io-ts';
-import { updateRulesSchema } from './rule_schemas';
 
-export const updateRulesBulkSchema = t.array(updateRulesSchema);
-export type UpdateRulesBulkSchema = t.TypeOf<typeof updateRulesBulkSchema>;
+import { createRulesSchema } from '../../../../schemas/request/rule_schemas';
+
+export const createRulesBulkSchema = t.array(createRulesSchema);
+export type CreateRulesBulkSchema = t.TypeOf<typeof createRulesBulkSchema>;

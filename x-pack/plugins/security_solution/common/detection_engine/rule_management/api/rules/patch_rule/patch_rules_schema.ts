@@ -7,7 +7,11 @@
 
 import * as t from 'io-ts';
 
-import { patchTypeSpecific, sharedPatchSchema, thresholdPatchParams } from './rule_schemas';
+import {
+  patchTypeSpecific,
+  sharedPatchSchema,
+  thresholdPatchParams,
+} from '../../../../schemas/request/rule_schemas';
 
 /**
  * All of the patch elements should default to undefined if not set

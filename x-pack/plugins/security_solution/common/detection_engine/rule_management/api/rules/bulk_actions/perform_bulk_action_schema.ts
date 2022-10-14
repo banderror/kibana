@@ -20,7 +20,7 @@ import {
   RuleTagArray,
   TimelineTemplateId,
   TimelineTemplateTitle,
-} from '../../rule_schema';
+} from '../../../../rule_schema';
 
 export enum BulkAction {
   'enable' = 'enable',

@@ -6,7 +6,7 @@
  */
 
 import * as t from 'io-ts';
-import { RuleObjectId, RuleSignatureId } from '../../rule_schema';
+import { RuleObjectId, RuleSignatureId } from '../../../../rule_schema';
 
 export const queryRulesSchema = t.exact(
   t.partial({

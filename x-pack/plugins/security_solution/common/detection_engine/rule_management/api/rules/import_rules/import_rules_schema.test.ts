@@ -14,7 +14,7 @@ import {
   getImportRulesSchemaMock,
   getImportThreatMatchRulesSchemaMock,
 } from './import_rules_schema.mock';
-import { getListArrayMock } from '../types/lists.mock';
+import { getListArrayMock } from '../../../../schemas/types/lists.mock';
 
 describe('import rules schema', () => {
   test('empty objects do not validate', () => {

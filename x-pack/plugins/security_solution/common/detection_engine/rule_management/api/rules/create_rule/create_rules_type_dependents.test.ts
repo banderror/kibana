@@ -5,8 +5,11 @@
  * 2.0.
  */
 
-import { getCreateRulesSchemaMock, getCreateThreatMatchRulesSchemaMock } from './rule_schemas.mock';
-import type { CreateRulesSchema } from './rule_schemas';
+import {
+  getCreateRulesSchemaMock,
+  getCreateThreatMatchRulesSchemaMock,
+} from '../../../../schemas/request/rule_schemas.mock';
+import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
 import { createRuleValidateTypeDependents } from './create_rules_type_dependents';
 
 describe('create_rules_type_dependents', () => {

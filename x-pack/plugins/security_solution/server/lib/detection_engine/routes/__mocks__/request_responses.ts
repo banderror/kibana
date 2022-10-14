@@ -37,7 +37,7 @@ import { getQueryRuleParams } from '../../rule_schema/mocks';
 import {
   getPerformBulkActionSchemaMock,
   getPerformBulkActionEditSchemaMock,
-} from '../../../../../common/detection_engine/schemas/request/perform_bulk_action_schema.mock';
+} from '../../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema.mock';
 // eslint-disable-next-line no-restricted-imports
 import type {
   LegacyRuleNotificationAlertType,

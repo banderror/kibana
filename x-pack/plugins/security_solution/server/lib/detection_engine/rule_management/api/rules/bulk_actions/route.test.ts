@@ -27,7 +27,7 @@ import { performBulkActionRoute } from './route';
 import {
   getPerformBulkActionEditSchemaMock,
   getPerformBulkActionSchemaMock,
-} from '../../../../../../../common/detection_engine/schemas/request/perform_bulk_action_schema.mock';
+} from '../../../../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema.mock';
 import { loggingSystemMock } from '@kbn/core/server/mocks';
 import { readRules } from '../../../logic/crud/read_rules';
 // eslint-disable-next-line no-restricted-imports

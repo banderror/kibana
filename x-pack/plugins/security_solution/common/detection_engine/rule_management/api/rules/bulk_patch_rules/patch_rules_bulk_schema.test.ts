@@ -8,7 +8,7 @@
 import type { PatchRulesBulkSchema } from './patch_rules_bulk_schema';
 import { patchRulesBulkSchema } from './patch_rules_bulk_schema';
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
-import type { PatchRulesSchema } from './patch_rules_schema';
+import type { PatchRulesSchema } from '../patch_rule/patch_rules_schema';
 
 // only the basics of testing are here.
 // see: patch_rules_schema.test.ts for the bulk of the validation tests
