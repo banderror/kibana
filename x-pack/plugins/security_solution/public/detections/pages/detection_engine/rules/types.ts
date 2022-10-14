@@ -27,15 +27,15 @@ import type {
   RiskScoreMapping,
   RuleAuthorArray,
   RuleLicense,
+  RuleNameOverride,
   SetupGuide,
   Severity,
   SeverityMapping,
+  TimestampOverride,
 } from '../../../../../common/detection_engine/rule_schema';
 import type {
   BuildingBlockType,
-  RuleNameOverride,
   SortOrder,
-  TimestampOverride,
 } from '../../../../../common/detection_engine/schemas/common';
 import type { EqlOptionsSelected } from '../../../../../common/search_strategy';
 import type {

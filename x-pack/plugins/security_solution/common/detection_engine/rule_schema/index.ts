@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+export * from './model/common_to_all_types/field_overrides';
 export * from './model/common_to_all_types/main_attributes';
 export * from './model/common_to_all_types/misc_attributes';
 export * from './model/common_to_all_types/related_integrations';

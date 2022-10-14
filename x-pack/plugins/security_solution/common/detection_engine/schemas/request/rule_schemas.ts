@@ -41,6 +41,7 @@ import {
   RuleInterval,
   RuleLicense,
   RuleName,
+  RuleNameOverride,
   RuleObjectId,
   RuleReferenceArray,
   RuleSignatureId,
@@ -53,6 +54,7 @@ import {
   TimelineTemplateId,
   TimelineTemplateTitle,
   TimestampField,
+  TimestampOverride,
 } from '../../rule_schema';
 import {
   index,
@@ -60,8 +62,6 @@ import {
   filters,
   building_block_type,
   meta,
-  rule_name_override,
-  timestamp_override,
   timestamp_override_fallback_disabled,
   output_index,
   query,
@@ -176,10 +176,10 @@ const baseParams = {
     // Main attributes
     meta,
     // Field overrides
-    rule_name_override,
-    timestamp_override,
+    rule_name_override: RuleNameOverride,
+    timestamp_override: TimestampOverride,
     timestamp_override_fallback_disabled,
-    // Reference to a timeline template
+    // Timeline template
     timeline_id: TimelineTemplateId,
     timeline_title: TimelineTemplateTitle,
     // Atributes related to SavedObjectsClient.resolve API

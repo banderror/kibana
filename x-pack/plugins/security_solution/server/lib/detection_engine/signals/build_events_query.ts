@@ -7,11 +7,8 @@
 import type * as estypes from '@elastic/elasticsearch/lib/api/typesWithBodyKey';
 import { isEmpty } from 'lodash';
 import type { Filter } from '@kbn/es-query';
-import type {
-  FiltersOrUndefined,
-  TimestampOverrideOrUndefined,
-  TimestampOverride,
-} from '../../../../common/detection_engine/schemas/common/schemas';
+import type { TimestampOverride } from '../../../../common/detection_engine/rule_schema';
+import type { FiltersOrUndefined } from '../../../../common/detection_engine/schemas/common/schemas';
 import { getQueryFilter } from './get_query_filter';
 
 interface BuildEventsSearchQuery {
@@ -25,7 +22,7 @@ interface BuildEventsSearchQuery {
   sortOrder?: estypes.SortOrder;
   searchAfterSortIds: estypes.SortResults | undefined;
   primaryTimestamp: TimestampOverride;
-  secondaryTimestamp: TimestampOverrideOrUndefined;
+  secondaryTimestamp: TimestampOverride | undefined;
   trackTotalHits?: boolean;
 }
 
@@ -37,7 +34,7 @@ interface BuildEqlSearchRequestParams {
   size: number;
   filters: FiltersOrUndefined;
   primaryTimestamp: TimestampOverride;
-  secondaryTimestamp: TimestampOverrideOrUndefined;
+  secondaryTimestamp: TimestampOverride | undefined;
   runtimeMappings: estypes.MappingRuntimeFields | undefined;
   eventCategoryOverride?: string;
   timestampField?: string;
@@ -54,7 +51,7 @@ const buildTimeRangeFilter = ({
   to: string;
   from: string;
   primaryTimestamp: TimestampOverride;
-  secondaryTimestamp: TimestampOverrideOrUndefined;
+  secondaryTimestamp: TimestampOverride | undefined;
 }): estypes.QueryDslQueryContainer => {
   // The primaryTimestamp is always provided and will contain either the timestamp override field or `@timestamp` otherwise.
   // The secondaryTimestamp is `undefined` if

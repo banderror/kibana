@@ -36,6 +36,7 @@ import {
   RuleFalsePositiveArray,
   RuleLicense,
   RuleName,
+  RuleNameOverride,
   RuleObjectId,
   RuleReferenceArray,
   RuleSignatureId,
@@ -48,6 +49,7 @@ import {
   TimelineTemplateId,
   TimelineTemplateTitle,
   TimestampField,
+  TimestampOverride,
 } from '../../../../common/detection_engine/rule_schema';
 
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
@@ -56,9 +58,7 @@ import {
   building_block_type,
   data_view_id,
   outcome as savedObjectResolveOutcome,
-  rule_name_override,
   threshold,
-  timestamp_override,
   timestamp_override_fallback_disabled,
 } from '../../../../common/detection_engine/schemas/common';
 import type {
@@ -161,7 +161,7 @@ export const RuleSchema = t.intersection([
     history_window_start: t.string,
     output_index: t.string,
     query: t.string,
-    rule_name_override,
+    rule_name_override: RuleNameOverride,
     saved_id: t.string,
     threshold,
     threat_query,
@@ -172,7 +172,7 @@ export const RuleSchema = t.intersection([
     threat_language,
     timeline_id: TimelineTemplateId,
     timeline_title: TimelineTemplateTitle,
-    timestamp_override,
+    timestamp_override: TimestampOverride,
     timestamp_override_fallback_disabled,
     event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,

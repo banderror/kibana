@@ -78,12 +78,6 @@ export const saved_id = t.string;
 export const savedIdOrUndefined = t.union([saved_id, t.undefined]);
 export type SavedIdOrUndefined = t.TypeOf<typeof savedIdOrUndefined>;
 
-export const timestamp_override = t.string;
-export type TimestampOverride = t.TypeOf<typeof timestamp_override>;
-
-export const timestampOverrideOrUndefined = t.union([timestamp_override, t.undefined]);
-export type TimestampOverrideOrUndefined = t.TypeOf<typeof timestampOverrideOrUndefined>;
-
 export const anomaly_threshold = PositiveInteger;
 
 export const timestamp_override_fallback_disabled = t.boolean;
@@ -101,12 +95,6 @@ export const meta = t.object;
 export type Meta = t.TypeOf<typeof meta>;
 export const metaOrUndefined = t.union([meta, t.undefined]);
 export type MetaOrUndefined = t.TypeOf<typeof metaOrUndefined>;
-
-export const rule_name_override = t.string;
-export type RuleNameOverride = t.TypeOf<typeof rule_name_override>;
-
-export const ruleNameOverrideOrUndefined = t.union([rule_name_override, t.undefined]);
-export type RuleNameOverrideOrUndefined = t.TypeOf<typeof ruleNameOverrideOrUndefined>;
 
 export const status = t.keyof({
   open: null,

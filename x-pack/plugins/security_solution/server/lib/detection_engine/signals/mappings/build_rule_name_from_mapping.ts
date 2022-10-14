@@ -8,17 +8,17 @@
 import * as t from 'io-ts';
 import { get } from 'lodash/fp';
 
-import type { RuleName } from '../../../../../common/detection_engine/rule_schema';
 import type {
-  Meta,
-  RuleNameOverrideOrUndefined,
-} from '../../../../../common/detection_engine/schemas/common/schemas';
+  RuleName,
+  RuleNameOverride,
+} from '../../../../../common/detection_engine/rule_schema';
+import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SignalSource } from '../types';
 
 interface BuildRuleNameFromMappingProps {
   eventSource: SignalSource;
   ruleName: RuleName;
-  ruleNameMapping: RuleNameOverrideOrUndefined;
+  ruleNameMapping: RuleNameOverride | undefined;
 }
 
 interface BuildRuleNameFromMappingReturn {
