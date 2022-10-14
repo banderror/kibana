@@ -47,6 +47,7 @@ import {
   RuleDescription,
   RuleFalsePositiveArray,
   RuleLicense,
+  RuleMetadata,
   RuleName,
   RuleNameOverride,
   RuleReferenceArray,
@@ -61,6 +62,7 @@ import {
   TimelineTemplateTitle,
   TimestampField,
   TimestampOverride,
+  TimestampOverrideFallbackDisabled,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
   buildingBlockTypeOrUndefined,
@@ -68,7 +70,6 @@ import {
   dataViewIdOrUndefined,
   indexOrUndefined,
   output_index,
-  metaOrUndefined,
   query,
   queryOrUndefined,
   filtersOrUndefined,
@@ -79,7 +80,6 @@ import {
   anomaly_threshold,
   newTermsFields,
   historyWindowStart,
-  timestampOverrideFallbackDisabledOrUndefined,
 } from '../../../../../common/detection_engine/schemas/common';
 import { SERVER_APP_ID } from '../../../../../common/constants';
 import { ResponseActionRuleParamsOrUndefined } from '../../../../../common/detection_engine/rule_response_actions/schemas';
@@ -101,7 +101,7 @@ export const baseRuleParams = t.exact(
     outputIndex: output_index,
     timelineId: t.union([TimelineTemplateId, t.undefined]),
     timelineTitle: t.union([TimelineTemplateTitle, t.undefined]),
-    meta: metaOrUndefined,
+    meta: t.union([RuleMetadata, t.undefined]),
     // maxSignals not used in ML rules but probably should be used
     maxSignals: max_signals,
     riskScore: RiskScore,
@@ -110,7 +110,7 @@ export const baseRuleParams = t.exact(
     severity: Severity,
     severityMapping: SeverityMapping,
     timestampOverride: t.union([TimestampOverride, t.undefined]),
-    timestampOverrideFallbackDisabled: timestampOverrideFallbackDisabledOrUndefined,
+    timestampOverrideFallbackDisabled: t.union([TimestampOverrideFallbackDisabled, t.undefined]),
     threat: threats,
     to,
     references: RuleReferenceArray,

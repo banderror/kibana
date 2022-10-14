@@ -10,8 +10,8 @@ import { get } from 'lodash/fp';
 import type {
   RiskScore,
   RiskScoreMapping,
+  RuleMetadata,
 } from '../../../../../common/detection_engine/rule_schema';
-import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SignalSource } from '../types';
 
 export interface BuildRiskScoreFromMappingProps {
@@ -22,7 +22,7 @@ export interface BuildRiskScoreFromMappingProps {
 
 export interface BuildRiskScoreFromMappingReturn {
   riskScore: RiskScore;
-  riskScoreMeta: Meta; // TODO: Stricter types
+  riskScoreMeta: RuleMetadata; // TODO: Stricter types
 }
 
 /**

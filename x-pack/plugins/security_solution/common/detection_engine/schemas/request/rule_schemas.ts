@@ -40,6 +40,7 @@ import {
   RuleFalsePositiveArray,
   RuleInterval,
   RuleLicense,
+  RuleMetadata,
   RuleName,
   RuleNameOverride,
   RuleObjectId,
@@ -55,14 +56,13 @@ import {
   TimelineTemplateTitle,
   TimestampField,
   TimestampOverride,
+  TimestampOverrideFallbackDisabled,
 } from '../../rule_schema';
 import {
   index,
   data_view_id,
   filters,
   building_block_type,
-  meta,
-  timestamp_override_fallback_disabled,
   output_index,
   query,
   to,
@@ -174,11 +174,11 @@ const baseParams = {
   },
   optional: {
     // Main attributes
-    meta,
+    meta: RuleMetadata,
     // Field overrides
     rule_name_override: RuleNameOverride,
     timestamp_override: TimestampOverride,
-    timestamp_override_fallback_disabled,
+    timestamp_override_fallback_disabled: TimestampOverrideFallbackDisabled,
     // Timeline template
     timeline_id: TimelineTemplateId,
     timeline_title: TimelineTemplateTitle,

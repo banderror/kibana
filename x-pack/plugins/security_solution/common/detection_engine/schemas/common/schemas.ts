@@ -80,22 +80,6 @@ export type SavedIdOrUndefined = t.TypeOf<typeof savedIdOrUndefined>;
 
 export const anomaly_threshold = PositiveInteger;
 
-export const timestamp_override_fallback_disabled = t.boolean;
-
-export const timestampOverrideFallbackDisabledOrUndefined = t.union([
-  timestamp_override_fallback_disabled,
-  t.undefined,
-]);
-
-/**
- * Note that this is a non-exact io-ts type as we allow extra meta information
- * to be added to the meta object
- */
-export const meta = t.object;
-export type Meta = t.TypeOf<typeof meta>;
-export const metaOrUndefined = t.union([meta, t.undefined]);
-export type MetaOrUndefined = t.TypeOf<typeof metaOrUndefined>;
-
 export const status = t.keyof({
   open: null,
   closed: null,

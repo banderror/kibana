@@ -50,6 +50,7 @@ import {
   TimelineTemplateTitle,
   TimestampField,
   TimestampOverride,
+  TimestampOverrideFallbackDisabled,
 } from '../../../../common/detection_engine/rule_schema';
 
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
@@ -59,7 +60,6 @@ import {
   data_view_id,
   outcome as savedObjectResolveOutcome,
   threshold,
-  timestamp_override_fallback_disabled,
 } from '../../../../common/detection_engine/schemas/common';
 import type {
   CreateRulesSchema,
@@ -173,7 +173,7 @@ export const RuleSchema = t.intersection([
     timeline_id: TimelineTemplateId,
     timeline_title: TimelineTemplateTitle,
     timestamp_override: TimestampOverride,
-    timestamp_override_fallback_disabled,
+    timestamp_override_fallback_disabled: TimestampOverrideFallbackDisabled,
     event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,
     tiebreaker_field: TiebreakerField,

@@ -50,6 +50,14 @@ export const RuleTags = t.array(t.string); // should be non-empty strings?
 
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description
+ * Note that this is a non-exact io-ts type as we allow extra meta information
+ * to be added to the meta object
+ */
+export type RuleMetadata = t.TypeOf<typeof RuleMetadata>;
+export const RuleMetadata = t.object; // should be a more specific type?
+
+/**
+ * TODO: https://github.com/elastic/kibana/pull/142950 Add description
  */
 export type IsRuleImmutable = t.TypeOf<typeof IsRuleImmutable>;
 export const IsRuleImmutable = t.boolean;

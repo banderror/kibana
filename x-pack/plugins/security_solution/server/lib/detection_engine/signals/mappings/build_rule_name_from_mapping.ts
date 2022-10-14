@@ -9,10 +9,10 @@ import * as t from 'io-ts';
 import { get } from 'lodash/fp';
 
 import type {
+  RuleMetadata,
   RuleName,
   RuleNameOverride,
 } from '../../../../../common/detection_engine/rule_schema';
-import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SignalSource } from '../types';
 
 interface BuildRuleNameFromMappingProps {
@@ -23,7 +23,7 @@ interface BuildRuleNameFromMappingProps {
 
 interface BuildRuleNameFromMappingReturn {
   ruleName: RuleName;
-  ruleNameMeta: Meta; // TODO: Stricter types
+  ruleNameMeta: RuleMetadata; // TODO: Stricter types
 }
 
 export const buildRuleNameFromMapping = ({

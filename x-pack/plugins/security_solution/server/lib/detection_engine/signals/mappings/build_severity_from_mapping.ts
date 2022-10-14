@@ -8,11 +8,11 @@
 import { get } from 'lodash/fp';
 
 import type {
+  RuleMetadata,
   SeverityMapping,
   SeverityMappingItem,
 } from '../../../../../common/detection_engine/rule_schema';
 import { Severity } from '../../../../../common/detection_engine/rule_schema';
-import type { Meta } from '../../../../../common/detection_engine/schemas/common/schemas';
 import type { SearchTypes } from '../../../../../common/detection_engine/types';
 import type { SignalSource } from '../types';
 
@@ -24,7 +24,7 @@ export interface BuildSeverityFromMappingProps {
 
 export interface BuildSeverityFromMappingReturn {
   severity: Severity;
-  severityMeta: Meta; // TODO: Stricter types
+  severityMeta: RuleMetadata; // TODO: Stricter types
 }
 
 const severitySortMapping = {
