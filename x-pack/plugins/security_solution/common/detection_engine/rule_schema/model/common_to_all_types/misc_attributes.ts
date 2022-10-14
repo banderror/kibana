@@ -6,19 +6,12 @@
  */
 
 import * as t from 'io-ts';
-import { NonEmptyString } from '@kbn/securitysolution-io-ts-types';
 
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description
  */
-export type RuleName = t.TypeOf<typeof RuleName>;
-export const RuleName = NonEmptyString;
-
-/**
- * TODO: https://github.com/elastic/kibana/pull/142950 Add description
- */
-export type RuleDescription = t.TypeOf<typeof RuleDescription>;
-export const RuleDescription = NonEmptyString;
+export type RuleLicense = t.TypeOf<typeof RuleLicense>;
+export const RuleLicense = t.string; // should be non-empty string?
 
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description
@@ -29,8 +22,14 @@ export const RuleAuthorArray = t.array(t.string); // should be non-empty strings
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description
  */
-export type RuleLicense = t.TypeOf<typeof RuleLicense>;
-export const RuleLicense = t.string; // should be non-empty string?
+export type RuleFalsePositiveArray = t.TypeOf<typeof RuleFalsePositiveArray>;
+export const RuleFalsePositiveArray = t.array(t.string); // should be non-empty strings?
+
+/**
+ * TODO: https://github.com/elastic/kibana/pull/142950 Add description
+ */
+export type RuleReferenceArray = t.TypeOf<typeof RuleReferenceArray>;
+export const RuleReferenceArray = t.array(t.string); // should be non-empty strings?
 
 /**
  * TODO: https://github.com/elastic/kibana/pull/142950 Add description

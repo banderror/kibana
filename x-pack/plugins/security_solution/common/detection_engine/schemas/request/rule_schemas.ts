@@ -23,7 +23,6 @@ import {
   throttle,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 import { listArray } from '@kbn/securitysolution-io-ts-list-types';
-import { version } from '@kbn/securitysolution-io-ts-types';
 
 import { RuleExecutionSummary } from '../../rule_monitoring';
 import { ResponseActionArray } from '../../rule_response_actions/schemas';
@@ -38,10 +37,15 @@ import {
   RiskScoreMapping,
   RuleAuthorArray,
   RuleDescription,
+  RuleFalsePositiveArray,
+  RuleInterval,
   RuleLicense,
   RuleName,
   RuleObjectId,
+  RuleReferenceArray,
   RuleSignatureId,
+  RuleTags,
+  RuleVersion,
   SetupGuide,
   Severity,
   SeverityMapping,
@@ -59,16 +63,12 @@ import {
   rule_name_override,
   timestamp_override,
   timestamp_override_fallback_disabled,
-  false_positives,
   output_index,
   query,
   to,
-  references,
   saved_id,
   threshold,
   anomaly_threshold,
-  tags,
-  interval,
   outcome,
   alias_target_id,
   alias_purpose,
@@ -165,45 +165,58 @@ interface APIParams<
 
 const baseParams = {
   required: {
+    // Main attributes
     name: RuleName,
     description: RuleDescription,
-    risk_score: RiskScore,
+    // Severity and risk score
     severity: Severity,
+    risk_score: RiskScore,
   },
   optional: {
-    building_block_type,
-    note: InvestigationGuide,
-    license: RuleLicense,
-    outcome,
-    alias_target_id,
-    alias_purpose,
-    output_index,
-    timeline_id: TimelineTemplateId,
-    timeline_title: TimelineTemplateTitle,
+    // Main attributes
     meta,
+    // Field overrides
     rule_name_override,
     timestamp_override,
     timestamp_override_fallback_disabled,
+    // Reference to a timeline template
+    timeline_id: TimelineTemplateId,
+    timeline_title: TimelineTemplateTitle,
+    // Atributes related to SavedObjectsClient.resolve API
+    outcome,
+    alias_target_id,
+    alias_purpose,
+    // Misc attributes
+    license: RuleLicense,
+    note: InvestigationGuide,
+    building_block_type,
+    output_index,
     namespace,
   },
   defaultable: {
-    tags,
-    interval,
+    // Main attributes
+    version: RuleVersion,
+    tags: RuleTags,
     enabled: IsRuleEnabled,
-    throttle,
-    actions,
-    author: RuleAuthorArray,
-    false_positives,
-    from,
-    // maxSignals not used in ML rules but probably should be used
-    max_signals,
+    // Field overrides
     risk_score_mapping: RiskScoreMapping,
     severity_mapping: SeverityMapping,
-    threat: threats,
+    // Rule schedule
+    interval: RuleInterval,
+    from,
     to,
-    references,
-    version,
+    // Rule actions
+    actions,
+    throttle,
+    // Rule exceptions
     exceptions_list: listArray,
+    // Misc attributes
+    author: RuleAuthorArray,
+    false_positives: RuleFalsePositiveArray,
+    references: RuleReferenceArray,
+    // maxSignals not used in ML rules but probably should be used
+    max_signals,
+    threat: threats,
   },
 };
 const {

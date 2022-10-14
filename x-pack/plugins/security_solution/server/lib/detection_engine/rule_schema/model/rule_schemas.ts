@@ -22,7 +22,6 @@ import {
   max_signals,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 import { listArray } from '@kbn/securitysolution-io-ts-list-types';
-import { version } from '@kbn/securitysolution-io-ts-types';
 import {
   SIGNALS_ID,
   EQL_RULE_TYPE_ID,
@@ -46,9 +45,13 @@ import {
   RiskScoreMapping,
   RuleAuthorArray,
   RuleDescription,
+  RuleFalsePositiveArray,
   RuleLicense,
   RuleName,
+  RuleReferenceArray,
   RuleSignatureId,
+  RuleTags,
+  RuleVersion,
   SetupGuide,
   Severity,
   SeverityMapping,
@@ -60,7 +63,6 @@ import {
 import {
   buildingBlockTypeOrUndefined,
   namespaceOrUndefined,
-  false_positives,
   dataViewIdOrUndefined,
   indexOrUndefined,
   output_index,
@@ -69,10 +71,8 @@ import {
   queryOrUndefined,
   filtersOrUndefined,
   ruleNameOverrideOrUndefined,
-  tags,
   timestampOverrideOrUndefined,
   to,
-  references,
   savedIdOrUndefined,
   saved_id,
   thresholdNormalized,
@@ -93,7 +93,7 @@ export const baseRuleParams = t.exact(
     description: RuleDescription,
     namespace: namespaceOrUndefined,
     note: t.union([InvestigationGuide, t.undefined]),
-    falsePositives: false_positives,
+    falsePositives: RuleFalsePositiveArray,
     from,
     ruleId: RuleSignatureId,
     immutable: IsRuleImmutable,
@@ -113,8 +113,8 @@ export const baseRuleParams = t.exact(
     timestampOverrideFallbackDisabled: timestampOverrideFallbackDisabledOrUndefined,
     threat: threats,
     to,
-    references,
-    version,
+    references: RuleReferenceArray,
+    version: RuleVersion,
     exceptionsList: listArray,
     relatedIntegrations: t.union([RelatedIntegrationArray, t.undefined]),
     requiredFields: t.union([RequiredFieldArray, t.undefined]),
@@ -277,7 +277,7 @@ export const allRuleTypes = t.union([
 
 export const internalRuleCreate = t.type({
   name: RuleName,
-  tags,
+  tags: RuleTags,
   alertTypeId: allRuleTypes,
   consumer: t.literal(SERVER_APP_ID),
   schedule: t.type({
@@ -293,7 +293,7 @@ export type InternalRuleCreate = t.TypeOf<typeof internalRuleCreate>;
 
 export const internalRuleUpdate = t.type({
   name: RuleName,
-  tags,
+  tags: RuleTags,
   schedule: t.type({
     interval: t.string,
   }),

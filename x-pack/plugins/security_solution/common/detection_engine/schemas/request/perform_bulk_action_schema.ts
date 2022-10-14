@@ -14,8 +14,8 @@ import {
   action_id as actionId,
 } from '@kbn/securitysolution-io-ts-alerting-types';
 
-import { TimelineTemplateId, TimelineTemplateTitle } from '../../rule_schema';
-import { queryOrUndefined, tags, index } from '../common/schemas';
+import { RuleTags, TimelineTemplateId, TimelineTemplateTitle } from '../../rule_schema';
+import { queryOrUndefined, index } from '../common/schemas';
 
 export enum BulkAction {
   'enable' = 'enable',
@@ -59,7 +59,7 @@ const bulkActionEditPayloadTags = t.type({
     t.literal(BulkActionEditType.delete_tags),
     t.literal(BulkActionEditType.set_tags),
   ]),
-  value: tags,
+  value: RuleTags,
 });
 
 export type BulkActionEditPayloadTags = t.TypeOf<typeof bulkActionEditPayloadTags>;

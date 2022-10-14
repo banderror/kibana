@@ -5,13 +5,13 @@
  * 2.0.
  */
 
+export * from './model/common_to_all_types/main_attributes';
+export * from './model/common_to_all_types/misc_attributes';
 export * from './model/common_to_all_types/related_integrations';
 export * from './model/common_to_all_types/required_fields';
 export * from './model/common_to_all_types/risk_score';
-export * from './model/common_to_all_types/rule_descriptions';
-export * from './model/common_to_all_types/rule_ids';
+export * from './model/common_to_all_types/rule_schedule';
 export * from './model/common_to_all_types/severity';
-export * from './model/common_to_all_types/temp';
 export * from './model/common_to_all_types/timeline_template';
 
 export * from './model/common_to_some_types/temp';

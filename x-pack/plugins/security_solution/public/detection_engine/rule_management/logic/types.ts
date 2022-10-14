@@ -5,6 +5,8 @@
  * 2.0.
  */
 
+import * as t from 'io-ts';
+
 import type { Type } from '@kbn/securitysolution-io-ts-alerting-types';
 import {
   threats,
@@ -18,22 +20,36 @@ import {
 } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { NamespaceType } from '@kbn/securitysolution-io-ts-list-types';
 import { listArray } from '@kbn/securitysolution-io-ts-list-types';
-import * as t from 'io-ts';
+
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
 import {
   EventCategoryOverride,
+  InvestigationGuide,
+  IsRuleEnabled,
+  IsRuleImmutable,
   RelatedIntegrationArray,
   RequiredFieldArray,
   RiskScore,
   RiskScoreMapping,
   RuleAuthorArray,
+  RuleDescription,
+  RuleFalsePositiveArray,
   RuleLicense,
+  RuleName,
+  RuleObjectId,
+  RuleReferenceArray,
+  RuleSignatureId,
+  RuleTags,
+  RuleVersion,
   SetupGuide,
   Severity,
   SeverityMapping,
   TiebreakerField,
+  TimelineTemplateId,
+  TimelineTemplateTitle,
   TimestampField,
 } from '../../../../common/detection_engine/rule_schema';
+
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
 import {
   alias_purpose as savedObjectResolveAliasPurpose,
@@ -101,25 +117,25 @@ export const RuleSchema = t.intersection([
     author: RuleAuthorArray,
     created_at: t.string,
     created_by: t.string,
-    description: t.string,
-    enabled: t.boolean,
-    false_positives: t.array(t.string),
+    description: RuleDescription,
+    enabled: IsRuleEnabled,
+    false_positives: RuleFalsePositiveArray,
     from: t.string,
-    id: t.string,
+    id: RuleObjectId,
     interval: t.string,
-    immutable: t.boolean,
-    name: t.string,
+    immutable: IsRuleImmutable,
+    name: RuleName,
     max_signals: t.number,
-    references: t.array(t.string),
+    references: RuleReferenceArray,
     related_integrations: RelatedIntegrationArray,
     required_fields: RequiredFieldArray,
     risk_score: RiskScore,
     risk_score_mapping: RiskScoreMapping,
-    rule_id: t.string,
+    rule_id: RuleSignatureId,
     severity: Severity,
     severity_mapping: SeverityMapping,
     setup: SetupGuide,
-    tags: t.array(t.string),
+    tags: RuleTags,
     type,
     to: t.string,
     threat: threats,
@@ -154,17 +170,17 @@ export const RuleSchema = t.intersection([
     threat_indicator_path,
     threat_mapping,
     threat_language,
-    timeline_id: t.string,
-    timeline_title: t.string,
+    timeline_id: TimelineTemplateId,
+    timeline_title: TimelineTemplateTitle,
     timestamp_override,
     timestamp_override_fallback_disabled,
     event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,
     tiebreaker_field: TiebreakerField,
-    note: t.string,
+    note: InvestigationGuide,
     exceptions_list: listArray,
     uuid: t.string,
-    version: t.number,
+    version: RuleVersion,
     execution_summary: RuleExecutionSummary,
   }),
 ]);

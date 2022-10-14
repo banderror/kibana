@@ -36,8 +36,6 @@ export const alias_purpose = t.union([
   t.literal('savedObjectImport'),
 ]);
 
-export const false_positives = t.array(t.string);
-
 export const file_name = t.string;
 export type FileName = t.TypeOf<typeof file_name>;
 
@@ -66,9 +64,6 @@ export const dataViewIdOrUndefined = t.union([data_view_id, t.undefined]);
 
 export const indexOrUndefined = t.union([index, t.undefined]);
 export type IndexOrUndefined = t.TypeOf<typeof indexOrUndefined>;
-
-export const interval = t.string;
-export type Interval = t.TypeOf<typeof interval>;
 
 export const query = t.string;
 export type Query = t.TypeOf<typeof query>;
@@ -133,17 +128,11 @@ export type QueryFilter = t.TypeOf<typeof queryFilter>;
 export const queryFilterOrUndefined = t.union([queryFilter, t.undefined]);
 export type QueryFilterOrUndefined = t.TypeOf<typeof queryFilterOrUndefined>;
 
-export const references = t.array(t.string);
-export type References = t.TypeOf<typeof references>;
-
 export const signal_ids = t.array(t.string);
 export type SignalIds = t.TypeOf<typeof signal_ids>;
 
 // TODO: Can this be more strict or is this is the set of all Elastic Queries?
 export const signal_status_query = t.object;
-
-export const tags = t.array(t.string);
-export type Tags = t.TypeOf<typeof tags>;
 
 export const fields = t.array(t.string);
 export type Fields = t.TypeOf<typeof fields>;
