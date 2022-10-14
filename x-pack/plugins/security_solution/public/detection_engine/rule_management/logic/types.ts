@@ -42,6 +42,9 @@ import {
   RuleSignatureId,
   RuleTags,
   RuleVersion,
+  SavedObjectResolveAliasPurpose,
+  SavedObjectResolveAliasTargetId,
+  SavedObjectResolveOutcome,
   SetupGuide,
   Severity,
   SeverityMapping,
@@ -55,10 +58,8 @@ import {
 
 import type { SortOrder } from '../../../../common/detection_engine/schemas/common';
 import {
-  alias_purpose as savedObjectResolveAliasPurpose,
   building_block_type,
   data_view_id,
-  outcome as savedObjectResolveOutcome,
   threshold,
 } from '../../../../common/detection_engine/schemas/common';
 import type {
@@ -145,9 +146,9 @@ export const RuleSchema = t.intersection([
     throttle: t.union([t.string, t.null]),
   }),
   t.partial({
-    outcome: savedObjectResolveOutcome,
-    alias_target_id: t.string,
-    alias_purpose: savedObjectResolveAliasPurpose,
+    outcome: SavedObjectResolveOutcome,
+    alias_target_id: SavedObjectResolveAliasTargetId,
+    alias_purpose: SavedObjectResolveAliasPurpose,
     building_block_type,
     anomaly_threshold: t.number,
     filters: t.array(t.unknown),

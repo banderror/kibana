@@ -21,21 +21,6 @@ export type BuildingBlockType = t.TypeOf<typeof building_block_type>;
 
 export const buildingBlockTypeOrUndefined = t.union([building_block_type, t.undefined]);
 
-// outcome is a property of the saved object resolve api
-// will tell us info about the rule after 8.0 migrations
-export const outcome = t.union([
-  t.literal('exactMatch'),
-  t.literal('aliasMatch'),
-  t.literal('conflict'),
-]);
-export type Outcome = t.TypeOf<typeof outcome>;
-
-export const alias_target_id = t.string;
-export const alias_purpose = t.union([
-  t.literal('savedObjectConversion'),
-  t.literal('savedObjectImport'),
-]);
-
 export const file_name = t.string;
 export type FileName = t.TypeOf<typeof file_name>;
 

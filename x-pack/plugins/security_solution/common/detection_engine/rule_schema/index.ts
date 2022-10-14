@@ -12,6 +12,7 @@ export * from './model/common_to_all_types/related_integrations';
 export * from './model/common_to_all_types/required_fields';
 export * from './model/common_to_all_types/risk_score';
 export * from './model/common_to_all_types/rule_schedule';
+export * from './model/common_to_all_types/saved_object';
 export * from './model/common_to_all_types/severity';
 export * from './model/common_to_all_types/timeline_template';
 
