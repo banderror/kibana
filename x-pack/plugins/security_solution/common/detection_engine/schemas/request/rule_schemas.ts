@@ -41,6 +41,7 @@ import {
   RuleAuthorArray,
   RuleDescription,
   RuleFalsePositiveArray,
+  RuleFilterArray,
   RuleInterval,
   RuleIntervalFrom,
   RuleIntervalTo,
@@ -49,6 +50,7 @@ import {
   RuleName,
   RuleNameOverride,
   RuleObjectId,
+  RuleQuery,
   RuleReferenceArray,
   RuleSignatureId,
   RuleTagArray,
@@ -68,8 +70,6 @@ import {
   TimestampOverrideFallbackDisabled,
 } from '../../rule_schema';
 import {
-  filters,
-  query,
   saved_id,
   threshold,
   anomaly_threshold,
@@ -253,12 +253,12 @@ const eqlRuleParams = {
   required: {
     type: t.literal('eql'),
     language: t.literal('eql'),
-    query,
+    query: RuleQuery,
   },
   optional: {
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    filters,
+    filters: RuleFilterArray,
     event_category_override: EventCategoryOverride,
     timestamp_field: TimestampField,
     tiebreaker_field: TiebreakerField,
@@ -275,7 +275,7 @@ export { eqlCreateParams, eqlResponseParams };
 const threatMatchRuleParams = {
   required: {
     type: t.literal('threat_match'),
-    query,
+    query: RuleQuery,
     threat_query,
     threat_mapping,
     threat_index,
@@ -283,7 +283,7 @@ const threatMatchRuleParams = {
   optional: {
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    filters,
+    filters: RuleFilterArray,
     saved_id,
     threat_filters,
     threat_indicator_path,
@@ -309,12 +309,12 @@ const queryRuleParams = {
   optional: {
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    filters,
+    filters: RuleFilterArray,
     saved_id,
     response_actions: ResponseActionArray,
   },
   defaultable: {
-    query,
+    query: RuleQuery,
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
@@ -336,8 +336,8 @@ const savedQueryRuleParams = {
     // if the saved object gets deleted for some reason
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    query,
-    filters,
+    query: RuleQuery,
+    filters: RuleFilterArray,
     response_actions: ResponseActionArray,
   },
   defaultable: {
@@ -355,13 +355,13 @@ export { savedQueryCreateParams, savedQueryResponseParams };
 const thresholdRuleParams = {
   required: {
     type: t.literal('threshold'),
-    query,
+    query: RuleQuery,
     threshold,
   },
   optional: {
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    filters,
+    filters: RuleFilterArray,
     saved_id,
   },
   defaultable: {
@@ -396,14 +396,14 @@ export { machineLearningCreateParams, machineLearningResponseParams };
 const newTermsRuleParams = {
   required: {
     type: t.literal('new_terms'),
-    query,
+    query: RuleQuery,
     new_terms_fields: newTermsFields,
     history_window_start: historyWindowStart,
   },
   optional: {
     index: IndexPatternArray,
     data_view_id: DataViewId,
-    filters,
+    filters: RuleFilterArray,
   },
   defaultable: {
     language: t.keyof({ kuery: null, lucene: null }),

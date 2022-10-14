@@ -9,8 +9,7 @@ import type { Language } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { Filter, EsQueryConfig, DataViewBase } from '@kbn/es-query';
 import { buildEsQuery } from '@kbn/es-query';
 import type { ESBoolQuery } from '../../../../common/typed_json';
-import type { IndexPatternArray } from '../../../../common/detection_engine/rule_schema';
-import type { Query } from '../../../../common/detection_engine/schemas/common';
+import type { IndexPatternArray, RuleQuery } from '../../../../common/detection_engine/rule_schema';
 
 export const getQueryFilter = ({
   query,
@@ -19,7 +18,7 @@ export const getQueryFilter = ({
   index,
   exceptionFilter,
 }: {
-  query: Query;
+  query: RuleQuery;
   language: Language;
   filters: unknown;
   index: IndexPatternArray;

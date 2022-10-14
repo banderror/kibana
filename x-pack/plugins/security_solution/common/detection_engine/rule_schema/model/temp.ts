@@ -56,3 +56,17 @@ export const IndexPatternArray = t.array(t.string);
  */
 export type DataViewId = t.TypeOf<typeof DataViewId>;
 export const DataViewId = t.string;
+
+/**
+ * TODO: https://github.com/elastic/kibana/pull/142950 Add description
+ */
+export type RuleQuery = t.TypeOf<typeof RuleQuery>;
+export const RuleQuery = t.string;
+
+/**
+ * TODO: https://github.com/elastic/kibana/pull/142950 Add description
+ * TODO: Right now the filters is an "unknown", when it could more than likely
+ * become the actual ESFilter as a type.
+ */
+export type RuleFilterArray = t.TypeOf<typeof RuleFilterArray>; // Filters are not easily type-able yet
+export const RuleFilterArray = t.array(t.unknown); // Filters are not easily type-able yet

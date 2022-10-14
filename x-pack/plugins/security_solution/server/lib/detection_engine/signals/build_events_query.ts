@@ -7,8 +7,10 @@
 import type * as estypes from '@elastic/elasticsearch/lib/api/typesWithBodyKey';
 import { isEmpty } from 'lodash';
 import type { Filter } from '@kbn/es-query';
-import type { TimestampOverride } from '../../../../common/detection_engine/rule_schema';
-import type { FiltersOrUndefined } from '../../../../common/detection_engine/schemas/common/schemas';
+import type {
+  RuleFilterArray,
+  TimestampOverride,
+} from '../../../../common/detection_engine/rule_schema';
 import { getQueryFilter } from './get_query_filter';
 
 interface BuildEventsSearchQuery {
@@ -32,7 +34,7 @@ interface BuildEqlSearchRequestParams {
   from: string;
   to: string;
   size: number;
-  filters: FiltersOrUndefined;
+  filters: RuleFilterArray | undefined;
   primaryTimestamp: TimestampOverride;
   secondaryTimestamp: TimestampOverride | undefined;
   runtimeMappings: estypes.MappingRuntimeFields | undefined;

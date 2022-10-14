@@ -22,22 +22,6 @@ export type FileName = t.TypeOf<typeof file_name>;
 export const exclude_export_details = t.boolean;
 export type ExcludeExportDetails = t.TypeOf<typeof exclude_export_details>;
 
-/**
- * TODO: Right now the filters is an "unknown", when it could more than likely
- * become the actual ESFilter as a type.
- */
-export const filters = t.array(t.unknown); // Filters are not easily type-able yet
-export type Filters = t.TypeOf<typeof filters>; // Filters are not easily type-able yet
-
-export const filtersOrUndefined = t.union([filters, t.undefined]);
-export type FiltersOrUndefined = t.TypeOf<typeof filtersOrUndefined>;
-
-export const query = t.string;
-export type Query = t.TypeOf<typeof query>;
-
-export const queryOrUndefined = t.union([query, t.undefined]);
-export type QueryOrUndefined = t.TypeOf<typeof queryOrUndefined>;
-
 export const saved_id = t.string;
 
 export const savedIdOrUndefined = t.union([saved_id, t.undefined]);

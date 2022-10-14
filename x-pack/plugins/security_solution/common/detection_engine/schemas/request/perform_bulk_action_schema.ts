@@ -16,11 +16,11 @@ import {
 
 import {
   IndexPatternArray,
+  RuleQuery,
   RuleTagArray,
   TimelineTemplateId,
   TimelineTemplateTitle,
 } from '../../rule_schema';
-import { queryOrUndefined } from '../common/schemas';
 
 export enum BulkAction {
   'enable' = 'enable',
@@ -158,7 +158,7 @@ export type BulkActionEditForRuleParams =
 export const performBulkActionSchema = t.intersection([
   t.exact(
     t.type({
-      query: queryOrUndefined,
+      query: t.union([RuleQuery, t.undefined]),
     })
   ),
   t.exact(t.partial({ ids: NonEmptyArray(t.string) })),

@@ -21,6 +21,7 @@ import type { NamespaceType } from '@kbn/securitysolution-io-ts-list-types';
 
 import { RuleExecutionSummary } from '../../../../common/detection_engine/rule_monitoring';
 import {
+  AlertsIndex,
   BuildingBlockType,
   DataViewId,
   EventCategoryOverride,
@@ -37,6 +38,7 @@ import {
   RuleAuthorArray,
   RuleDescription,
   RuleFalsePositiveArray,
+  RuleFilterArray,
   RuleInterval,
   RuleIntervalFrom,
   RuleIntervalTo,
@@ -44,6 +46,7 @@ import {
   RuleName,
   RuleNameOverride,
   RuleObjectId,
+  RuleQuery,
   RuleReferenceArray,
   RuleSignatureId,
   RuleTagArray,
@@ -154,7 +157,7 @@ export const RuleSchema = t.intersection([
     alias_purpose: SavedObjectResolveAliasPurpose,
     building_block_type: BuildingBlockType,
     anomaly_threshold: t.number,
-    filters: t.array(t.unknown),
+    filters: RuleFilterArray,
     index: IndexPatternArray,
     data_view_id: DataViewId,
     language: t.string,
@@ -163,8 +166,8 @@ export const RuleSchema = t.intersection([
     machine_learning_job_id: t.array(t.string),
     new_terms_fields: t.array(t.string),
     history_window_start: t.string,
-    output_index: t.string,
-    query: t.string,
+    output_index: AlertsIndex,
+    query: RuleQuery,
     rule_name_override: RuleNameOverride,
     saved_id: t.string,
     threshold,
