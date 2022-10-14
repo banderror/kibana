@@ -9,6 +9,12 @@ import * as t from 'io-ts';
 
 import type { Type } from '@kbn/securitysolution-io-ts-alerting-types';
 import {
+  RiskScore,
+  RiskScoreMapping,
+  RuleActionArray,
+  RuleInterval,
+  RuleIntervalFrom,
+  RuleIntervalTo,
   threat_filters,
   threat_index,
   threat_indicator_path,
@@ -33,15 +39,10 @@ import {
   MaxSignals,
   RelatedIntegrationArray,
   RequiredFieldArray,
-  RiskScore,
-  RiskScoreMapping,
   RuleAuthorArray,
   RuleDescription,
   RuleFalsePositiveArray,
   RuleFilterArray,
-  RuleInterval,
-  RuleIntervalFrom,
-  RuleIntervalTo,
   RuleLicense,
   RuleName,
   RuleNameOverride,
@@ -148,7 +149,7 @@ export const RuleSchema = t.intersection([
     threat: ThreatArray,
     updated_at: t.string,
     updated_by: t.string,
-    actions: t.array(action),
+    actions: RuleActionArray,
     throttle: t.union([t.string, t.null]),
   }),
   t.partial({

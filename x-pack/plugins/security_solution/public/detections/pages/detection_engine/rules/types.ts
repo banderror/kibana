@@ -8,6 +8,7 @@
 import type { List } from '@kbn/securitysolution-io-ts-list-types';
 
 import type {
+  RiskScoreMapping,
   ThreatIndex,
   ThreatMapping,
   Threats,
@@ -25,7 +26,6 @@ import type {
   BuildingBlockType,
   RelatedIntegrationArray,
   RequiredFieldArray,
-  RiskScoreMapping,
   RuleAuthorArray,
   RuleLicense,
   RuleNameOverride,
