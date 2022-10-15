@@ -13,20 +13,20 @@ import {
   SetupGuide,
   RuleSignatureId,
   RuleVersion,
-} from '../../../rule_schema';
+} from '../../rule_schema';
 
-import { baseCreateParams, createTypeSpecific } from '../../../schemas/request/rule_schemas';
+import { baseCreateParams, createTypeSpecific } from '../../schemas/request/rule_schemas';
 
 /**
  * Big differences between this schema and the createRulesSchema
  *  - rule_id is required here
  *  - version is a required field that must exist
  */
-export type AddPrepackagedRulesSchema = t.TypeOf<typeof AddPrepackagedRulesSchema>;
-export const AddPrepackagedRulesSchema = t.intersection([
+export type PrebuiltRuleToInstall = t.TypeOf<typeof PrebuiltRuleToInstall>;
+export const PrebuiltRuleToInstall = t.intersection([
   baseCreateParams,
   createTypeSpecific,
-  // version is required in AddPrepackagedRulesSchema, so this supercedes the defaultable
+  // version is required in PrebuiltRuleToInstall, so this supercedes the defaultable
   // version in baseParams
   t.exact(
     t.type({

@@ -12,7 +12,7 @@ import type * as t from 'io-ts';
 import { BadRequestError } from '@kbn/securitysolution-es-utils';
 import { exactCheck, formatErrors } from '@kbn/securitysolution-io-ts-utils';
 
-import { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import type { ConfigType } from '../../../../config';
 import { withSecuritySpan } from '../../../../utils/with_security_span';
 
@@ -27,7 +27,7 @@ export const getLatestPrebuiltRules = async (
   client: RuleAssetSavedObjectsClient,
   prebuiltRulesFromFileSystem: ConfigType['prebuiltRulesFromFileSystem'],
   prebuiltRulesFromSavedObjects: ConfigType['prebuiltRulesFromSavedObjects']
-): Promise<Map<string, AddPrepackagedRulesSchema>> =>
+): Promise<Map<string, PrebuiltRuleToInstall>> =>
   withSecuritySpan('getLatestPrebuiltRules', async () => {
     // build a map of the most recent version of each rule
     const prebuilt = prebuiltRulesFromFileSystem ? getFilesystemRules() : [];
@@ -54,8 +54,8 @@ export const getLatestPrebuiltRules = async (
  */
 export const getFilesystemRules = (
   // @ts-expect-error mock data is too loosely typed
-  rules: AddPrepackagedRulesSchema[] = rawRules
-): AddPrepackagedRulesSchema[] => {
+  rules: PrebuiltRuleToInstall[] = rawRules
+): PrebuiltRuleToInstall[] => {
   return validateFilesystemRules(rules);
 };
 
@@ -65,13 +65,13 @@ export const getFilesystemRules = (
  * aspects such as default interval of 5 minutes, default arrays, etc...
  */
 const validateFilesystemRules = (
-  rules: AddPrepackagedRulesSchema[]
-): AddPrepackagedRulesSchema[] => {
+  rules: PrebuiltRuleToInstall[]
+): PrebuiltRuleToInstall[] => {
   return rules.map((rule) => {
-    const decoded = AddPrepackagedRulesSchema.decode(rule);
+    const decoded = PrebuiltRuleToInstall.decode(rule);
     const checked = exactCheck(rule, decoded);
 
-    const onLeft = (errors: t.Errors): AddPrepackagedRulesSchema => {
+    const onLeft = (errors: t.Errors): PrebuiltRuleToInstall => {
       const ruleName = rule.name ? rule.name : '(rule name unknown)';
       const ruleId = rule.rule_id ? rule.rule_id : '(rule rule_id unknown)';
       throw new BadRequestError(
@@ -84,8 +84,8 @@ const validateFilesystemRules = (
       );
     };
 
-    const onRight = (schema: AddPrepackagedRulesSchema): AddPrepackagedRulesSchema => {
-      return schema as AddPrepackagedRulesSchema;
+    const onRight = (schema: PrebuiltRuleToInstall): PrebuiltRuleToInstall => {
+      return schema as PrebuiltRuleToInstall;
     };
     return pipe(checked, fold(onLeft, onRight));
   });
@@ -96,7 +96,7 @@ const validateFilesystemRules = (
  */
 const getFleetRules = async (
   client: RuleAssetSavedObjectsClient
-): Promise<AddPrepackagedRulesSchema[]> => {
+): Promise<PrebuiltRuleToInstall[]> => {
   const fleetResponse = await client.all();
   const fleetRules = fleetResponse.map((so) => so.attributes);
   return validateFleetRules(fleetRules);
@@ -105,12 +105,12 @@ const getFleetRules = async (
 /**
  * Validate the rules from Saved Objects created by Fleet.
  */
-const validateFleetRules = (rules: IRuleAssetSOAttributes[]): AddPrepackagedRulesSchema[] => {
+const validateFleetRules = (rules: IRuleAssetSOAttributes[]): PrebuiltRuleToInstall[] => {
   return rules.map((rule) => {
-    const decoded = AddPrepackagedRulesSchema.decode(rule);
+    const decoded = PrebuiltRuleToInstall.decode(rule);
     const checked = exactCheck(rule, decoded);
 
-    const onLeft = (errors: t.Errors): AddPrepackagedRulesSchema => {
+    const onLeft = (errors: t.Errors): PrebuiltRuleToInstall => {
       const ruleName = rule.name ? rule.name : '(rule name unknown)';
       const ruleId = rule.rule_id ? rule.rule_id : '(rule rule_id unknown)';
       throw new BadRequestError(
@@ -123,8 +123,8 @@ const validateFleetRules = (rules: IRuleAssetSOAttributes[]): AddPrepackagedRule
       );
     };
 
-    const onRight = (schema: AddPrepackagedRulesSchema): AddPrepackagedRulesSchema => {
-      return schema as AddPrepackagedRulesSchema;
+    const onRight = (schema: PrebuiltRuleToInstall): PrebuiltRuleToInstall => {
+      return schema as PrebuiltRuleToInstall;
     };
     return pipe(checked, fold(onLeft, onRight));
   });

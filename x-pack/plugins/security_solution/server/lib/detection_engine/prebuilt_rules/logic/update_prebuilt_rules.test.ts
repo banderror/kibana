@@ -11,8 +11,8 @@ import { getRuleMock, getFindResultWithSingleHit } from '../../routes/__mocks__/
 import { updatePrebuiltRules } from './update_prebuilt_rules';
 import { patchRules } from '../../rule_management/logic/crud/patch_rules';
 import {
-  getAddPrepackagedRulesSchemaMock,
-  getAddPrepackagedThreatMatchRulesSchemaMock,
+  getPrebuiltRuleMock,
+  getPrebuiltThreatMatchRuleMock,
 } from '../../../../../common/detection_engine/prebuilt_rules/mocks';
 import { ruleExecutionLogMock } from '../../rule_monitoring/mocks';
 import { legacyMigrate } from '../../rule_management';
@@ -52,7 +52,7 @@ describe('updatePrebuiltRules', () => {
         params: {},
       },
     ];
-    const prepackagedRule = getAddPrepackagedRulesSchemaMock();
+    const prepackagedRule = getPrebuiltRuleMock();
     rulesClient.find.mockResolvedValue(getFindResultWithSingleHit());
 
     await updatePrebuiltRules(
@@ -85,7 +85,7 @@ describe('updatePrebuiltRules', () => {
       threat_indicator_path: 'test.path',
       threat_query: 'threat:*',
     };
-    const prepackagedRule = getAddPrepackagedThreatMatchRulesSchemaMock();
+    const prepackagedRule = getPrebuiltThreatMatchRuleMock();
     rulesClient.find.mockResolvedValue({
       ...getFindResultWithSingleHit(),
       data: [getRuleMock(getThreatRuleParams())],

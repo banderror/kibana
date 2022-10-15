@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import type { RuleAlertType } from '../../rule_schema';
 
 /**
@@ -16,7 +16,7 @@ import type { RuleAlertType } from '../../rule_schema';
  * @param installedRules The installed rules
  */
 export const getRulesToUpdate = (
-  latestPrebuiltRules: Map<string, AddPrepackagedRulesSchema>,
+  latestPrebuiltRules: Map<string, PrebuiltRuleToInstall>,
   installedRules: Map<string, RuleAlertType>
 ) => {
   return Array.from(latestPrebuiltRules.values())
@@ -31,7 +31,7 @@ export const getRulesToUpdate = (
  * @param installedRules The installed rules to compare against for updates
  */
 export const filterInstalledRules = (
-  latestPrebuiltRule: AddPrepackagedRulesSchema,
+  latestPrebuiltRule: PrebuiltRuleToInstall,
   installedRules: Map<string, RuleAlertType>
 ): boolean => {
   const installedRule = installedRules.get(latestPrebuiltRule.rule_id);
@@ -46,9 +46,9 @@ export const filterInstalledRules = (
  * @param installedRules The installed rules which might have user driven exceptions_lists
  */
 export const mergeExceptionLists = (
-  latestPrebuiltRule: AddPrepackagedRulesSchema,
+  latestPrebuiltRule: PrebuiltRuleToInstall,
   installedRules: Map<string, RuleAlertType>
-): AddPrepackagedRulesSchema => {
+): PrebuiltRuleToInstall => {
   if (latestPrebuiltRule.exceptions_list != null) {
     const installedRule = installedRules.get(latestPrebuiltRule.rule_id);
 

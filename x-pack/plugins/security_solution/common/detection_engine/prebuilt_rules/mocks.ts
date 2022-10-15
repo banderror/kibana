@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export * from './api/install_prebuilt_rules_and_timelines/request_schema.mock';
+export * from './model/prebuilt_rule.mock';

@@ -9,7 +9,7 @@ import { chunk } from 'lodash/fp';
 import type { SavedObjectsClientContract } from '@kbn/core/server';
 import type { RulesClient, PartialRule } from '@kbn/alerting-plugin/server';
 
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import { transformAlertToRuleAction } from '../../../../../common/detection_engine/transform_actions';
 import { MAX_RULES_TO_UPDATE_IN_PARALLEL } from '../../../../../common/constants';
 
@@ -35,7 +35,7 @@ import { PrepackagedRulesError } from '../api/install_prebuilt_rules_and_timelin
 export const updatePrebuiltRules = async (
   rulesClient: RulesClient,
   savedObjectsClient: SavedObjectsClientContract,
-  rules: AddPrepackagedRulesSchema[],
+  rules: PrebuiltRuleToInstall[],
   ruleExecutionLog: IRuleExecutionLogForRoutes
 ): Promise<void> => {
   const ruleChunks = chunk(MAX_RULES_TO_UPDATE_IN_PARALLEL, rules);
@@ -60,7 +60,7 @@ export const updatePrebuiltRules = async (
 const createPromises = (
   rulesClient: RulesClient,
   savedObjectsClient: SavedObjectsClientContract,
-  rules: AddPrepackagedRulesSchema[],
+  rules: PrebuiltRuleToInstall[],
   ruleExecutionLog: IRuleExecutionLogForRoutes
 ): Array<Promise<PartialRule<RuleParams> | null>> => {
   return rules.map(async (rule) => {

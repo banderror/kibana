@@ -5,22 +5,20 @@
  * 2.0.
  */
 
-import { AddPrepackagedRulesSchema } from './request_schema';
-
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
-import {
-  getAddPrepackagedRulesSchemaMock,
-  getAddPrepackagedThreatMatchRulesSchemaMock,
-} from './request_schema.mock';
-import { getListArrayMock } from '../../../schemas/types/lists.mock';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
+
+import { getListArrayMock } from '../../schemas/types/lists.mock';
+
+import { PrebuiltRuleToInstall } from './prebuilt_rule';
+import { getPrebuiltRuleMock, getPrebuiltThreatMatchRuleMock } from './prebuilt_rule.mock';
 
 describe('Prebuilt rule schema', () => {
   test('empty objects do not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {};
+    const payload: Partial<PrebuiltRuleToInstall> = {};
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -45,12 +43,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('made up values do not validate', () => {
-    const payload: AddPrepackagedRulesSchema & { madeUp: string } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall & { madeUp: string } = {
+      ...getPrebuiltRuleMock(),
       madeUp: 'hi',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['invalid keys "madeUp"']);
@@ -58,11 +56,11 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -84,12 +82,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -108,13 +106,13 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -133,14 +131,14 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
       to: 'now',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -159,7 +157,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -167,7 +165,7 @@ describe('Prebuilt rule schema', () => {
       name: 'some-name',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -183,7 +181,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -192,7 +190,7 @@ describe('Prebuilt rule schema', () => {
       severity: 'low',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -205,7 +203,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -215,7 +213,7 @@ describe('Prebuilt rule schema', () => {
       type: 'query',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -226,7 +224,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type, interval] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -237,7 +235,7 @@ describe('Prebuilt rule schema', () => {
       type: 'query',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -248,7 +246,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type, interval, index] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -260,7 +258,7 @@ describe('Prebuilt rule schema', () => {
       index: ['index-1'],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -271,7 +269,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type, query, index, interval, version] does validate', () => {
-    const payload: AddPrepackagedRulesSchema = {
+    const payload: PrebuiltRuleToInstall = {
       rule_id: 'rule-1',
       risk_score: 50,
       description: 'some description',
@@ -286,14 +284,14 @@ describe('Prebuilt rule schema', () => {
       version: 1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, query, language] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -308,7 +306,7 @@ describe('Prebuilt rule schema', () => {
       risk_score: 50,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -318,7 +316,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, query, language, version] does validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -334,14 +332,14 @@ describe('Prebuilt rule schema', () => {
       version: 1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, query, language, risk_score, output_index] does not validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> & { output_index: string } = {
+    const payload: Partial<PrebuiltRuleToInstall> & { output_index: string } = {
       rule_id: 'rule-1',
       output_index: '.siem-signals',
       risk_score: 50,
@@ -357,7 +355,7 @@ describe('Prebuilt rule schema', () => {
       language: 'kuery',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -367,7 +365,7 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, filter, risk_score, version] does validate', () => {
-    const payload: Partial<AddPrepackagedRulesSchema> = {
+    const payload: Partial<PrebuiltRuleToInstall> = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -381,38 +379,38 @@ describe('Prebuilt rule schema', () => {
       version: 1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can send in a namespace', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       namespace: 'a namespace',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can send in an empty array to threat', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       threat: [],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, filter, risk_score, output_index, threat] does validate', () => {
-    const payload: AddPrepackagedRulesSchema = {
+    const payload: PrebuiltRuleToInstall = {
       rule_id: 'rule-1',
       risk_score: 50,
       description: 'some description',
@@ -443,31 +441,31 @@ describe('Prebuilt rule schema', () => {
       version: 1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('allows references to be sent as valid', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       references: ['index-1'],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('immutable cannot be set in a pre-packaged rule', () => {
-    const payload: AddPrepackagedRulesSchema & { immutable: boolean } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall & { immutable: boolean } = {
+      ...getPrebuiltRuleMock(),
       immutable: true,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['invalid keys "immutable"']);
@@ -475,11 +473,11 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('rule_id is required', () => {
-    const payload: AddPrepackagedRulesSchema = getAddPrepackagedRulesSchemaMock();
+    const payload: PrebuiltRuleToInstall = getPrebuiltRuleMock();
     // @ts-expect-error
     delete payload.rule_id;
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -489,12 +487,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('references cannot be numbers', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'references'> & { references: number[] } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'references'> & { references: number[] } = {
+      ...getPrebuiltRuleMock(),
       references: [5],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "5" supplied to "references"']);
@@ -502,12 +500,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('indexes cannot be numbers', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'index'> & { index: number[] } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'index'> & { index: number[] } = {
+      ...getPrebuiltRuleMock(),
       index: [5],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "5" supplied to "index"']);
@@ -516,23 +514,23 @@ describe('Prebuilt rule schema', () => {
 
   test('saved_query type can have filters with it', () => {
     const payload = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       filters: [],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('filters cannot be a string', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'filters'> & { filters: string } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'filters'> & { filters: string } = {
+      ...getPrebuiltRuleMock(),
       filters: 'some string',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -543,11 +541,11 @@ describe('Prebuilt rule schema', () => {
 
   test('language validates with kuery', () => {
     const payload = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       language: 'kuery',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -555,23 +553,23 @@ describe('Prebuilt rule schema', () => {
 
   test('language validates with lucene', () => {
     const payload = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       language: 'lucene',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('language does not validate with something made up', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'language'> & { language: string } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'language'> & { language: string } = {
+      ...getPrebuiltRuleMock(),
       language: 'something-made-up',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -581,12 +579,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('max_signals cannot be negative', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       max_signals: -1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -596,12 +594,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('max_signals cannot be zero', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       max_signals: 0,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "0" supplied to "max_signals"']);
@@ -609,36 +607,36 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('max_signals can be 1', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       max_signals: 1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can optionally send in an array of tags', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       tags: ['tag_1', 'tag_2'],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You cannot send in an array of tags that are numbers', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'tags'> & { tags: number[] } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'tags'> & { tags: number[] } = {
+      ...getPrebuiltRuleMock(),
       tags: [0, 1, 2],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -650,10 +648,10 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of threat that are missing "framework"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'threat'> & {
-      threat: Array<Partial<Omit<AddPrepackagedRulesSchema['threat'], 'framework'>>>;
+    const payload: Omit<PrebuiltRuleToInstall, 'threat'> & {
+      threat: Array<Partial<Omit<PrebuiltRuleToInstall['threat'], 'framework'>>>;
     } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       threat: [
         {
           tactic: {
@@ -672,7 +670,7 @@ describe('Prebuilt rule schema', () => {
       ],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -682,10 +680,10 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of threat that are missing "tactic"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'threat'> & {
-      threat: Array<Partial<Omit<AddPrepackagedRulesSchema['threat'], 'tactic'>>>;
+    const payload: Omit<PrebuiltRuleToInstall, 'threat'> & {
+      threat: Array<Partial<Omit<PrebuiltRuleToInstall['threat'], 'tactic'>>>;
     } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       threat: [
         {
           framework: 'fake',
@@ -700,7 +698,7 @@ describe('Prebuilt rule schema', () => {
       ],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -710,10 +708,10 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You can send in an array of threat that are missing "technique"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'threat'> & {
-      threat: Array<Partial<Omit<AddPrepackagedRulesSchema['threat'], 'technique'>>>;
+    const payload: Omit<PrebuiltRuleToInstall, 'threat'> & {
+      threat: Array<Partial<Omit<PrebuiltRuleToInstall['threat'], 'technique'>>>;
     } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       threat: [
         {
           framework: 'fake',
@@ -726,33 +724,33 @@ describe('Prebuilt rule schema', () => {
       ],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can optionally send in an array of false positives', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       false_positives: ['false_1', 'false_2'],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You cannot send in an array of false positives that are numbers', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'false_positives'> & {
+    const payload: Omit<PrebuiltRuleToInstall, 'false_positives'> & {
       false_positives: number[];
     } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+      ...getPrebuiltRuleMock(),
       false_positives: [5, 4],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -762,12 +760,12 @@ describe('Prebuilt rule schema', () => {
     expect(message.schema).toEqual({});
   });
   test('You cannot set the risk_score to 101', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       risk_score: 101,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -777,12 +775,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot set the risk_score to -1', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       risk_score: -1,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "-1" supplied to "risk_score"']);
@@ -790,50 +788,50 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You can set the risk_score to 0', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       risk_score: 0,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can set the risk_score to 100', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       risk_score: 100,
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You can set meta to any object you want', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       meta: {
         somethingMadeUp: { somethingElse: true },
       },
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You cannot create meta as a string', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'meta'> & { meta: string } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'meta'> & { meta: string } = {
+      ...getPrebuiltRuleMock(),
       meta: 'should not work',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -843,25 +841,25 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('validates with timeline_id and timeline_title', () => {
-    const payload: AddPrepackagedRulesSchema = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: PrebuiltRuleToInstall = {
+      ...getPrebuiltRuleMock(),
       timeline_id: 'timeline-id',
       timeline_title: 'timeline-title',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
   });
 
   test('You cannot set the severity to a value other than low, medium, high, or critical', () => {
-    const payload: Omit<AddPrepackagedRulesSchema, 'severity'> & { severity: string } = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall, 'severity'> & { severity: string } = {
+      ...getPrebuiltRuleMock(),
       severity: 'junk',
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "junk" supplied to "severity"']);
@@ -869,12 +867,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "group"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema['actions'], 'group'> = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall['actions'], 'group'> = {
+      ...getPrebuiltRuleMock(),
       actions: [{ id: 'id', action_type_id: 'action_type_id', params: {} }],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -884,12 +882,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "id"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema['actions'], 'id'> = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall['actions'], 'id'> = {
+      ...getPrebuiltRuleMock(),
       actions: [{ group: 'group', action_type_id: 'action_type_id', params: {} }],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -899,12 +897,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "action_type_id"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema['actions'], 'action_type_id'> = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall['actions'], 'action_type_id'> = {
+      ...getPrebuiltRuleMock(),
       actions: [{ group: 'group', id: 'id', params: {} }],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -914,12 +912,12 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "params"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema['actions'], 'params'> = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall['actions'], 'params'> = {
+      ...getPrebuiltRuleMock(),
       actions: [{ group: 'group', id: 'id', action_type_id: 'action_type_id' }],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -929,8 +927,8 @@ describe('Prebuilt rule schema', () => {
   });
 
   test('You cannot send in an array of actions that are including "actionTypeId"', () => {
-    const payload: Omit<AddPrepackagedRulesSchema['actions'], 'actions'> = {
-      ...getAddPrepackagedRulesSchemaMock(),
+    const payload: Omit<PrebuiltRuleToInstall['actions'], 'actions'> = {
+      ...getPrebuiltRuleMock(),
       actions: [
         {
           group: 'group',
@@ -941,7 +939,7 @@ describe('Prebuilt rule schema', () => {
       ],
     };
 
-    const decoded = AddPrepackagedRulesSchema.decode(payload);
+    const decoded = PrebuiltRuleToInstall.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -952,38 +950,38 @@ describe('Prebuilt rule schema', () => {
 
   describe('note', () => {
     test('You can set note to a string', () => {
-      const payload: AddPrepackagedRulesSchema = {
-        ...getAddPrepackagedRulesSchemaMock(),
+      const payload: PrebuiltRuleToInstall = {
+        ...getPrebuiltRuleMock(),
         note: '# documentation markdown here',
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
     });
 
     test('You can set note to an empty string', () => {
-      const payload: AddPrepackagedRulesSchema = {
-        ...getAddPrepackagedRulesSchemaMock(),
+      const payload: PrebuiltRuleToInstall = {
+        ...getPrebuiltRuleMock(),
         note: '',
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
     });
 
     test('You cannot create note as an object', () => {
-      const payload: Omit<AddPrepackagedRulesSchema, 'note'> & { note: {} } = {
-        ...getAddPrepackagedRulesSchemaMock(),
+      const payload: Omit<PrebuiltRuleToInstall, 'note'> & { note: {} } = {
+        ...getPrebuiltRuleMock(),
         note: {
           somethingHere: 'something else',
         },
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -993,7 +991,7 @@ describe('Prebuilt rule schema', () => {
     });
 
     test('[rule_id, description, from, to, index, name, severity, interval, type, filter, risk_score, note] does validate', () => {
-      const payload: AddPrepackagedRulesSchema = {
+      const payload: PrebuiltRuleToInstall = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1008,7 +1006,7 @@ describe('Prebuilt rule schema', () => {
         version: 1,
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
@@ -1017,7 +1015,7 @@ describe('Prebuilt rule schema', () => {
 
   describe('exception_list', () => {
     test('[rule_id, description, from, to, index, name, severity, interval, type, filters, risk_score, note, version, and exceptions_list] does validate', () => {
-      const payload: AddPrepackagedRulesSchema = {
+      const payload: PrebuiltRuleToInstall = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1034,14 +1032,14 @@ describe('Prebuilt rule schema', () => {
         exceptions_list: getListArrayMock(),
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
     });
 
     test('[rule_id, description, from, to, index, name, severity, interval, type, filter, risk_score, note, version, and empty exceptions_list] does validate', () => {
-      const payload: AddPrepackagedRulesSchema = {
+      const payload: PrebuiltRuleToInstall = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1058,7 +1056,7 @@ describe('Prebuilt rule schema', () => {
         exceptions_list: [],
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
@@ -1082,7 +1080,7 @@ describe('Prebuilt rule schema', () => {
         exceptions_list: [{ id: 'uuid_here', namespace_type: 'not a namespace type' }],
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -1094,7 +1092,7 @@ describe('Prebuilt rule schema', () => {
     });
 
     test('[rule_id, description, from, to, index, name, severity, interval, type, filters, risk_score, note, version, and non-existent exceptions_list] does validate with empty exceptions_list', () => {
-      const payload: AddPrepackagedRulesSchema = {
+      const payload: PrebuiltRuleToInstall = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1110,7 +1108,7 @@ describe('Prebuilt rule schema', () => {
         note: '# some markdown',
       };
 
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
@@ -1119,8 +1117,8 @@ describe('Prebuilt rule schema', () => {
 
   describe('threat_mapping', () => {
     test('You can set a threat query, index, mapping, filters on a pre-packaged rule', () => {
-      const payload = getAddPrepackagedThreatMatchRulesSchemaMock();
-      const decoded = AddPrepackagedRulesSchema.decode(payload);
+      const payload = getPrebuiltThreatMatchRuleMock();
+      const decoded = PrebuiltRuleToInstall.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);

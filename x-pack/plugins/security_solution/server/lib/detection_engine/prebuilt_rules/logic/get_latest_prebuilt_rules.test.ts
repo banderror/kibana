@@ -6,7 +6,7 @@
  */
 
 import { isEmpty } from 'lodash/fp';
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import { getFilesystemRules } from './get_latest_prebuilt_rules';
 
 describe('Get latest prebuilt rules', () => {
@@ -17,7 +17,7 @@ describe('Get latest prebuilt rules', () => {
 
     test('no rule should have the same rule_id as another rule_id', () => {
       const prebuiltRules = getFilesystemRules();
-      let existingRuleIds: AddPrepackagedRulesSchema[] = [];
+      let existingRuleIds: PrebuiltRuleToInstall[] = [];
       prebuiltRules.forEach((rule) => {
         const foundDuplicate = existingRuleIds.reduce((accum, existingRule) => {
           if (existingRule.rule_id === rule.rule_id) {

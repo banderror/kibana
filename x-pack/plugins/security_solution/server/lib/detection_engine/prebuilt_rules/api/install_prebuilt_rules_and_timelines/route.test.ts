@@ -13,7 +13,7 @@ import {
   getBasicEmptySearchResponse,
 } from '../../../routes/__mocks__/request_responses';
 import { requestContextMock, serverMock } from '../../../routes/__mocks__';
-import type { AddPrepackagedRulesSchema } from '../../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../../common/detection_engine/prebuilt_rules';
 import { installPrebuiltRulesAndTimelinesRoute, createPrepackagedRules } from './route';
 import { listMock } from '@kbn/lists-plugin/server/mocks';
 import type { ExceptionListClient } from '@kbn/lists-plugin/server';
@@ -34,7 +34,7 @@ jest.mock('../../../rule_management/logic/rule_actions/legacy_action_migration',
 
 jest.mock('../../logic/get_latest_prebuilt_rules', () => {
   return {
-    getLatestPrebuiltRules: async (): Promise<AddPrepackagedRulesSchema[]> => {
+    getLatestPrebuiltRules: async (): Promise<PrebuiltRuleToInstall[]> => {
       return [
         {
           author: ['Elastic'],

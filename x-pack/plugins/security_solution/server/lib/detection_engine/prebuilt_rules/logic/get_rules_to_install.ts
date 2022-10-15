@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import type { RuleAlertType } from '../../rule_schema';
 
 export const getRulesToInstall = (
-  latestPrebuiltRules: Map<string, AddPrepackagedRulesSchema>,
+  latestPrebuiltRules: Map<string, PrebuiltRuleToInstall>,
   installedRules: Map<string, RuleAlertType>
 ) => {
   return Array.from(latestPrebuiltRules.values()).filter(

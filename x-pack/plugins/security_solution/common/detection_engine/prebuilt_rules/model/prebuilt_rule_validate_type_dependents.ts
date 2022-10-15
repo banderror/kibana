@@ -5,15 +5,13 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from './request_schema';
+import type { PrebuiltRuleToInstall } from './prebuilt_rule';
 
-export const addPrepackagedRuleValidateTypeDependents = (
-  rule: AddPrepackagedRulesSchema
-): string[] => {
+export const addPrepackagedRuleValidateTypeDependents = (rule: PrebuiltRuleToInstall): string[] => {
   return [...validateTimelineId(rule), ...validateTimelineTitle(rule), ...validateThreshold(rule)];
 };
 
-const validateTimelineId = (rule: AddPrepackagedRulesSchema): string[] => {
+const validateTimelineId = (rule: PrebuiltRuleToInstall): string[] => {
   if (rule.timeline_id != null) {
     if (rule.timeline_title == null) {
       return ['when "timeline_id" exists, "timeline_title" must also exist'];
@@ -26,7 +24,7 @@ const validateTimelineId = (rule: AddPrepackagedRulesSchema): string[] => {
   return [];
 };
 
-const validateTimelineTitle = (rule: AddPrepackagedRulesSchema): string[] => {
+const validateTimelineTitle = (rule: PrebuiltRuleToInstall): string[] => {
   if (rule.timeline_title != null) {
     if (rule.timeline_id == null) {
       return ['when "timeline_title" exists, "timeline_id" must also exist'];
@@ -39,7 +37,7 @@ const validateTimelineTitle = (rule: AddPrepackagedRulesSchema): string[] => {
   return [];
 };
 
-const validateThreshold = (rule: AddPrepackagedRulesSchema): string[] => {
+const validateThreshold = (rule: PrebuiltRuleToInstall): string[] => {
   const errors: string[] = [];
   if (rule.type === 'threshold') {
     if (!rule.threshold) {

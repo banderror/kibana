@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from './request_schema';
+import type { PrebuiltRuleToInstall } from './prebuilt_rule';
 
-export const getAddPrepackagedRulesSchemaMock = (): AddPrepackagedRulesSchema => ({
+export const getPrebuiltRuleMock = (): PrebuiltRuleToInstall => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',
@@ -19,7 +19,7 @@ export const getAddPrepackagedRulesSchemaMock = (): AddPrepackagedRulesSchema =>
   version: 1,
 });
 
-export const getAddPrepackagedThreatMatchRulesSchemaMock = (): AddPrepackagedRulesSchema => ({
+export const getPrebuiltThreatMatchRuleMock = (): PrebuiltRuleToInstall => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',

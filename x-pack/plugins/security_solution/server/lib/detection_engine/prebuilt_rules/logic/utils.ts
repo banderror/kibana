@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
+import type { PrebuiltRuleToInstall } from '../../../../../common/detection_engine/prebuilt_rules';
 import type { RuleAlertType } from '../../rule_schema';
 
 /**
@@ -14,7 +14,7 @@ import type { RuleAlertType } from '../../rule_schema';
  * @param rules Array of prebuilt rules
  * @returns Map
  */
-export const prebuiltRulesToMap = (rules: AddPrepackagedRulesSchema[]) =>
+export const prebuiltRulesToMap = (rules: PrebuiltRuleToInstall[]) =>
   new Map(rules.map((rule) => [rule.rule_id, rule]));
 
 /**
