@@ -8,12 +8,8 @@
 import { left } from 'fp-ts/lib/Either';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-import type { PerformBulkActionSchema } from './perform_bulk_action_schema';
-import {
-  performBulkActionSchema,
-  BulkAction,
-  BulkActionEditType,
-} from './perform_bulk_action_schema';
+import type { PerformBulkActionSchema } from './request_schema';
+import { performBulkActionSchema, BulkAction, BulkActionEditType } from './request_schema';
 
 const retrieveValidationMessage = (payload: unknown) => {
   const decoded = performBulkActionSchema.decode(payload);
@@ -21,7 +17,7 @@ const retrieveValidationMessage = (payload: unknown) => {
   return foldLeftRight(checked);
 };
 
-describe('perform_bulk_action_schema', () => {
+describe('Perform bulk action request schema', () => {
   describe('cases common to every bulk action', () => {
     // missing query means it will request for all rules
     test('valid request: missing query', () => {

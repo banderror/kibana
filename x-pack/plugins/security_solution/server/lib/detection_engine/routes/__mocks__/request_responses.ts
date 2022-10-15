@@ -41,13 +41,13 @@ import { getQueryRuleParams } from '../../rule_schema/mocks';
 import {
   getPerformBulkActionSchemaMock,
   getPerformBulkActionEditSchemaMock,
-} from '../../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema.mock';
+} from '../../../../../common/detection_engine/rule_management/mocks';
+import type { HapiReadableStream } from '../../rule_management/logic/import/hapi_readable_stream';
 // eslint-disable-next-line no-restricted-imports
 import type {
   LegacyRuleNotificationAlertType,
   LegacyIRuleActionsAttributes,
 } from '../../rule_actions_legacy';
-import type { HapiReadableStream } from '../../rule_management/logic/import/hapi_readable_stream';
 
 export const typicalSetStatusSignalByIdsPayload = (): SetSignalsStatusSchemaDecoded => ({
   signal_ids: ['somefakeid1', 'somefakeid2'],

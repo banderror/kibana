@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { BulkAction, BulkActionEditType } from './perform_bulk_action_schema';
-import type { PerformBulkActionSchema } from './perform_bulk_action_schema';
+import { BulkAction, BulkActionEditType } from './request_schema';
+import type { PerformBulkActionSchema } from './request_schema';
 
 export const getPerformBulkActionSchemaMock = (): PerformBulkActionSchema => ({
   query: '',

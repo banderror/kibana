@@ -20,15 +20,18 @@ import {
   PREBUILT_RULES_STATUS_URL,
   PREBUILT_RULES_URL,
 } from '../../../../common/detection_engine/prebuilt_rules';
+
+import type { RulesReferencedByExceptionListsSchema } from '../../../../common/detection_engine/rule_exceptions';
 import { DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL } from '../../../../common/detection_engine/rule_exceptions';
+
+import type { BulkActionEditPayload } from '../../../../common/detection_engine/rule_management';
+import { BulkAction } from '../../../../common/detection_engine/rule_management';
+
 import type {
   FullResponseSchema,
   PreviewResponse,
 } from '../../../../common/detection_engine/schemas/request';
 
-import type { BulkActionEditPayload } from '../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
-import { BulkAction } from '../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
-import type { RulesReferencedByExceptionListsSchema } from '../../../../common/detection_engine/rule_exceptions';
 import { KibanaServices } from '../../../common/lib/kibana';
 import * as i18n from '../../../detections/pages/detection_engine/rules/translations';
 import type {

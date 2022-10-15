@@ -5,8 +5,7 @@
  * 2.0.
  */
 
-import { BulkActionEditType } from '../../../../../../common/detection_engine/rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
-
+import { BulkActionEditType } from '../../../../../../common/detection_engine/rule_management';
 import { bulkEditActionToRulesClientOperation } from './action_to_rules_client_operation';
 
 describe('bulkEditActionToRulesClientOperation', () => {
