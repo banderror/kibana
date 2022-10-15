@@ -9,15 +9,21 @@ import { transformError } from '@kbn/securitysolution-es-utils';
 import { getSavedObjectType } from '@kbn/securitysolution-list-utils';
 import { validate } from '@kbn/securitysolution-io-ts-utils';
 
-import type { SecuritySolutionPluginRouter } from '../../../../../types';
-import { DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL } from '../../../../../../common/constants';
-import { buildSiemResponse } from '../../../routes/utils';
-import { enrichFilterWithRuleTypeMapping } from '../../../rule_management/logic/search/enrich_filter_with_rule_type_mappings';
-import type { FindExceptionReferencesOnRuleSchemaDecoded } from '../../../../../../common/detection_engine/rule_exceptions/api/find_rule_exceptions/find_exception_list_references_schema';
-import { findExceptionReferencesOnRuleSchema } from '../../../../../../common/detection_engine/rule_exceptions/api/find_rule_exceptions/find_exception_list_references_schema';
 import { buildRouteValidation } from '../../../../../utils/build_validation/route_validation';
-import type { RuleReferencesSchema } from '../../../../../../common/detection_engine/schemas/response/find_exception_list_references_schema';
-import { rulesReferencedByExceptionListsSchema } from '../../../../../../common/detection_engine/schemas/response/find_exception_list_references_schema';
+import { buildSiemResponse } from '../../../routes/utils';
+import type { SecuritySolutionPluginRouter } from '../../../../../types';
+
+import type {
+  FindExceptionReferencesOnRuleSchemaDecoded,
+  RuleReferencesSchema,
+} from '../../../../../../common/detection_engine/rule_exceptions';
+import {
+  DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL,
+  findExceptionReferencesOnRuleSchema,
+  rulesReferencedByExceptionListsSchema,
+} from '../../../../../../common/detection_engine/rule_exceptions';
+
+import { enrichFilterWithRuleTypeMapping } from '../../../rule_management/logic/search/enrich_filter_with_rule_type_mappings';
 import type { RuleParams } from '../../../rule_schema';
 
 export const findRuleExceptionReferencesRoute = (router: SecuritySolutionPluginRouter) => {

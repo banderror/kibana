@@ -6,8 +6,6 @@
  */
 
 // TODO: https://github.com/elastic/kibana/pull/142950 Delete re-exports
-export * from '../../rule_exceptions/api/create_rule_exceptions/create_rule_exception_schema';
-export * from '../../rule_exceptions/api/create_rule_exceptions/query_rule_by_id_schema';
 export * from '../../rule_management/api/rules/bulk_actions/perform_bulk_action_schema';
 export * from '../../rule_management/api/rules/bulk_update_rules/update_rules_bulk_schema';
 export * from '../../rule_management/api/rules/bulk_patch_rules/patch_rules_bulk_schema';

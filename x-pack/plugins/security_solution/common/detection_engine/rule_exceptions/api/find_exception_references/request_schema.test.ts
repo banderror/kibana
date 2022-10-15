@@ -6,10 +6,10 @@
  */
 
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
-import { findExceptionReferencesOnRuleSchema } from './find_exception_list_references_schema';
-import type { FindExceptionReferencesOnRuleSchema } from './find_exception_list_references_schema';
+import { findExceptionReferencesOnRuleSchema } from './request_schema';
+import type { FindExceptionReferencesOnRuleSchema } from './request_schema';
 
-describe('find_exception_list_references_schema', () => {
+describe('Find exception list references schema', () => {
   test('validates all fields', () => {
     const payload: FindExceptionReferencesOnRuleSchema = {
       ids: 'abc,def',

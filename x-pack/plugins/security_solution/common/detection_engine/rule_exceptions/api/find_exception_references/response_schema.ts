@@ -6,10 +6,8 @@
  */
 
 import * as t from 'io-ts';
-
 import { exceptionListSchema, listArray, list_id } from '@kbn/securitysolution-io-ts-list-types';
-
-import { RuleName, RuleObjectId, RuleSignatureId } from '../../rule_schema';
+import { RuleName, RuleObjectId, RuleSignatureId } from '../../../rule_schema';
 
 export const ruleReferenceRuleInfoSchema = t.exact(
   t.type({

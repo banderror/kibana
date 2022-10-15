@@ -6,17 +6,17 @@
  */
 
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
+import { getExceptionListSchemaMock } from '@kbn/lists-plugin/common/schemas/response/exception_list_schema.mock';
 import {
   exceptionListRuleReferencesSchema,
   rulesReferencedByExceptionListsSchema,
-} from './find_exception_list_references_schema';
+} from './response_schema';
 import type {
   ExceptionListRuleReferencesSchema,
   RulesReferencedByExceptionListsSchema,
-} from './find_exception_list_references_schema';
-import { getExceptionListSchemaMock } from '@kbn/lists-plugin/common/schemas/response/exception_list_schema.mock';
+} from './response_schema';
 
-describe('find_exception_list_references_schema', () => {
+describe('Find exception list references response schema', () => {
   describe('exceptionListRuleReferencesSchema', () => {
     test('validates all fields', () => {
       const payload: ExceptionListRuleReferencesSchema = {

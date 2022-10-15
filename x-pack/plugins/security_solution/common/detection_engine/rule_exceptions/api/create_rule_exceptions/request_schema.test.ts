@@ -5,19 +5,47 @@
  * 2.0.
  */
 
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
-import { createRuleExceptionsSchema } from './create_rule_exception_schema';
-import type { CreateRuleExceptionSchema } from './create_rule_exception_schema';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
 import { getCreateExceptionListItemSchemaMock } from '@kbn/lists-plugin/common/schemas/request/create_exception_list_item_schema.mock';
+import {
+  CreateRuleExceptionsRequestBody,
+  CreateRuleExceptionsRequestParams,
+} from './request_schema';
 
-describe('createRuleExceptionsSchema', () => {
+describe('CreateRuleExceptionsRequestParams', () => {
   test('empty objects do not validate', () => {
-    const payload: CreateRuleExceptionSchema = {} as CreateRuleExceptionSchema;
+    const payload: Partial<CreateRuleExceptionsRequestParams> = {};
 
-    const decoded = createRuleExceptionsSchema.decode(payload);
+    const decoded = CreateRuleExceptionsRequestParams.decode(payload);
+    const checked = exactCheck(payload, decoded);
+    const message = pipe(checked, foldLeftRight);
+    expect(getPaths(left(message.errors))).toEqual(['Invalid value "undefined" supplied to "id"']);
+    expect(message.schema).toEqual({});
+  });
+
+  test('validates string for id', () => {
+    const payload: Partial<CreateRuleExceptionsRequestParams> = {
+      id: '4656dc92-5832-11ea-8e2d-0242ac130003',
+    };
+
+    const decoded = CreateRuleExceptionsRequestParams.decode(payload);
+    const checked = exactCheck(payload, decoded);
+    const message = pipe(checked, foldLeftRight);
+    expect(getPaths(left(message.errors))).toEqual([]);
+    expect(message.schema).toEqual({
+      id: '4656dc92-5832-11ea-8e2d-0242ac130003',
+    });
+  });
+});
+
+describe('CreateRuleExceptionsRequestBody', () => {
+  test('empty objects do not validate', () => {
+    const payload: CreateRuleExceptionsRequestBody = {} as CreateRuleExceptionsRequestBody;
+
+    const decoded = CreateRuleExceptionsRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -27,7 +55,7 @@ describe('createRuleExceptionsSchema', () => {
   });
 
   test('items without list_id validate', () => {
-    const payload: CreateRuleExceptionSchema = {
+    const payload: CreateRuleExceptionsRequestBody = {
       items: [
         {
           description: 'Exception item for rule default exception list',
@@ -45,12 +73,12 @@ describe('createRuleExceptionsSchema', () => {
       ],
     };
 
-    const decoded = createRuleExceptionsSchema.decode(payload);
+    const decoded = CreateRuleExceptionsRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as CreateRuleExceptionSchema).items[0]).toEqual(
+    expect((message.schema as CreateRuleExceptionsRequestBody).items[0]).toEqual(
       expect.objectContaining({
         comments: [],
         description: 'Exception item for rule default exception list',
@@ -73,9 +101,9 @@ describe('createRuleExceptionsSchema', () => {
   test('items with list_id do not validate', () => {
     const payload = {
       items: [getCreateExceptionListItemSchemaMock()],
-    } as unknown as CreateRuleExceptionSchema;
+    } as unknown as CreateRuleExceptionsRequestBody;
 
-    const decoded = createRuleExceptionsSchema.decode(payload);
+    const decoded = CreateRuleExceptionsRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -85,7 +113,7 @@ describe('createRuleExceptionsSchema', () => {
   });
 
   test('made up parameters do not validate', () => {
-    const payload: Partial<CreateRuleExceptionSchema> & { madeUp: string } = {
+    const payload: Partial<CreateRuleExceptionsRequestBody> & { madeUp: string } = {
       items: [
         {
           description: 'Exception item for rule default exception list',
@@ -104,7 +132,7 @@ describe('createRuleExceptionsSchema', () => {
       madeUp: 'invalid value',
     };
 
-    const decoded = createRuleExceptionsSchema.decode(payload);
+    const decoded = CreateRuleExceptionsRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['invalid keys "madeUp"']);

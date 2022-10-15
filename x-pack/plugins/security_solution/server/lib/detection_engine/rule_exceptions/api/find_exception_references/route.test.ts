@@ -5,16 +5,18 @@
  * 2.0.
  */
 
-import { DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL } from '../../../../../../common/constants';
+import { getExceptionListSchemaMock } from '@kbn/lists-plugin/common/schemas/response/exception_list_schema.mock';
+
+import { DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL } from '../../../../../../common/detection_engine/rule_exceptions';
+
 import {
   getEmptyFindResult,
   getFindResultWithSingleHit,
   getRuleMock,
 } from '../../../routes/__mocks__/request_responses';
 import { requestContextMock, serverMock, requestMock } from '../../../routes/__mocks__';
-import { findRuleExceptionReferencesRoute } from './route';
 import { getQueryRuleParams } from '../../../rule_schema/mocks';
-import { getExceptionListSchemaMock } from '@kbn/lists-plugin/common/schemas/response/exception_list_schema.mock';
+import { findRuleExceptionReferencesRoute } from './route';
 
 describe('findRuleExceptionReferencesRoute', () => {
   let server: ReturnType<typeof serverMock.create>;

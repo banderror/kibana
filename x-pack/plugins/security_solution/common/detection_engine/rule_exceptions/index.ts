@@ -5,4 +5,7 @@
  * 2.0.
  */
 
-// export * from './api/urls';
+export * from './api/create_rule_exceptions/request_schema';
+export * from './api/find_exception_references/request_schema';
+export * from './api/find_exception_references/response_schema';
+export * from './api/urls';
