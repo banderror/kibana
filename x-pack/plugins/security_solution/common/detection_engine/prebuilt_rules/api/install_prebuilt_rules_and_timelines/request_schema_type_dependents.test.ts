@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from './add_prepackaged_rules_schema';
-import { addPrepackagedRuleValidateTypeDependents } from './add_prepackaged_rules_type_dependents';
-import { getAddPrepackagedRulesSchemaMock } from './add_prepackaged_rules_schema.mock';
+import type { AddPrepackagedRulesSchema } from './request_schema';
+import { addPrepackagedRuleValidateTypeDependents } from './request_schema_type_dependents';
+import { getAddPrepackagedRulesSchemaMock } from './request_schema.mock';
 
-describe('add_prepackaged_rules_type_dependents', () => {
+describe('addPrepackagedRuleValidateTypeDependents', () => {
   test('You cannot omit timeline_title when timeline_id is present', () => {
     const schema: AddPrepackagedRulesSchema = {
       ...getAddPrepackagedRulesSchemaMock(),

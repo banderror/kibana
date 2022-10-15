@@ -15,28 +15,28 @@ import type {
   SecuritySolutionPluginRouter,
 } from '../../../../../types';
 
-import type { PrePackagedRulesAndTimelinesSchema } from '../../../../../../common/detection_engine/schemas/response/prepackaged_rules_schema';
-import { prePackagedRulesAndTimelinesSchema } from '../../../../../../common/detection_engine/schemas/response/prepackaged_rules_schema';
+import {
+  PREBUILT_RULES_URL,
+  InstallPrebuiltRulesAndTimelinesResponse,
+} from '../../../../../../common/detection_engine/prebuilt_rules';
 import { importTimelineResultSchema } from '../../../../../../common/types/timeline';
-import { DETECTION_ENGINE_PREPACKAGED_URL } from '../../../../../../common/constants';
 
-import { getLatestPrepackagedRules } from '../../logic/get_prepackaged_rules';
-import { installPrepackagedRules } from '../../logic/install_prepacked_rules';
-import { updatePrepackagedRules } from '../../logic/update_prepacked_rules';
+import { getExistingPrepackagedRules } from '../../../rule_management/logic/search/get_existing_prepackaged_rules';
+import { getLatestPrebuiltRules } from '../../logic/get_latest_prebuilt_rules';
+import { createPrebuiltRules } from '../../logic/create_prebuilt_rules';
+import { updatePrebuiltRules } from '../../logic/update_prebuilt_rules';
 import { getRulesToInstall } from '../../logic/get_rules_to_install';
 import { getRulesToUpdate } from '../../logic/get_rules_to_update';
-import { getExistingPrepackagedRules } from '../../../rule_management/logic/search/get_existing_prepackaged_rules';
 import { ruleAssetSavedObjectsClientFactory } from '../../logic/rule_asset/rule_asset_saved_objects_client';
-
-import { buildSiemResponse } from '../../../routes/utils';
-
-import { installPrepackagedTimelines } from '../../../../timeline/routes/prepackaged_timelines/install_prepackaged_timelines';
 import { rulesToMap } from '../../logic/utils';
 
-export const addPrepackedRulesRoute = (router: SecuritySolutionPluginRouter) => {
+import { installPrepackagedTimelines } from '../../../../timeline/routes/prepackaged_timelines/install_prepackaged_timelines';
+import { buildSiemResponse } from '../../../routes/utils';
+
+export const installPrebuiltRulesAndTimelinesRoute = (router: SecuritySolutionPluginRouter) => {
   router.put(
     {
-      path: DETECTION_ENGINE_PREPACKAGED_URL,
+      path: PREBUILT_RULES_URL,
       validate: false,
       options: {
         tags: ['access:securitySolution'],
@@ -84,7 +84,7 @@ export const createPrepackagedRules = async (
   context: SecuritySolutionApiRequestHandlerContext,
   rulesClient: RulesClient,
   exceptionsClient?: ExceptionListClient
-): Promise<PrePackagedRulesAndTimelinesSchema | null> => {
+): Promise<InstallPrebuiltRulesAndTimelinesResponse | null> => {
   const config = context.getConfig();
   const frameworkRequest = context.getFrameworkRequest();
   const savedObjectsClient = context.core.savedObjects.client;
@@ -107,7 +107,7 @@ export const createPrepackagedRules = async (
     await exceptionsListClient.createEndpointList();
   }
 
-  const latestPrepackagedRulesMap = await getLatestPrepackagedRules(
+  const latestPrepackagedRulesMap = await getLatestPrebuiltRules(
     ruleAssetsClient,
     prebuiltRulesFromFileSystem,
     prebuiltRulesFromSavedObjects
@@ -116,7 +116,8 @@ export const createPrepackagedRules = async (
   const rulesToInstall = getRulesToInstall(latestPrepackagedRulesMap, installedPrePackagedRules);
   const rulesToUpdate = getRulesToUpdate(latestPrepackagedRulesMap, installedPrePackagedRules);
 
-  await installPrepackagedRules(rulesClient, rulesToInstall);
+  await createPrebuiltRules(rulesClient, rulesToInstall);
+
   const timeline = await installPrepackagedTimelines(
     maxTimelineImportExportSize,
     frameworkRequest,
@@ -126,28 +127,32 @@ export const createPrepackagedRules = async (
     timeline,
     importTimelineResultSchema
   );
-  await updatePrepackagedRules(
+
+  await updatePrebuiltRules(
     rulesClient,
     savedObjectsClient,
     rulesToUpdate,
     context.getRuleExecutionLog()
   );
 
-  const prepackagedRulesOutput: PrePackagedRulesAndTimelinesSchema = {
+  const prepackagedRulesOutput: InstallPrebuiltRulesAndTimelinesResponse = {
     rules_installed: rulesToInstall.length,
     rules_updated: rulesToUpdate.length,
     timelines_installed: prepackagedTimelinesResult?.timelines_installed ?? 0,
     timelines_updated: prepackagedTimelinesResult?.timelines_updated ?? 0,
   };
+
   const [validated, genericErrors] = validate(
     prepackagedRulesOutput,
-    prePackagedRulesAndTimelinesSchema
+    InstallPrebuiltRulesAndTimelinesResponse
   );
+
   if (genericErrors != null && timelinesErrors != null) {
     throw new PrepackagedRulesError(
       [genericErrors, timelinesErrors].filter((msg) => msg != null).join(', '),
       500
     );
   }
+
   return validated;
 };

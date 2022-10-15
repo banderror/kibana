@@ -8,12 +8,12 @@
 import { rulesClientMock } from '@kbn/alerting-plugin/server/mocks';
 import { savedObjectsClientMock } from '@kbn/core/server/mocks';
 import { getRuleMock, getFindResultWithSingleHit } from '../../routes/__mocks__/request_responses';
-import { updatePrepackagedRules } from './update_prepacked_rules';
+import { updatePrebuiltRules } from './update_prebuilt_rules';
 import { patchRules } from '../../rule_management/logic/crud/patch_rules';
 import {
   getAddPrepackagedRulesSchemaMock,
   getAddPrepackagedThreatMatchRulesSchemaMock,
-} from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema.mock';
+} from '../../../../../common/detection_engine/prebuilt_rules/mocks';
 import { ruleExecutionLogMock } from '../../rule_monitoring/mocks';
 import { legacyMigrate } from '../../rule_management';
 import { getQueryRuleParams, getThreatRuleParams } from '../../rule_schema/mocks';
@@ -30,7 +30,7 @@ jest.mock('../../rule_management/logic/rule_actions/legacy_action_migration', ()
   };
 });
 
-describe('updatePrepackagedRules', () => {
+describe('updatePrebuiltRules', () => {
   let rulesClient: ReturnType<typeof rulesClientMock.create>;
   let savedObjectsClient: ReturnType<typeof savedObjectsClientMock.create>;
   let ruleExecutionLog: ReturnType<typeof ruleExecutionLogMock.forRoutes.create>;
@@ -55,7 +55,7 @@ describe('updatePrepackagedRules', () => {
     const prepackagedRule = getAddPrepackagedRulesSchemaMock();
     rulesClient.find.mockResolvedValue(getFindResultWithSingleHit());
 
-    await updatePrepackagedRules(
+    await updatePrebuiltRules(
       rulesClient,
       savedObjectsClient,
       [{ ...prepackagedRule, actions }],
@@ -92,7 +92,7 @@ describe('updatePrepackagedRules', () => {
     });
     (legacyMigrate as jest.Mock).mockResolvedValue(getRuleMock(getThreatRuleParams()));
 
-    await updatePrepackagedRules(
+    await updatePrebuiltRules(
       rulesClient,
       savedObjectsClient,
       [{ ...prepackagedRule, ...updatedThreatParams }],

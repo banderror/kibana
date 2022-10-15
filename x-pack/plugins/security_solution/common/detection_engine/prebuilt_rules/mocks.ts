@@ -4,3 +4,5 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
+export * from './api/install_prebuilt_rules_and_timelines/request_schema.mock';

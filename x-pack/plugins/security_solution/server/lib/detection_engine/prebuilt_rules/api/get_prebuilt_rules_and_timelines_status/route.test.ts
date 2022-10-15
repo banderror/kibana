@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { getPrepackagedRulesStatusRoute } from './route';
+import { getPrebuiltRulesAndTimelinesStatusRoute } from './route';
 
 import {
   getEmptyFindResult,
@@ -82,7 +82,7 @@ describe('get_prepackaged_rule_status_route', () => {
       prepackagedTimelines: [],
     });
 
-    getPrepackagedRulesStatusRoute(server.router, createMockConfig(), securitySetup);
+    getPrebuiltRulesAndTimelinesStatusRoute(server.router, createMockConfig(), securitySetup);
   });
 
   describe('status codes', () => {

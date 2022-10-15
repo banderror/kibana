@@ -7,35 +7,38 @@
 
 import { transformError } from '@kbn/securitysolution-es-utils';
 import { validate } from '@kbn/securitysolution-io-ts-utils';
-import type { PrePackagedRulesAndTimelinesStatusSchema } from '../../../../../../common/detection_engine/schemas/response/prepackaged_rules_status_schema';
-import { prePackagedRulesAndTimelinesStatusSchema } from '../../../../../../common/detection_engine/schemas/response/prepackaged_rules_status_schema';
-import type { SecuritySolutionPluginRouter } from '../../../../../types';
-import { DETECTION_ENGINE_PREPACKAGED_URL } from '../../../../../../common/constants';
 import { buildSiemResponse } from '../../../routes/utils';
-
-import { getRulesToInstall } from '../../logic/get_rules_to_install';
-import { getRulesToUpdate } from '../../logic/get_rules_to_update';
-import { findRules } from '../../../rule_management/logic/search/find_rules';
-import { getLatestPrepackagedRules } from '../../logic/get_prepackaged_rules';
-import { getExistingPrepackagedRules } from '../../../rule_management/logic/search/get_existing_prepackaged_rules';
-import { ruleAssetSavedObjectsClientFactory } from '../../logic/rule_asset/rule_asset_saved_objects_client';
-import { buildFrameworkRequest } from '../../../../timeline/utils/common';
 import type { ConfigType } from '../../../../../config';
 import type { SetupPlugins } from '../../../../../plugin';
+import type { SecuritySolutionPluginRouter } from '../../../../../types';
+
+import {
+  PREBUILT_RULES_STATUS_URL,
+  GetPrebuiltRulesAndTimelinesStatusResponse,
+} from '../../../../../../common/detection_engine/prebuilt_rules';
+
+import { getExistingPrepackagedRules } from '../../../rule_management/logic/search/get_existing_prepackaged_rules';
+import { findRules } from '../../../rule_management/logic/search/find_rules';
+import { getLatestPrebuiltRules } from '../../logic/get_latest_prebuilt_rules';
+import { getRulesToInstall } from '../../logic/get_rules_to_install';
+import { getRulesToUpdate } from '../../logic/get_rules_to_update';
+import { ruleAssetSavedObjectsClientFactory } from '../../logic/rule_asset/rule_asset_saved_objects_client';
+import { rulesToMap } from '../../logic/utils';
+
+import { buildFrameworkRequest } from '../../../../timeline/utils/common';
 import {
   checkTimelinesStatus,
   checkTimelineStatusRt,
 } from '../../../../timeline/utils/check_timelines_status';
-import { rulesToMap } from '../../logic/utils';
 
-export const getPrepackagedRulesStatusRoute = (
+export const getPrebuiltRulesAndTimelinesStatusRoute = (
   router: SecuritySolutionPluginRouter,
   config: ConfigType,
   security: SetupPlugins['security']
 ) => {
   router.get(
     {
-      path: `${DETECTION_ENGINE_PREPACKAGED_URL}/_status`,
+      path: PREBUILT_RULES_STATUS_URL,
       validate: false,
       options: {
         tags: ['access:securitySolution'],
@@ -49,11 +52,12 @@ export const getPrepackagedRulesStatusRoute = (
       const ruleAssetsClient = ruleAssetSavedObjectsClientFactory(savedObjectsClient);
 
       try {
-        const latestPrepackagedRules = await getLatestPrepackagedRules(
+        const latestPrebuiltRules = await getLatestPrebuiltRules(
           ruleAssetsClient,
           config.prebuiltRulesFromFileSystem,
           config.prebuiltRulesFromSavedObjects
         );
+
         const customRules = await findRules({
           rulesClient,
           perPage: 1,
@@ -63,37 +67,40 @@ export const getPrepackagedRulesStatusRoute = (
           filter: 'alert.attributes.params.immutable: false',
           fields: undefined,
         });
-        const frameworkRequest = await buildFrameworkRequest(context, security, request);
-        const installedPrePackagedRules = rulesToMap(
+
+        const installedPrebuiltRules = rulesToMap(
           await getExistingPrepackagedRules({ rulesClient })
         );
 
-        const rulesToInstall = getRulesToInstall(latestPrepackagedRules, installedPrePackagedRules);
-        const rulesToUpdate = getRulesToUpdate(latestPrepackagedRules, installedPrePackagedRules);
-        const prepackagedTimelineStatus = await checkTimelinesStatus(frameworkRequest);
-        const [validatedPrepackagedTimelineStatus] = validate(
-          prepackagedTimelineStatus,
+        const rulesToInstall = getRulesToInstall(latestPrebuiltRules, installedPrebuiltRules);
+        const rulesToUpdate = getRulesToUpdate(latestPrebuiltRules, installedPrebuiltRules);
+
+        const frameworkRequest = await buildFrameworkRequest(context, security, request);
+        const prebuiltTimelineStatus = await checkTimelinesStatus(frameworkRequest);
+        const [validatedPrebuiltTimelineStatus] = validate(
+          prebuiltTimelineStatus,
           checkTimelineStatusRt
         );
 
-        const prepackagedRulesStatus: PrePackagedRulesAndTimelinesStatusSchema = {
+        const responseBody: GetPrebuiltRulesAndTimelinesStatusResponse = {
           rules_custom_installed: customRules.total,
-          rules_installed: installedPrePackagedRules.size,
+          rules_installed: installedPrebuiltRules.size,
           rules_not_installed: rulesToInstall.length,
           rules_not_updated: rulesToUpdate.length,
-          timelines_installed: validatedPrepackagedTimelineStatus?.prepackagedTimelines.length ?? 0,
-          timelines_not_installed:
-            validatedPrepackagedTimelineStatus?.timelinesToInstall.length ?? 0,
-          timelines_not_updated: validatedPrepackagedTimelineStatus?.timelinesToUpdate.length ?? 0,
+          timelines_installed: validatedPrebuiltTimelineStatus?.prepackagedTimelines.length ?? 0,
+          timelines_not_installed: validatedPrebuiltTimelineStatus?.timelinesToInstall.length ?? 0,
+          timelines_not_updated: validatedPrebuiltTimelineStatus?.timelinesToUpdate.length ?? 0,
         };
-        const [validated, errors] = validate(
-          prepackagedRulesStatus,
-          prePackagedRulesAndTimelinesStatusSchema
+
+        const [validatedBody, validationError] = validate(
+          responseBody,
+          GetPrebuiltRulesAndTimelinesStatusResponse
         );
-        if (errors != null) {
-          return siemResponse.error({ statusCode: 500, body: errors });
+
+        if (validationError != null) {
+          return siemResponse.error({ statusCode: 500, body: validationError });
         } else {
-          return response.ok({ body: validated ?? {} });
+          return response.ok({ body: validatedBody ?? {} });
         }
       } catch (err) {
         const error = transformError(err);

@@ -7,16 +7,13 @@
 
 import type { RulesClient } from '@kbn/alerting-plugin/server';
 import { MAX_RULES_TO_UPDATE_IN_PARALLEL } from '../../../../../common/constants';
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
+import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
 import { initPromisePool } from '../../../../utils/promise_pool';
 import { withSecuritySpan } from '../../../../utils/with_security_span';
 import { createRules } from '../../rule_management/logic/crud/create_rules';
 
-export const installPrepackagedRules = (
-  rulesClient: RulesClient,
-  rules: AddPrepackagedRulesSchema[]
-) =>
-  withSecuritySpan('installPrepackagedRules', async () => {
+export const createPrebuiltRules = (rulesClient: RulesClient, rules: AddPrepackagedRulesSchema[]) =>
+  withSecuritySpan('createPrebuiltRules', async () => {
     const result = await initPromisePool({
       concurrency: MAX_RULES_TO_UPDATE_IN_PARALLEL,
       items: rules,
@@ -31,6 +28,6 @@ export const installPrepackagedRules = (
     });
 
     if (result.errors.length > 0) {
-      throw new AggregateError(result.errors, 'Error installing prepackaged rules');
+      throw new AggregateError(result.errors, 'Error installing new prebuilt rules');
     }
   });

@@ -7,13 +7,12 @@
 
 import * as t from 'io-ts';
 
-import { version } from '@kbn/securitysolution-io-ts-types';
-
 import {
   RelatedIntegrationArray,
   RequiredFieldArray,
   SetupGuide,
   RuleSignatureId,
+  RuleVersion,
 } from '../../../rule_schema';
 
 import { baseCreateParams, createTypeSpecific } from '../../../schemas/request/rule_schemas';
@@ -23,15 +22,16 @@ import { baseCreateParams, createTypeSpecific } from '../../../schemas/request/r
  *  - rule_id is required here
  *  - version is a required field that must exist
  */
-export const addPrepackagedRulesSchema = t.intersection([
+export type AddPrepackagedRulesSchema = t.TypeOf<typeof AddPrepackagedRulesSchema>;
+export const AddPrepackagedRulesSchema = t.intersection([
   baseCreateParams,
   createTypeSpecific,
-  // version is required in addPrepackagedRulesSchema, so this supercedes the defaultable
+  // version is required in AddPrepackagedRulesSchema, so this supercedes the defaultable
   // version in baseParams
   t.exact(
     t.type({
       rule_id: RuleSignatureId,
-      version,
+      version: RuleVersion,
     })
   ),
   t.exact(
@@ -42,4 +42,3 @@ export const addPrepackagedRulesSchema = t.intersection([
     })
   ),
 ]);
-export type AddPrepackagedRulesSchema = t.TypeOf<typeof addPrepackagedRulesSchema>;

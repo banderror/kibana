@@ -6,10 +6,9 @@
  */
 
 import { camelCase } from 'lodash';
+
 import type { BulkActionsDryRunErrCode } from '../../../../common/constants';
 import {
-  DETECTION_ENGINE_PREPACKAGED_RULES_STATUS_URL,
-  DETECTION_ENGINE_PREPACKAGED_URL,
   DETECTION_ENGINE_RULES_BULK_ACTION,
   DETECTION_ENGINE_RULES_EXCEPTIONS_REFERENCE_URL,
   DETECTION_ENGINE_RULES_PREVIEW,
@@ -17,6 +16,12 @@ import {
   DETECTION_ENGINE_RULES_URL_FIND,
   DETECTION_ENGINE_TAGS_URL,
 } from '../../../../common/constants';
+
+import {
+  PREBUILT_RULES_STATUS_URL,
+  PREBUILT_RULES_URL,
+} from '../../../../common/detection_engine/prebuilt_rules';
+
 import type {
   FullResponseSchema,
   PreviewResponse,
@@ -288,7 +293,7 @@ export const createPrepackagedRules = async (): Promise<CreatePrepackagedRulesRe
     rules_updated: number;
     timelines_installed: number;
     timelines_updated: number;
-  }>(DETECTION_ENGINE_PREPACKAGED_URL, {
+  }>(PREBUILT_RULES_URL, {
     method: 'PUT',
   });
 
@@ -384,13 +389,10 @@ export const getPrePackagedRulesStatus = async ({
 }: {
   signal: AbortSignal | undefined;
 }): Promise<PrePackagedRulesStatusResponse> =>
-  KibanaServices.get().http.fetch<PrePackagedRulesStatusResponse>(
-    DETECTION_ENGINE_PREPACKAGED_RULES_STATUS_URL,
-    {
-      method: 'GET',
-      signal,
-    }
-  );
+  KibanaServices.get().http.fetch<PrePackagedRulesStatusResponse>(PREBUILT_RULES_STATUS_URL, {
+    method: 'GET',
+    signal,
+  });
 
 /**
  * Fetch info on what exceptions lists are referenced by what rules

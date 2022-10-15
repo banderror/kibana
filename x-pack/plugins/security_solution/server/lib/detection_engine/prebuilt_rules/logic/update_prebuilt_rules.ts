@@ -8,27 +8,31 @@
 import { chunk } from 'lodash/fp';
 import type { SavedObjectsClientContract } from '@kbn/core/server';
 import type { RulesClient, PartialRule } from '@kbn/alerting-plugin/server';
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
-import { MAX_RULES_TO_UPDATE_IN_PARALLEL } from '../../../../../common/constants';
-import { patchRules } from '../../rule_management/logic/crud/patch_rules';
-import { readRules } from '../../rule_management/logic/crud/read_rules';
-import type { RuleParams } from '../../rule_schema';
-import { legacyMigrate } from '../../rule_management';
-import { deleteRules } from '../../rule_management/logic/crud/delete_rules';
-import { PrepackagedRulesError } from '../api/add_prepackaged_rules/route';
-import type { IRuleExecutionLogForRoutes } from '../../rule_monitoring';
-import { createRules } from '../../rule_management/logic/crud/create_rules';
+
+import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules';
 import { transformAlertToRuleAction } from '../../../../../common/detection_engine/transform_actions';
+import { MAX_RULES_TO_UPDATE_IN_PARALLEL } from '../../../../../common/constants';
+
+import { legacyMigrate } from '../../rule_management';
+import { createRules } from '../../rule_management/logic/crud/create_rules';
+import { readRules } from '../../rule_management/logic/crud/read_rules';
+import { patchRules } from '../../rule_management/logic/crud/patch_rules';
+import { deleteRules } from '../../rule_management/logic/crud/delete_rules';
+
+import type { IRuleExecutionLogForRoutes } from '../../rule_monitoring';
+import type { RuleParams } from '../../rule_schema';
+
+import { PrepackagedRulesError } from '../api/install_prebuilt_rules_and_timelines/route';
 
 /**
- * Updates the prepackaged rules given a set of rules and output index.
+ * Updates existing prebuilt rules given a set of rules and output index.
  * This implements a chunked approach to not saturate network connections and
  * avoid being a "noisy neighbor".
  * @param rulesClient Alerting client
  * @param spaceId Current user spaceId
  * @param rules The rules to apply the update for
  */
-export const updatePrepackagedRules = async (
+export const updatePrebuiltRules = async (
   rulesClient: RulesClient,
   savedObjectsClient: SavedObjectsClientContract,
   rules: AddPrepackagedRulesSchema[],
@@ -53,7 +57,7 @@ export const updatePrepackagedRules = async (
  * @param rules The rules to apply the update for
  * @returns Promise of what was updated.
  */
-export const createPromises = (
+const createPromises = (
   rulesClient: RulesClient,
   savedObjectsClient: SavedObjectsClientContract,
   rules: AddPrepackagedRulesSchema[],
