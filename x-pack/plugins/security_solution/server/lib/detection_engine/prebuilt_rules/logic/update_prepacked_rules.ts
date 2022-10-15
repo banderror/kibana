@@ -8,7 +8,7 @@
 import { chunk } from 'lodash/fp';
 import type { SavedObjectsClientContract } from '@kbn/core/server';
 import type { RulesClient, PartialRule } from '@kbn/alerting-plugin/server';
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema';
+import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
 import { MAX_RULES_TO_UPDATE_IN_PARALLEL } from '../../../../../common/constants';
 import { patchRules } from '../../rule_management/logic/crud/patch_rules';
 import { readRules } from '../../rule_management/logic/crud/read_rules';

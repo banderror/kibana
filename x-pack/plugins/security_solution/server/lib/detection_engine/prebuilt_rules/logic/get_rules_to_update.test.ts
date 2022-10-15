@@ -7,7 +7,7 @@
 
 import { filterInstalledRules, getRulesToUpdate, mergeExceptionLists } from './get_rules_to_update';
 import { getRuleMock } from '../../routes/__mocks__/request_responses';
-import { getAddPrepackagedRulesSchemaMock } from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema.mock';
+import { getAddPrepackagedRulesSchemaMock } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema.mock';
 import { getQueryRuleParams } from '../../rule_schema/mocks';
 import { prepackagedRulesToMap, rulesToMap } from './utils';
 

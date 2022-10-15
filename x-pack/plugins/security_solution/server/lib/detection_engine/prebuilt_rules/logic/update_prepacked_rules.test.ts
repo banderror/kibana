@@ -13,7 +13,7 @@ import { patchRules } from '../../rule_management/logic/crud/patch_rules';
 import {
   getAddPrepackagedRulesSchemaMock,
   getAddPrepackagedThreatMatchRulesSchemaMock,
-} from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema.mock';
+} from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema.mock';
 import { ruleExecutionLogMock } from '../../rule_monitoring/mocks';
 import { legacyMigrate } from '../../rule_management';
 import { getQueryRuleParams, getThreatRuleParams } from '../../rule_schema/mocks';

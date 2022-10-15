@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema';
+import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
 import type { RuleAlertType } from '../../rule_schema';
 
 export const getRulesToInstall = (

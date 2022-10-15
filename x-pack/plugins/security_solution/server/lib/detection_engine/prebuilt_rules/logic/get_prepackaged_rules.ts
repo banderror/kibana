@@ -10,8 +10,8 @@ import { exactCheck, formatErrors } from '@kbn/securitysolution-io-ts-utils';
 import { fold } from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import type * as t from 'io-ts';
-import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema';
-import { addPrepackagedRulesSchema } from '../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema';
+import type { AddPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
+import { addPrepackagedRulesSchema } from '../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
 import type { ConfigType } from '../../../../config';
 import { withSecuritySpan } from '../../../../utils/with_security_span';
 // TODO: convert rules files to TS and add explicit type definitions

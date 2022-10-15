@@ -13,7 +13,7 @@ import {
   getBasicEmptySearchResponse,
 } from '../../../routes/__mocks__/request_responses';
 import { requestContextMock, serverMock } from '../../../routes/__mocks__';
-import type { AddPrepackagedRulesSchema } from '../../../../../../common/detection_engine/schemas/request/add_prepackaged_rules_schema';
+import type { AddPrepackagedRulesSchema } from '../../../../../../common/detection_engine/prebuilt_rules/api/add_prepackaged_rules/add_prepackaged_rules_schema';
 import { addPrepackedRulesRoute, createPrepackagedRules } from './route';
 import { listMock } from '@kbn/lists-plugin/server/mocks';
 import type { ExceptionListClient } from '@kbn/lists-plugin/server';

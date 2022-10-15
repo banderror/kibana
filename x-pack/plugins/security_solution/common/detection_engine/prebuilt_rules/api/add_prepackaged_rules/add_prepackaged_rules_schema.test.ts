@@ -15,7 +15,7 @@ import {
   getAddPrepackagedRulesSchemaMock,
   getAddPrepackagedThreatMatchRulesSchemaMock,
 } from './add_prepackaged_rules_schema.mock';
-import { getListArrayMock } from '../types/lists.mock';
+import { getListArrayMock } from '../../../schemas/types/lists.mock';
 
 describe('add prepackaged rules schema', () => {
   test('empty objects do not validate', () => {

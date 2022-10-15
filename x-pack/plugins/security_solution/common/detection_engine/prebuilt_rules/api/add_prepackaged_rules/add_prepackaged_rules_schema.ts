@@ -14,9 +14,9 @@ import {
   RequiredFieldArray,
   SetupGuide,
   RuleSignatureId,
-} from '../../rule_schema';
+} from '../../../rule_schema';
 
-import { baseCreateParams, createTypeSpecific } from './rule_schemas';
+import { baseCreateParams, createTypeSpecific } from '../../../schemas/request/rule_schemas';
 
 /**
  * Big differences between this schema and the createRulesSchema
