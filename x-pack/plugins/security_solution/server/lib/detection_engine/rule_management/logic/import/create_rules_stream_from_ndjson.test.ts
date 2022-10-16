@@ -13,7 +13,7 @@ import type { ImportRulesSchema } from '../../../../../../common/detection_engin
 import {
   getOutputDetailsSample,
   getSampleDetailsAsNdjson,
-} from '../../../../../../common/detection_engine/schemas/response/export_rules_details_schema.mock';
+} from '../../../../../../common/detection_engine/rule_management/mocks';
 import type { RuleExceptionsPromiseFromStreams } from './import_rules_utils';
 
 export const getOutputSample = (): Partial<ImportRulesSchema> => ({

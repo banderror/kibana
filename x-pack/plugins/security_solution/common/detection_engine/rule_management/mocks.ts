@@ -6,3 +6,4 @@
  */
 
 export * from './api/rules/bulk_actions/request_schema.mock';
+export * from './model/export/export_rules_details_schema.mock';

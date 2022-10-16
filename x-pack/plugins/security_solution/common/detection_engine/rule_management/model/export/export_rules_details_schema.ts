@@ -16,7 +16,7 @@ const createSchema = <Required extends t.Props, Optional extends t.Props>(
   return t.intersection([t.exact(t.type(requiredFields)), t.exact(t.partial(optionalFields))]);
 };
 
-export const exportRulesDetails = {
+const exportRulesDetails = {
   exported_count: t.number,
   exported_rules_count: t.number,
   missing_rules: t.array(
