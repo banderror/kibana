@@ -81,100 +81,19 @@ import {
   historyWindowStart,
 } from '../../schemas/common';
 
-export const createSchema = <
-  Required extends t.Props,
-  Optional extends t.Props,
-  Defaultable extends t.Props
->(
-  requiredFields: Required,
-  optionalFields: Optional,
-  defaultableFields: Defaultable
-) => {
-  return t.intersection([
-    t.exact(t.type(requiredFields)),
-    t.exact(t.partial(optionalFields)),
-    t.exact(t.partial(defaultableFields)),
-  ]);
-};
+import { buildRuleSchemas } from './build_rule_schemas';
 
-const patchSchema = <
-  Required extends t.Props,
-  Optional extends t.Props,
-  Defaultable extends t.Props
->(
-  requiredFields: Required,
-  optionalFields: Optional,
-  defaultableFields: Defaultable
-) => {
-  return t.intersection([
-    t.partial(requiredFields),
-    t.partial(optionalFields),
-    t.partial(defaultableFields),
-  ]);
-};
+// -------------------------------------------------------------------------------------------------
+// Base rule fields
 
-type OrUndefined<P extends t.Props> = {
-  [K in keyof P]: P[K] | t.UndefinedC;
-};
-
-export const responseSchema = <
-  Required extends t.Props,
-  Optional extends t.Props,
-  Defaultable extends t.Props
->(
-  requiredFields: Required,
-  optionalFields: Optional,
-  defaultableFields: Defaultable
-) => {
-  // This bit of logic is to force all fields to be accounted for in conversions from the internal
-  // rule schema to the response schema. Rather than use `t.partial`, which makes each field optional,
-  // we make each field required but possibly undefined. The result is that if a field is forgotten in
-  // the conversion from internal schema to response schema TS will report an error. If we just used t.partial
-  // instead, then optional fields can be accidentally omitted from the conversion - and any actual values
-  // in those fields internally will be stripped in the response.
-  const optionalWithUndefined = Object.keys(optionalFields).reduce<t.Props>((acc, key) => {
-    acc[key] = t.union([optionalFields[key], t.undefined]);
-    return acc;
-  }, {}) as OrUndefined<Optional>;
-  return t.intersection([
-    t.exact(t.type(requiredFields)),
-    t.exact(t.type(optionalWithUndefined)),
-    t.exact(t.type(defaultableFields)),
-  ]);
-};
-
-export const buildAPISchemas = <R extends t.Props, O extends t.Props, D extends t.Props>(
-  params: APIParams<R, O, D>
-) => {
-  return {
-    create: createSchema(params.required, params.optional, params.defaultable),
-    patch: patchSchema(params.required, params.optional, params.defaultable),
-    response: responseSchema(params.required, params.optional, params.defaultable),
-  };
-};
-
-interface APIParams<
-  Required extends t.Props,
-  Optional extends t.Props,
-  Defaultable extends t.Props
-> {
-  required: Required;
-  optional: Optional;
-  defaultable: Defaultable;
-}
-
-const baseParams = {
+const baseRuleFields = {
   required: {
-    // Main attributes
     name: RuleName,
     description: RuleDescription,
-    // Severity and risk score
     severity: Severity,
     risk_score: RiskScore,
   },
   optional: {
-    // Main attributes
-    meta: RuleMetadata,
     // Field overrides
     rule_name_override: RuleNameOverride,
     timestamp_override: TimestampOverride,
@@ -192,6 +111,7 @@ const baseParams = {
     building_block_type: BuildingBlockType,
     output_index: AlertsIndex,
     namespace: AlertsIndexNamespace,
+    meta: RuleMetadata,
   },
   defaultable: {
     // Main attributes
@@ -219,36 +139,78 @@ const baseParams = {
     threat: ThreatArray,
   },
 };
+
+const responseRequiredFields = {
+  id: RuleObjectId,
+  rule_id: RuleSignatureId,
+  immutable: IsRuleImmutable,
+  updated_at,
+  updated_by,
+  created_at,
+  created_by,
+
+  // NOTE: For now, Related Integrations, Required Fields and Setup Guide are supported for prebuilt
+  // rules only. We don't want to allow users to edit these 3 fields via the API. If we added them
+  // to baseParams.defaultable, they would become a part of the request schema as optional fields.
+  // This is why we add them here, in order to add them only to the response schema.
+  related_integrations: RelatedIntegrationArray,
+  required_fields: RequiredFieldArray,
+  setup: SetupGuide,
+};
+
+const responseOptionalFields = {
+  execution_summary: RuleExecutionSummary,
+};
+
 const {
   create: baseCreateParams,
   patch: basePatchParams,
   response: baseResponseParams,
-} = buildAPISchemas(baseParams);
+} = buildRuleSchemas(baseRuleFields);
+
 export { baseCreateParams };
 
-// "shared" types are the same across all rule types, and built from "baseParams" above
+// -------------------------------------------------------------------------------------------------
+// Helper types and schemas
+
+// "Shared" types are the same across all rule types, and built from "baseParams" above
 // with some variations for each route. These intersect with type specific schemas below
 // to create the full schema for each route.
-export const sharedCreateSchema = t.intersection([
+
+type SharedCreateProps = t.TypeOf<typeof SharedCreateProps>;
+const SharedCreateProps = t.intersection([
   baseCreateParams,
   t.exact(t.partial({ rule_id: RuleSignatureId })),
 ]);
-export type SharedCreateSchema = t.TypeOf<typeof sharedCreateSchema>;
 
-export const sharedUpdateSchema = t.intersection([
+type SharedUpdateProps = t.TypeOf<typeof SharedUpdateProps>;
+const SharedUpdateProps = t.intersection([
   baseCreateParams,
   t.exact(t.partial({ rule_id: RuleSignatureId })),
   t.exact(t.partial({ id: RuleObjectId })),
 ]);
-export type SharedUpdateSchema = t.TypeOf<typeof sharedUpdateSchema>;
 
-export const sharedPatchSchema = t.intersection([
+export type SharedPatchProps = t.TypeOf<typeof SharedPatchProps>;
+export const SharedPatchProps = t.intersection([
   basePatchParams,
   t.exact(t.partial({ rule_id: RuleSignatureId, id: RuleObjectId })),
 ]);
 
-// START type specific parameter definitions
-// -----------------------------------------
+export type SharedResponseSchema = t.TypeOf<typeof sharedResponseSchema>;
+const sharedResponseSchema = t.intersection([
+  baseResponseParams,
+  t.exact(t.type(responseRequiredFields)),
+  t.exact(t.partial(responseOptionalFields)),
+]);
+
+type CreateSchema<T> = SharedCreateProps & T;
+type UpdateSchema<T> = SharedUpdateProps & T;
+type PatchSchema<T> = SharedPatchProps & T;
+type ResponseSchema<T> = SharedResponseSchema & T;
+
+// -------------------------------------------------------------------------------------------------
+// EQL rule fields
+
 const eqlRuleParams = {
   required: {
     type: t.literal('eql'),
@@ -265,12 +227,21 @@ const eqlRuleParams = {
   },
   defaultable: {},
 };
+
 const {
   create: eqlCreateParams,
   patch: eqlPatchParams,
   response: eqlResponseParams,
-} = buildAPISchemas(eqlRuleParams);
-export { eqlCreateParams, eqlResponseParams };
+} = buildRuleSchemas(eqlRuleParams);
+
+export type EqlCreateSchema = CreateSchema<t.TypeOf<typeof eqlCreateParams>>;
+export type EqlPatchParams = t.TypeOf<typeof eqlPatchParams>;
+export type EqlResponseSchema = ResponseSchema<t.TypeOf<typeof eqlResponseParams>>;
+
+export { eqlCreateParams, eqlPatchParams, eqlResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Indicator Match rule fields
 
 const threatMatchRuleParams = {
   required: {
@@ -295,12 +266,21 @@ const threatMatchRuleParams = {
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
+
 const {
   create: threatMatchCreateParams,
   patch: threatMatchPatchParams,
   response: threatMatchResponseParams,
-} = buildAPISchemas(threatMatchRuleParams);
-export { threatMatchCreateParams, threatMatchResponseParams };
+} = buildRuleSchemas(threatMatchRuleParams);
+
+export type ThreatMatchCreateSchema = CreateSchema<t.TypeOf<typeof threatMatchCreateParams>>;
+export type ThreatMatchPatchParams = t.TypeOf<typeof threatMatchPatchParams>;
+export type ThreatMatchResponseSchema = ResponseSchema<t.TypeOf<typeof threatMatchResponseParams>>;
+
+export { threatMatchCreateParams, threatMatchPatchParams, threatMatchResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Custom Query rule fields
 
 const queryRuleParams = {
   required: {
@@ -318,13 +298,22 @@ const queryRuleParams = {
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
+
 const {
   create: queryCreateParams,
   patch: queryPatchParams,
   response: queryResponseParams,
-} = buildAPISchemas(queryRuleParams);
+} = buildRuleSchemas(queryRuleParams);
 
-export { queryCreateParams, queryResponseParams };
+export type QueryCreateSchema = CreateSchema<t.TypeOf<typeof queryCreateParams>>;
+export type QueryUpdateSchema = UpdateSchema<t.TypeOf<typeof queryCreateParams>>;
+export type QueryPatchParams = t.TypeOf<typeof queryPatchParams>;
+export type QueryResponseSchema = ResponseSchema<t.TypeOf<typeof queryResponseParams>>;
+
+export { queryCreateParams, queryPatchParams, queryResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Saved Query rule fields
 
 const savedQueryRuleParams = {
   required: {
@@ -344,13 +333,21 @@ const savedQueryRuleParams = {
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
+
 const {
   create: savedQueryCreateParams,
   patch: savedQueryPatchParams,
   response: savedQueryResponseParams,
-} = buildAPISchemas(savedQueryRuleParams);
+} = buildRuleSchemas(savedQueryRuleParams);
 
-export { savedQueryCreateParams, savedQueryResponseParams };
+export type SavedQueryCreateSchema = CreateSchema<t.TypeOf<typeof savedQueryCreateParams>>;
+export type SavedQueryPatchParams = t.TypeOf<typeof savedQueryPatchParams>;
+export type SavedQueryResponseSchema = ResponseSchema<t.TypeOf<typeof savedQueryResponseParams>>;
+
+export { savedQueryCreateParams, savedQueryPatchParams, savedQueryResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Threshold rule fields
 
 const thresholdRuleParams = {
   required: {
@@ -368,13 +365,24 @@ const thresholdRuleParams = {
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
+
 const {
   create: thresholdCreateParams,
   patch: thresholdPatchParams,
   response: thresholdResponseParams,
-} = buildAPISchemas(thresholdRuleParams);
+} = buildRuleSchemas(thresholdRuleParams);
 
-export { thresholdCreateParams, thresholdResponseParams };
+export type ThresholdCreateSchema = CreateSchema<t.TypeOf<typeof thresholdCreateParams>>;
+export type ThresholdPatchParams = t.TypeOf<typeof thresholdPatchParams>;
+export type ThresholdResponseSchema = ResponseSchema<t.TypeOf<typeof thresholdResponseParams>>;
+
+export type PatchThresholdRuleProps = t.TypeOf<typeof PatchThresholdRuleProps>;
+export const PatchThresholdRuleProps = t.intersection([thresholdPatchParams, SharedPatchProps]);
+
+export { thresholdCreateParams, thresholdPatchParams, thresholdResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Machine Learning rule fields
 
 const machineLearningRuleParams = {
   required: {
@@ -385,13 +393,28 @@ const machineLearningRuleParams = {
   optional: {},
   defaultable: {},
 };
+
 const {
   create: machineLearningCreateParams,
   patch: machineLearningPatchParams,
   response: machineLearningResponseParams,
-} = buildAPISchemas(machineLearningRuleParams);
+} = buildRuleSchemas(machineLearningRuleParams);
 
-export { machineLearningCreateParams, machineLearningResponseParams };
+export type MachineLearningCreateSchema = CreateSchema<
+  t.TypeOf<typeof machineLearningCreateParams>
+>;
+export type MachineLearningUpdateSchema = UpdateSchema<
+  t.TypeOf<typeof machineLearningCreateParams>
+>;
+export type MachineLearningPatchParams = t.TypeOf<typeof machineLearningPatchParams>;
+export type MachineLearningResponseSchema = ResponseSchema<
+  t.TypeOf<typeof machineLearningResponseParams>
+>;
+
+export { machineLearningCreateParams, machineLearningPatchParams, machineLearningResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// New Terms rule fields
 
 const newTermsRuleParams = {
   required: {
@@ -409,16 +432,24 @@ const newTermsRuleParams = {
     language: t.keyof({ kuery: null, lucene: null }),
   },
 };
+
 const {
   create: newTermsCreateParams,
   patch: newTermsPatchParams,
   response: newTermsResponseParams,
-} = buildAPISchemas(newTermsRuleParams);
+} = buildRuleSchemas(newTermsRuleParams);
 
-export { newTermsCreateParams, newTermsResponseParams };
-// ---------------------------------------
-// END type specific parameter definitions
+export type NewTermsCreateSchema = CreateSchema<t.TypeOf<typeof newTermsCreateParams>>;
+export type NewTermsUpdateSchema = UpdateSchema<t.TypeOf<typeof newTermsCreateParams>>;
+export type NewTermsPatchParams = t.TypeOf<typeof newTermsPatchParams>;
+export type NewTermsResponseSchema = ResponseSchema<t.TypeOf<typeof newTermsResponseParams>>;
 
+export { newTermsCreateParams, newTermsPatchParams, newTermsResponseParams };
+
+// -------------------------------------------------------------------------------------------------
+// Final combined schemas
+
+export type CreateTypeSpecific = t.TypeOf<typeof createTypeSpecific>;
 export const createTypeSpecific = t.union([
   eqlCreateParams,
   threatMatchCreateParams,
@@ -428,35 +459,6 @@ export const createTypeSpecific = t.union([
   machineLearningCreateParams,
   newTermsCreateParams,
 ]);
-export type CreateTypeSpecific = t.TypeOf<typeof createTypeSpecific>;
-
-// Convenience types for building specific types of rules
-type CreateSchema<T> = SharedCreateSchema & T;
-export type EqlCreateSchema = CreateSchema<t.TypeOf<typeof eqlCreateParams>>;
-export type ThreatMatchCreateSchema = CreateSchema<t.TypeOf<typeof threatMatchCreateParams>>;
-export type QueryCreateSchema = CreateSchema<t.TypeOf<typeof queryCreateParams>>;
-export type SavedQueryCreateSchema = CreateSchema<t.TypeOf<typeof savedQueryCreateParams>>;
-export type ThresholdCreateSchema = CreateSchema<t.TypeOf<typeof thresholdCreateParams>>;
-export type MachineLearningCreateSchema = CreateSchema<
-  t.TypeOf<typeof machineLearningCreateParams>
->;
-export type NewTermsCreateSchema = CreateSchema<t.TypeOf<typeof newTermsCreateParams>>;
-
-export const createRulesSchema = t.intersection([sharedCreateSchema, createTypeSpecific]);
-export type CreateRulesSchema = t.TypeOf<typeof createRulesSchema>;
-export const previewRulesSchema = t.intersection([
-  sharedCreateSchema,
-  createTypeSpecific,
-  t.type({ invocationCount: t.number, timeframeEnd: t.string }),
-]);
-export type PreviewRulesSchema = t.TypeOf<typeof previewRulesSchema>;
-
-type UpdateSchema<T> = SharedUpdateSchema & T;
-export type QueryUpdateSchema = UpdateSchema<t.TypeOf<typeof queryCreateParams>>;
-export type MachineLearningUpdateSchema = UpdateSchema<
-  t.TypeOf<typeof machineLearningCreateParams>
->;
-export type NewTermsUpdateSchema = UpdateSchema<t.TypeOf<typeof newTermsCreateParams>>;
 
 export const patchTypeSpecific = t.union([
   eqlPatchParams,
@@ -467,24 +469,8 @@ export const patchTypeSpecific = t.union([
   machineLearningPatchParams,
   newTermsPatchParams,
 ]);
-export {
-  eqlPatchParams,
-  threatMatchPatchParams,
-  queryPatchParams,
-  savedQueryPatchParams,
-  thresholdPatchParams,
-  machineLearningPatchParams,
-  newTermsPatchParams,
-};
 
-export type EqlPatchParams = t.TypeOf<typeof eqlPatchParams>;
-export type ThreatMatchPatchParams = t.TypeOf<typeof threatMatchPatchParams>;
-export type QueryPatchParams = t.TypeOf<typeof queryPatchParams>;
-export type SavedQueryPatchParams = t.TypeOf<typeof savedQueryPatchParams>;
-export type ThresholdPatchParams = t.TypeOf<typeof thresholdPatchParams>;
-export type MachineLearningPatchParams = t.TypeOf<typeof machineLearningPatchParams>;
-export type NewTermsPatchParams = t.TypeOf<typeof newTermsPatchParams>;
-
+export type ResponseTypeSpecific = t.TypeOf<typeof responseTypeSpecific>;
 const responseTypeSpecific = t.union([
   eqlResponseParams,
   threatMatchResponseParams,
@@ -494,53 +480,28 @@ const responseTypeSpecific = t.union([
   machineLearningResponseParams,
   newTermsResponseParams,
 ]);
-export type ResponseTypeSpecific = t.TypeOf<typeof responseTypeSpecific>;
 
-export const updateRulesSchema = t.intersection([createTypeSpecific, sharedUpdateSchema]);
+export type CreateRulesSchema = t.TypeOf<typeof createRulesSchema>;
+export const createRulesSchema = t.intersection([SharedCreateProps, createTypeSpecific]);
+
 export type UpdateRulesSchema = t.TypeOf<typeof updateRulesSchema>;
+export const updateRulesSchema = t.intersection([createTypeSpecific, SharedUpdateProps]);
 
-const responseRequiredFields = {
-  id: RuleObjectId,
-  rule_id: RuleSignatureId,
-  immutable: IsRuleImmutable,
-  updated_at,
-  updated_by,
-  created_at,
-  created_by,
+export type PatchRuleProps = t.TypeOf<typeof PatchRuleProps>;
+export const PatchRuleProps = t.intersection([patchTypeSpecific, SharedPatchProps]);
 
-  // NOTE: For now, Related Integrations, Required Fields and Setup Guide are supported for prebuilt
-  // rules only. We don't want to allow users to edit these 3 fields via the API. If we added them
-  // to baseParams.defaultable, they would become a part of the request schema as optional fields.
-  // This is why we add them here, in order to add them only to the response schema.
-  related_integrations: RelatedIntegrationArray,
-  required_fields: RequiredFieldArray,
-  setup: SetupGuide,
-};
-
-const responseOptionalFields = {
-  execution_summary: RuleExecutionSummary,
-};
-
-const sharedResponseSchema = t.intersection([
-  baseResponseParams,
-  t.exact(t.type(responseRequiredFields)),
-  t.exact(t.partial(responseOptionalFields)),
-]);
-export type SharedResponseSchema = t.TypeOf<typeof sharedResponseSchema>;
 export const fullResponseSchema = t.intersection([sharedResponseSchema, responseTypeSpecific]);
 export type FullResponseSchema = t.TypeOf<typeof fullResponseSchema>;
 
-// Convenience types for type specific responses
-type ResponseSchema<T> = SharedResponseSchema & T;
-export type EqlResponseSchema = ResponseSchema<t.TypeOf<typeof eqlResponseParams>>;
-export type ThreatMatchResponseSchema = ResponseSchema<t.TypeOf<typeof threatMatchResponseParams>>;
-export type QueryResponseSchema = ResponseSchema<t.TypeOf<typeof queryResponseParams>>;
-export type SavedQueryResponseSchema = ResponseSchema<t.TypeOf<typeof savedQueryResponseParams>>;
-export type ThresholdResponseSchema = ResponseSchema<t.TypeOf<typeof thresholdResponseParams>>;
-export type MachineLearningResponseSchema = ResponseSchema<
-  t.TypeOf<typeof machineLearningResponseParams>
->;
-export type NewTermsResponseSchema = ResponseSchema<t.TypeOf<typeof newTermsResponseParams>>;
+// -------------------------------------------------------------------------------------------------
+// Rule preview schemas
+
+export type PreviewRulesSchema = t.TypeOf<typeof previewRulesSchema>;
+export const previewRulesSchema = t.intersection([
+  SharedCreateProps,
+  createTypeSpecific,
+  t.type({ invocationCount: t.number, timeframeEnd: t.string }),
+]);
 
 export interface RulePreviewLogs {
   errors: string[];

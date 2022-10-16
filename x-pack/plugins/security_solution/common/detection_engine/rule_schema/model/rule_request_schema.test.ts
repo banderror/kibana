@@ -6,11 +6,13 @@
  */
 
 import * as t from 'io-ts';
-import type { CreateRulesSchema, SavedQueryCreateSchema } from './rule_schemas';
-import { createRulesSchema, responseSchema } from './rule_schemas';
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
+
+import { getListArrayMock } from '../../schemas/types/lists.mock';
+import type { CreateRulesSchema, SavedQueryCreateSchema } from './rule_schemas';
+import { createRulesSchema } from './rule_schemas';
 import {
   getCreateSavedQueryRulesSchemaMock,
   getCreateThreatMatchRulesSchemaMock,
@@ -19,7 +21,7 @@ import {
   getCreateRulesSchemaMockWithDataView,
   getCreateMachineLearningRulesSchemaMock,
 } from './rule_request_schema.mock';
-import { getListArrayMock } from '../../schemas/types/lists.mock';
+import { buildResponseRuleSchema } from './build_rule_schemas';
 
 describe('rules schema', () => {
   test('empty objects do not validate', () => {
@@ -1301,7 +1303,11 @@ describe('rules schema', () => {
         testDefaultableString: t.string,
       },
     };
-    const schema = responseSchema(testSchema.required, testSchema.optional, testSchema.defaultable);
+    const schema = buildResponseRuleSchema(
+      testSchema.required,
+      testSchema.optional,
+      testSchema.defaultable
+    );
 
     describe('required fields', () => {
       test('should allow required fields with the correct type', () => {
