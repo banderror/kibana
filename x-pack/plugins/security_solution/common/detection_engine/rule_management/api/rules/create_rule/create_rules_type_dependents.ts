@@ -7,7 +7,16 @@
 
 import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
 
-export const validateTimelineId = (rule: CreateRulesSchema): string[] => {
+export const createRuleValidateTypeDependents = (rule: CreateRulesSchema): string[] => {
+  return [
+    ...validateTimelineId(rule),
+    ...validateTimelineTitle(rule),
+    ...validateThreatMapping(rule),
+    ...validateThreshold(rule),
+  ];
+};
+
+const validateTimelineId = (rule: CreateRulesSchema): string[] => {
   if (rule.timeline_id != null) {
     if (rule.timeline_title == null) {
       return ['when "timeline_id" exists, "timeline_title" must also exist'];
@@ -20,7 +29,7 @@ export const validateTimelineId = (rule: CreateRulesSchema): string[] => {
   return [];
 };
 
-export const validateTimelineTitle = (rule: CreateRulesSchema): string[] => {
+const validateTimelineTitle = (rule: CreateRulesSchema): string[] => {
   if (rule.timeline_title != null) {
     if (rule.timeline_id == null) {
       return ['when "timeline_title" exists, "timeline_id" must also exist'];
@@ -33,7 +42,7 @@ export const validateTimelineTitle = (rule: CreateRulesSchema): string[] => {
   return [];
 };
 
-export const validateThreatMapping = (rule: CreateRulesSchema): string[] => {
+const validateThreatMapping = (rule: CreateRulesSchema): string[] => {
   const errors: string[] = [];
   if (rule.type === 'threat_match') {
     if (rule.concurrent_searches != null && rule.items_per_search == null) {
@@ -46,7 +55,7 @@ export const validateThreatMapping = (rule: CreateRulesSchema): string[] => {
   return errors;
 };
 
-export const validateThreshold = (rule: CreateRulesSchema): string[] => {
+const validateThreshold = (rule: CreateRulesSchema): string[] => {
   const errors: string[] = [];
   if (rule.type === 'threshold') {
     if (!rule.threshold) {
@@ -64,13 +73,4 @@ export const validateThreshold = (rule: CreateRulesSchema): string[] => {
     }
   }
   return errors;
-};
-
-export const createRuleValidateTypeDependents = (rule: CreateRulesSchema): string[] => {
-  return [
-    ...validateTimelineId(rule),
-    ...validateTimelineTitle(rule),
-    ...validateThreatMapping(rule),
-    ...validateThreshold(rule),
-  ];
 };
