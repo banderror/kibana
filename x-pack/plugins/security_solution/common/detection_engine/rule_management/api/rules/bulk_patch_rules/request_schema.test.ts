@@ -5,19 +5,18 @@
  * 2.0.
  */
 
-import type { PatchRulesBulkSchema } from './patch_rules_bulk_schema';
-import { patchRulesBulkSchema } from './patch_rules_bulk_schema';
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
 import type { PatchRulesSchema } from '../patch_rule/patch_rules_schema';
+import { BulkPatchRulesRequestBody } from './request_schema';
 
 // only the basics of testing are here.
 // see: patch_rules_schema.test.ts for the bulk of the validation tests
 // this just wraps patchRulesSchema in an array
-describe('patch_rules_bulk_schema', () => {
+describe('Bulk patch rules request schema', () => {
   test('can take an empty array and validate it', () => {
-    const payload: PatchRulesBulkSchema = [];
+    const payload: BulkPatchRulesRequestBody = [];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(output.errors).toEqual([]);
@@ -25,9 +24,9 @@ describe('patch_rules_bulk_schema', () => {
   });
 
   test('single array of [id] does validate', () => {
-    const payload: PatchRulesBulkSchema = [{ id: '4125761e-51da-4de9-a0c8-42824f532ddb' }];
+    const payload: BulkPatchRulesRequestBody = [{ id: '4125761e-51da-4de9-a0c8-42824f532ddb' }];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -35,12 +34,12 @@ describe('patch_rules_bulk_schema', () => {
   });
 
   test('two arrays of [id] validate', () => {
-    const payload: PatchRulesBulkSchema = [
+    const payload: BulkPatchRulesRequestBody = [
       { id: '4125761e-51da-4de9-a0c8-42824f532ddb' },
       { id: '192f403d-b285-4251-9e8b-785fcfcf22e8' },
     ];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -48,12 +47,12 @@ describe('patch_rules_bulk_schema', () => {
   });
 
   test('can set "note" to be a string', () => {
-    const payload: PatchRulesBulkSchema = [
+    const payload: BulkPatchRulesRequestBody = [
       { id: '4125761e-51da-4de9-a0c8-42824f532ddb' },
       { note: 'hi' },
     ];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -61,12 +60,12 @@ describe('patch_rules_bulk_schema', () => {
   });
 
   test('can set "note" to be an empty string', () => {
-    const payload: PatchRulesBulkSchema = [
+    const payload: BulkPatchRulesRequestBody = [
       { id: '4125761e-51da-4de9-a0c8-42824f532ddb' },
       { note: '' },
     ];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -79,7 +78,7 @@ describe('patch_rules_bulk_schema', () => {
       { note: { someprop: 'some value here' } },
     ];
 
-    const decoded = patchRulesBulkSchema.decode(payload);
+    const decoded = BulkPatchRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([

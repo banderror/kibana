@@ -6,8 +6,10 @@
  */
 
 import * as t from 'io-ts';
-
 import { patchRulesSchema } from '../patch_rule/patch_rules_schema';
 
-export const patchRulesBulkSchema = t.array(patchRulesSchema);
-export type PatchRulesBulkSchema = t.TypeOf<typeof patchRulesBulkSchema>;
+/**
+ * Request body parameters of the API route.
+ */
+export type BulkPatchRulesRequestBody = t.TypeOf<typeof BulkPatchRulesRequestBody>;
+export const BulkPatchRulesRequestBody = t.array(patchRulesSchema);
