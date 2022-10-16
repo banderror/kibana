@@ -7,7 +7,10 @@
 
 import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
 
-export const createRuleValidateTypeDependents = (rule: CreateRulesSchema): string[] => {
+/**
+ * Additional validation that is implemented outside of the schema itself.
+ */
+export const validateCreateRuleSchema = (rule: CreateRulesSchema): string[] => {
   return [
     ...validateTimelineId(rule),
     ...validateTimelineTitle(rule),

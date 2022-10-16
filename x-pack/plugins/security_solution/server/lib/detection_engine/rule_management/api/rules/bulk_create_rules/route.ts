@@ -5,16 +5,21 @@
  * 2.0.
  */
 
-import { validate } from '@kbn/securitysolution-io-ts-utils';
 import type { Logger } from '@kbn/core/server';
-import { createRuleValidateTypeDependents } from '../../../../../../../common/detection_engine/rule_management/api/rules/create_rule/create_rules_type_dependents';
-import { BulkCreateRulesRequestBody } from '../../../../../../../common/detection_engine/rule_management';
-import { rulesBulkSchema } from '../../../../../../../common/detection_engine/schemas/response/rules_bulk_schema';
-import type { SecuritySolutionPluginRouter } from '../../../../../../types';
+import { validate } from '@kbn/securitysolution-io-ts-utils';
+
 import { DETECTION_ENGINE_RULES_BULK_CREATE } from '../../../../../../../common/constants';
+import {
+  BulkCreateRulesRequestBody,
+  validateCreateRuleSchema,
+} from '../../../../../../../common/detection_engine/rule_management';
+import { rulesBulkSchema } from '../../../../../../../common/detection_engine/schemas/response/rules_bulk_schema';
+
+import type { SecuritySolutionPluginRouter } from '../../../../../../types';
 import type { SetupPlugins } from '../../../../../../plugin';
 import { buildMlAuthz } from '../../../../../machine_learning/authz';
 import { throwAuthzError } from '../../../../../machine_learning/validation';
+import { createRules } from '../../../logic/crud/create_rules';
 import { readRules } from '../../../logic/crud/read_rules';
 import { getDuplicates } from './get_duplicates';
 import { transformValidateBulkError } from '../../../utils/validate';
@@ -26,7 +31,6 @@ import {
   buildSiemResponse,
 } from '../../../../routes/utils';
 import { getDeprecatedBulkEndpointHeader, logDeprecatedBulkEndpoint } from '../../deprecation';
-import { createRules } from '../../../logic/crud/create_rules';
 
 /**
  * @deprecated since version 8.2.0. Use the detection_engine/rules/_bulk_action API instead
@@ -86,7 +90,7 @@ export const bulkCreateRulesRoute = (
             }
 
             try {
-              const validationErrors = createRuleValidateTypeDependents(payloadRule);
+              const validationErrors = validateCreateRuleSchema(payloadRule);
               if (validationErrors.length) {
                 return createBulkErrorObject({
                   ruleId: payloadRule.rule_id,

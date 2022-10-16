@@ -5,21 +5,21 @@
  * 2.0.
  */
 
+import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
 import {
   getCreateRulesSchemaMock,
   getCreateThreatMatchRulesSchemaMock,
 } from '../../../../schemas/request/rule_schemas.mock';
-import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
-import { createRuleValidateTypeDependents } from './create_rules_type_dependents';
+import { validateCreateRuleSchema } from './request_schema_validation';
 
-describe('create_rules_type_dependents', () => {
+describe('Create rule request schema, additional validation', () => {
   test('You cannot omit timeline_title when timeline_id is present', () => {
     const schema: CreateRulesSchema = {
       ...getCreateRulesSchemaMock(),
       timeline_id: '123',
     };
     delete schema.timeline_title;
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual(['when "timeline_id" exists, "timeline_title" must also exist']);
   });
 
@@ -29,7 +29,7 @@ describe('create_rules_type_dependents', () => {
       timeline_id: '123',
       timeline_title: '',
     };
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual(['"timeline_title" cannot be an empty string']);
   });
 
@@ -39,7 +39,7 @@ describe('create_rules_type_dependents', () => {
       timeline_id: '',
       timeline_title: 'some-title',
     };
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual(['"timeline_id" cannot be an empty string']);
   });
 
@@ -49,7 +49,7 @@ describe('create_rules_type_dependents', () => {
       timeline_title: 'some-title',
     };
     delete schema.timeline_id;
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual(['when "timeline_title" exists, "timeline_id" must also exist']);
   });
 
@@ -59,7 +59,7 @@ describe('create_rules_type_dependents', () => {
       concurrent_searches: 10,
       items_per_search: 10,
     };
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual([]);
   });
 
@@ -68,7 +68,7 @@ describe('create_rules_type_dependents', () => {
       ...getCreateThreatMatchRulesSchemaMock(),
       items_per_search: 10,
     };
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual([
       'when "items_per_search" exists, "concurrent_searches" must also exist',
     ]);
@@ -79,7 +79,7 @@ describe('create_rules_type_dependents', () => {
       ...getCreateThreatMatchRulesSchemaMock(),
       concurrent_searches: 10,
     };
-    const errors = createRuleValidateTypeDependents(schema);
+    const errors = validateCreateRuleSchema(schema);
     expect(errors).toEqual([
       'when "concurrent_searches" exists, "items_per_search" must also exist',
     ]);
