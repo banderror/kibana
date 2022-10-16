@@ -481,14 +481,14 @@ const responseTypeSpecific = t.union([
   newTermsResponseParams,
 ]);
 
-export type CreateRulesSchema = t.TypeOf<typeof createRulesSchema>;
-export const createRulesSchema = t.intersection([SharedCreateProps, createTypeSpecific]);
+export type RuleCreateProps = t.TypeOf<typeof RuleCreateProps>;
+export const RuleCreateProps = t.intersection([SharedCreateProps, createTypeSpecific]);
 
-export type UpdateRulesSchema = t.TypeOf<typeof updateRulesSchema>;
-export const updateRulesSchema = t.intersection([createTypeSpecific, SharedUpdateProps]);
+export type RuleUpdateProps = t.TypeOf<typeof RuleUpdateProps>;
+export const RuleUpdateProps = t.intersection([createTypeSpecific, SharedUpdateProps]);
 
-export type PatchRuleProps = t.TypeOf<typeof PatchRuleProps>;
-export const PatchRuleProps = t.intersection([patchTypeSpecific, SharedPatchProps]);
+export type RulePatchProps = t.TypeOf<typeof RulePatchProps>;
+export const RulePatchProps = t.intersection([patchTypeSpecific, SharedPatchProps]);
 
 export const fullResponseSchema = t.intersection([sharedResponseSchema, responseTypeSpecific]);
 export type FullResponseSchema = t.TypeOf<typeof fullResponseSchema>;

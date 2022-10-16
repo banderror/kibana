@@ -24,7 +24,7 @@ import type {
   RelatedIntegrationArray,
   RequiredFieldArray,
   SetupGuide,
-  CreateRulesSchema,
+  RuleCreateProps,
   CreateTypeSpecific,
   EqlPatchParams,
   FullResponseSchema,
@@ -476,7 +476,7 @@ export const convertPatchAPIToInternalSchema = (
 
 // eslint-disable-next-line complexity
 export const convertCreateAPIToInternalSchema = (
-  input: CreateRulesSchema & {
+  input: RuleCreateProps & {
     related_integrations?: RelatedIntegrationArray;
     required_fields?: RequiredFieldArray;
     setup?: SetupGuide;

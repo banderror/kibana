@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import { PatchRuleProps, PatchThresholdRuleProps } from '../../../../../rule_schema';
+import { RulePatchProps, PatchThresholdRuleProps } from '../../../../../rule_schema';
 
 /**
  * Request body parameters of the API route.
  * All of the patch elements should default to undefined if not set.
  */
-export type PatchRuleRequestBody = PatchRuleProps;
+export type PatchRuleRequestBody = RulePatchProps;
 export const PatchRuleRequestBody = PatchRuleProps;
 
 export type ThresholdPatchRuleRequestBody = PatchThresholdRuleProps;

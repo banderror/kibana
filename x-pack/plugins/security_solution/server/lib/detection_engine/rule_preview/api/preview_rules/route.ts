@@ -22,7 +22,7 @@ import {
   DEFAULT_PREVIEW_INDEX,
   DETECTION_ENGINE_RULES_PREVIEW,
 } from '../../../../../../common/constants';
-import { validateCreateRuleSchema } from '../../../../../../common/detection_engine/rule_management';
+import { validateCreateRuleProps } from '../../../../../../common/detection_engine/rule_management';
 import { RuleExecutionStatus } from '../../../../../../common/detection_engine/rule_monitoring';
 import type { RulePreviewLogs } from '../../../../../../common/detection_engine/schemas/request';
 import { previewRulesSchema } from '../../../../../../common/detection_engine/schemas/request';
@@ -84,7 +84,7 @@ export const previewRulesRoute = async (
     },
     async (context, request, response) => {
       const siemResponse = buildSiemResponse(response);
-      const validationErrors = validateCreateRuleSchema(request.body);
+      const validationErrors = validateCreateRuleProps(request.body);
       const coreContext = await context.core;
       if (validationErrors.length) {
         return siemResponse.error({ statusCode: 400, body: validationErrors });
