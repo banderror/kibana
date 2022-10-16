@@ -6,8 +6,8 @@
  */
 
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
-import type { UpdateRulesSchema } from '../../../../schemas/request/rule_schemas';
-import { getUpdateRulesSchemaMock } from '../../../../schemas/request/rule_schemas.mock';
+import type { UpdateRulesSchema } from '../../../../../schemas/request/rule_schemas';
+import { getUpdateRulesSchemaMock } from '../../../../../schemas/request/rule_schemas.mock';
 import { BulkUpdateRulesRequestBody } from './request_schema';
 
 // only the basics of testing are here.

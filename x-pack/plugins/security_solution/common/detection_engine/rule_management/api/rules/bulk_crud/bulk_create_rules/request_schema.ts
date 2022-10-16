@@ -6,10 +6,10 @@
  */
 
 import * as t from 'io-ts';
-import { QueryRuleByIds } from '../read_rule/query_rule_by_ids';
+import { createRulesSchema } from '../../../../../schemas/request/rule_schemas';
 
 /**
  * Request body parameters of the API route.
  */
-export type BulkDeleteRulesRequestBody = t.TypeOf<typeof BulkDeleteRulesRequestBody>;
-export const BulkDeleteRulesRequestBody = t.array(QueryRuleByIds);
+export type BulkCreateRulesRequestBody = t.TypeOf<typeof BulkCreateRulesRequestBody>;
+export const BulkCreateRulesRequestBody = t.array(createRulesSchema);

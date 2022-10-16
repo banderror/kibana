@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { CreateRulesSchema } from '../../../../schemas/request/rule_schemas';
+import type { CreateRulesSchema } from '../../../../../schemas/request/rule_schemas';
 
 /**
  * Additional validation that is implemented outside of the schema itself.
