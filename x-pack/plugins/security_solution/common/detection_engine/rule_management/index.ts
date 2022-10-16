@@ -11,6 +11,8 @@ export * from './api/rules/bulk_delete_rules/request_schema';
 export * from './api/rules/bulk_patch_rules/request_schema';
 export * from './api/rules/bulk_update_rules/request_schema';
 export * from './api/rules/export_rules/request_schema';
+export * from './api/rules/find_rules/request_schema_validation';
+export * from './api/rules/find_rules/request_schema';
 // export * from './api/urls';
 
 export * from './model/export/export_rules_details_schema';

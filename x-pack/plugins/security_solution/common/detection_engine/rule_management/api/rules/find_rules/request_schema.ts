@@ -6,12 +6,15 @@
  */
 
 import * as t from 'io-ts';
-
 import { DefaultPerPage, DefaultPage } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { PerPage, Page } from '../../../../schemas/common';
 import { queryFilter, fields, SortField, SortOrder } from '../../../../schemas/common';
 
-export const findRulesSchema = t.exact(
+/**
+ * Query string parameters of the API route.
+ */
+export type FindRulesRequestQuery = t.TypeOf<typeof FindRulesRequestQuery>;
+export const FindRulesRequestQuery = t.exact(
   t.partial({
     fields,
     filter: queryFilter,
@@ -22,8 +25,7 @@ export const findRulesSchema = t.exact(
   })
 );
 
-export type FindRulesSchema = t.TypeOf<typeof findRulesSchema>;
-export type FindRulesSchemaDecoded = Omit<FindRulesSchema, 'per_page'> & {
+export type FindRulesRequestQueryDecoded = Omit<FindRulesRequestQuery, 'per_page'> & {
   page: Page;
   per_page: PerPage;
 };
