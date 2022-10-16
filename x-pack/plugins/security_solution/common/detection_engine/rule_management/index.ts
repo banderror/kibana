@@ -15,6 +15,8 @@ export * from './api/rules/find_rules/request_schema_validation';
 export * from './api/rules/find_rules/request_schema';
 export * from './api/rules/import_rules/request_schema';
 export * from './api/rules/import_rules/response_schema';
+export * from './api/rules/patch_rule/request_schema_validation';
+export * from './api/rules/patch_rule/request_schema';
 // export * from './api/urls';
 
 export * from './model/export/export_rules_details_schema';

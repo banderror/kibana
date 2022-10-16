@@ -6,11 +6,15 @@
  */
 
 import { DETECTION_ENGINE_RULES_URL } from '../../../../../../../common/constants';
+import { getPatchRulesSchemaMock } from '../../../../../../../common/detection_engine/rule_management/mocks';
+
+import { buildMlAuthz } from '../../../../../machine_learning/authz';
 import {
   mlServicesMock,
   mlAuthzMock as mockMlAuthzFactory,
 } from '../../../../../machine_learning/mocks';
-import { buildMlAuthz } from '../../../../../machine_learning/authz';
+
+import { requestContextMock, serverMock, requestMock } from '../../../../routes/__mocks__';
 import {
   getEmptyFindResult,
   getRuleMock,
@@ -19,12 +23,12 @@ import {
   nonRuleFindResult,
   typicalMlRulePayload,
 } from '../../../../routes/__mocks__/request_responses';
-import { requestContextMock, serverMock, requestMock } from '../../../../routes/__mocks__';
-import { patchRuleRoute } from './route';
-import { getPatchRulesSchemaMock } from '../../../../../../../common/detection_engine/rule_management/api/rules/patch_rule/patch_rules_schema.mock';
+
 import { getMlRuleParams, getQueryRuleParams } from '../../../../rule_schema/mocks';
 // eslint-disable-next-line no-restricted-imports
 import { legacyMigrate } from '../../../logic/rule_actions/legacy_action_migration';
+
+import { patchRuleRoute } from './route';
 
 jest.mock('../../../../../machine_learning/authz', () => mockMlAuthzFactory.create());
 

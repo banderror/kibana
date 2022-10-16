@@ -5,56 +5,56 @@
  * 2.0.
  */
 
-import type { PatchRulesSchema } from './patch_rules_schema';
-import { patchRulesSchema } from './patch_rules_schema';
-import { getPatchRulesSchemaMock } from './patch_rules_schema.mock';
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
-import { getListArrayMock } from '../../../../schemas/types/lists.mock';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-describe('patch_rules_schema', () => {
+import { getListArrayMock } from '../../../../schemas/types/lists.mock';
+import { PatchRuleRequestBody } from './request_schema';
+import { getPatchRulesSchemaMock } from './request_schema.mock';
+
+describe('Patch rule request schema', () => {
   test('[id] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
     expect(message.schema).toEqual(expected);
   });
 
   test('[rule_id] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
     };
     expect(message.schema).toEqual(expected);
   });
 
   test('[rule_id, description] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
     };
@@ -62,16 +62,16 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
     };
@@ -79,16 +79,16 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, risk_score] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       risk_score: 10,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       risk_score: 10,
     };
@@ -96,17 +96,17 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -115,18 +115,18 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
       to: 'now',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -136,18 +136,18 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
       to: 'now',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -157,7 +157,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, name] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -165,11 +165,11 @@ describe('patch_rules_schema', () => {
       name: 'some-name',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -180,7 +180,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, name] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -188,11 +188,11 @@ describe('patch_rules_schema', () => {
       name: 'some-name',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -203,7 +203,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -212,11 +212,11 @@ describe('patch_rules_schema', () => {
       severity: 'low',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -228,7 +228,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, name, severity] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -237,11 +237,11 @@ describe('patch_rules_schema', () => {
       severity: 'low',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -253,7 +253,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -263,11 +263,11 @@ describe('patch_rules_schema', () => {
       type: 'query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -280,7 +280,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, name, severity, type] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -290,11 +290,11 @@ describe('patch_rules_schema', () => {
       type: 'query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -307,7 +307,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, name, severity, type, interval] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -318,11 +318,11 @@ describe('patch_rules_schema', () => {
       type: 'query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -336,7 +336,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, name, severity, type, interval] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -347,11 +347,11 @@ describe('patch_rules_schema', () => {
       type: 'query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -365,7 +365,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, query] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -378,11 +378,11 @@ describe('patch_rules_schema', () => {
       query: 'some query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -398,7 +398,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, index, name, severity, interval, type, query, language] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -411,11 +411,11 @@ describe('patch_rules_schema', () => {
       language: 'kuery',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -431,7 +431,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, index, name, severity, interval, type, query, language] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -439,11 +439,11 @@ describe('patch_rules_schema', () => {
       name: 'some-name',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -454,7 +454,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[id, description, from, to, index, name, severity, type, filters] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -466,11 +466,11 @@ describe('patch_rules_schema', () => {
       filters: [],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -485,7 +485,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('[rule_id, description, from, to, index, name, severity, type, filters] does validate', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -497,11 +497,11 @@ describe('patch_rules_schema', () => {
       filters: [],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       rule_id: 'rule-1',
       description: 'some description',
       from: 'now-5m',
@@ -516,7 +516,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('allows references to be sent as a valid value to patch with', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -531,11 +531,11 @@ describe('patch_rules_schema', () => {
       language: 'kuery',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       description: 'some description',
       from: 'now-5m',
@@ -553,48 +553,48 @@ describe('patch_rules_schema', () => {
   });
 
   test('does not default references to an array', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as PatchRulesSchema).references).toEqual(undefined);
+    expect((message.schema as PatchRuleRequestBody).references).toEqual(undefined);
   });
 
   test('does not default interval', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as PatchRulesSchema).interval).toEqual(undefined);
+    expect((message.schema as PatchRuleRequestBody).interval).toEqual(undefined);
   });
 
   test('does not default max_signals', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as PatchRulesSchema).max_signals).toEqual(undefined);
+    expect((message.schema as PatchRuleRequestBody).max_signals).toEqual(undefined);
   });
 
   test('references cannot be numbers', () => {
-    const payload: Omit<PatchRulesSchema, 'references'> & { references: number[] } = {
+    const payload: Omit<PatchRuleRequestBody, 'references'> & { references: number[] } = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       references: [5],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "5" supplied to "references"']);
@@ -602,13 +602,13 @@ describe('patch_rules_schema', () => {
   });
 
   test('indexes cannot be numbers', () => {
-    const payload: Omit<PatchRulesSchema, 'index'> & { index: number[] } = {
+    const payload: Omit<PatchRuleRequestBody, 'index'> & { index: number[] } = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       type: 'query',
       index: [5],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -619,16 +619,16 @@ describe('patch_rules_schema', () => {
   });
 
   test('saved_id is not required when type is saved_query and will validate without it', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       type: 'saved_query',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       type: 'saved_query',
     };
@@ -642,7 +642,7 @@ describe('patch_rules_schema', () => {
       saved_id: 'some id',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -661,7 +661,7 @@ describe('patch_rules_schema', () => {
       filters: [],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -680,7 +680,7 @@ describe('patch_rules_schema', () => {
       language: 'kuery',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -699,7 +699,7 @@ describe('patch_rules_schema', () => {
       language: 'lucene',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -719,7 +719,7 @@ describe('patch_rules_schema', () => {
       language: 'something-made-up',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -735,7 +735,7 @@ describe('patch_rules_schema', () => {
       max_signals: -1,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -751,7 +751,7 @@ describe('patch_rules_schema', () => {
       max_signals: 0,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "0" supplied to "max_signals"']);
@@ -765,7 +765,7 @@ describe('patch_rules_schema', () => {
       max_signals: 1,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -778,16 +778,16 @@ describe('patch_rules_schema', () => {
   });
 
   test('meta can be patched', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       meta: { whateverYouWant: 'anything_at_all' },
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       meta: { whateverYouWant: 'anything_at_all' },
     };
@@ -795,12 +795,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot patch meta as a string', () => {
-    const payload: Omit<PatchRulesSchema, 'meta'> & { meta: string } = {
+    const payload: Omit<PatchRuleRequestBody, 'meta'> & { meta: string } = {
       ...getPatchRulesSchemaMock(),
       meta: 'should not work',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -810,12 +810,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('filters cannot be a string', () => {
-    const payload: Omit<PatchRulesSchema, 'filters'> & { filters: string } = {
+    const payload: Omit<PatchRuleRequestBody, 'filters'> & { filters: string } = {
       ...getPatchRulesSchemaMock(),
       filters: 'should not work',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toContain(
@@ -825,12 +825,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('name cannot be an empty string', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       name: '',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "" supplied to "name"']);
@@ -838,12 +838,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('description cannot be an empty string', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       description: '',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "" supplied to "description"']);
@@ -851,32 +851,32 @@ describe('patch_rules_schema', () => {
   });
 
   test('threat is not defaulted to empty array on patch', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as PatchRulesSchema).threat).toEqual(undefined);
+    expect((message.schema as PatchRuleRequestBody).threat).toEqual(undefined);
   });
 
   test('threat is not defaulted to undefined on patch with empty array', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       threat: [],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    expect((message.schema as PatchRulesSchema).threat).toEqual([]);
+    expect((message.schema as PatchRuleRequestBody).threat).toEqual([]);
   });
 
   test('threat is valid when updated with all sub-objects', () => {
-    const threat: PatchRulesSchema['threat'] = [
+    const threat: PatchRuleRequestBody['threat'] = [
       {
         framework: 'fake',
         tactic: {
@@ -893,12 +893,12 @@ describe('patch_rules_schema', () => {
         ],
       },
     ];
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       threat,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -906,7 +906,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('threat is invalid when updated with missing property framework', () => {
-    const threat: Omit<PatchRulesSchema['threat'], 'framework'> = [
+    const threat: Omit<PatchRuleRequestBody['threat'], 'framework'> = [
       {
         tactic: {
           id: 'fakeId',
@@ -922,12 +922,12 @@ describe('patch_rules_schema', () => {
         ],
       },
     ];
-    const payload: Omit<PatchRulesSchema['threat'], 'framework'> = {
+    const payload: Omit<PatchRuleRequestBody['threat'], 'framework'> = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       threat,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -937,7 +937,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('threat is invalid when updated with missing tactic sub-object', () => {
-    const threat: Omit<PatchRulesSchema['threat'], 'tactic'> = [
+    const threat: Omit<PatchRuleRequestBody['threat'], 'tactic'> = [
       {
         framework: 'fake',
         technique: [
@@ -950,12 +950,12 @@ describe('patch_rules_schema', () => {
       },
     ];
 
-    const payload: Omit<PatchRulesSchema['threat'], 'tactic'> = {
+    const payload: Omit<PatchRuleRequestBody['threat'], 'tactic'> = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       threat,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -965,7 +965,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('threat is valid when updated with missing technique', () => {
-    const threat: Omit<PatchRulesSchema['threat'], 'technique'> = [
+    const threat: Omit<PatchRuleRequestBody['threat'], 'technique'> = [
       {
         framework: 'fake',
         tactic: {
@@ -976,12 +976,12 @@ describe('patch_rules_schema', () => {
       },
     ];
 
-    const payload: Omit<PatchRulesSchema['threat'], 'technique'> = {
+    const payload: Omit<PatchRuleRequestBody['threat'], 'technique'> = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       threat,
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
@@ -989,17 +989,17 @@ describe('patch_rules_schema', () => {
   });
 
   test('validates with timeline_id and timeline_title', () => {
-    const payload: PatchRulesSchema = {
+    const payload: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       timeline_id: 'some-id',
       timeline_title: 'some-title',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);
-    const expected: PatchRulesSchema = {
+    const expected: PatchRuleRequestBody = {
       ...getPatchRulesSchemaMock(),
       timeline_id: 'some-id',
       timeline_title: 'some-title',
@@ -1008,12 +1008,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot set the severity to a value other than low, medium, high, or critical', () => {
-    const payload: Omit<PatchRulesSchema, 'severity'> & { severity: string } = {
+    const payload: Omit<PatchRuleRequestBody, 'severity'> & { severity: string } = {
       id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
       severity: 'junk',
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual(['Invalid value "junk" supplied to "severity"']);
@@ -1022,7 +1022,7 @@ describe('patch_rules_schema', () => {
 
   describe('note', () => {
     test('[rule_id, description, from, to, index, name, severity, interval, type, note] does validate', () => {
-      const payload: PatchRulesSchema = {
+      const payload: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1035,11 +1035,11 @@ describe('patch_rules_schema', () => {
         note: '# some documentation markdown',
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
-      const expected: PatchRulesSchema = {
+      const expected: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1055,16 +1055,16 @@ describe('patch_rules_schema', () => {
     });
 
     test('note can be patched', () => {
-      const payload: PatchRulesSchema = {
+      const payload: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         note: '# new documentation markdown',
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
-      const expected: PatchRulesSchema = {
+      const expected: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         note: '# new documentation markdown',
       };
@@ -1072,14 +1072,14 @@ describe('patch_rules_schema', () => {
     });
 
     test('You cannot patch note as an object', () => {
-      const payload: Omit<PatchRulesSchema, 'note'> & { note: object } = {
+      const payload: Omit<PatchRuleRequestBody, 'note'> & { note: object } = {
         id: 'b8f95e17-681f-407f-8a5e-b832a77d3831',
         note: {
           someProperty: 'something else here',
         },
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -1090,12 +1090,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "group"', () => {
-    const payload: Omit<PatchRulesSchema['actions'], 'group'> = {
+    const payload: Omit<PatchRuleRequestBody['actions'], 'group'> = {
       ...getPatchRulesSchemaMock(),
       actions: [{ id: 'id', action_type_id: 'action_type_id', params: {} }],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -1105,12 +1105,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "id"', () => {
-    const payload: Omit<PatchRulesSchema['actions'], 'id'> = {
+    const payload: Omit<PatchRuleRequestBody['actions'], 'id'> = {
       ...getPatchRulesSchemaMock(),
       actions: [{ group: 'group', action_type_id: 'action_type_id', params: {} }],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -1120,12 +1120,12 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot send in an array of actions that are missing "params"', () => {
-    const payload: Omit<PatchRulesSchema['actions'], 'params'> = {
+    const payload: Omit<PatchRuleRequestBody['actions'], 'params'> = {
       ...getPatchRulesSchemaMock(),
       actions: [{ group: 'group', id: 'id', action_type_id: 'action_type_id' }],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -1135,7 +1135,7 @@ describe('patch_rules_schema', () => {
   });
 
   test('You cannot send in an array of actions that are including "actionTypeId"', () => {
-    const payload: Omit<PatchRulesSchema['actions'], 'actions'> = {
+    const payload: Omit<PatchRuleRequestBody['actions'], 'actions'> = {
       ...getPatchRulesSchemaMock(),
       actions: [
         {
@@ -1147,7 +1147,7 @@ describe('patch_rules_schema', () => {
       ],
     };
 
-    const decoded = patchRulesSchema.decode(payload);
+    const decoded = PatchRuleRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([
@@ -1158,7 +1158,7 @@ describe('patch_rules_schema', () => {
 
   describe('exception_list', () => {
     test('[rule_id, description, from, to, index, name, severity, interval, type, filters, note, and exceptions_list] does validate', () => {
-      const payload: PatchRulesSchema = {
+      const payload: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1173,11 +1173,11 @@ describe('patch_rules_schema', () => {
         exceptions_list: getListArrayMock(),
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
-      const expected: PatchRulesSchema = {
+      const expected: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1208,7 +1208,7 @@ describe('patch_rules_schema', () => {
     });
 
     test('[rule_id, description, from, to, index, name, severity, interval, type, filter, risk_score, note, and empty exceptions_list] does validate', () => {
-      const payload: PatchRulesSchema = {
+      const payload: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1224,11 +1224,11 @@ describe('patch_rules_schema', () => {
         exceptions_list: [],
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
-      const expected: PatchRulesSchema = {
+      const expected: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1263,7 +1263,7 @@ describe('patch_rules_schema', () => {
         exceptions_list: [{ id: 'uuid_here', namespace_type: 'not a namespace type' }],
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -1275,7 +1275,7 @@ describe('patch_rules_schema', () => {
     });
 
     test('[rule_id, description, from, to, index, name, severity, interval, type, filters, risk_score, note, and non-existent exceptions_list] does validate with empty exceptions_list', () => {
-      const payload: PatchRulesSchema = {
+      const payload: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',
@@ -1290,11 +1290,11 @@ describe('patch_rules_schema', () => {
         note: '# some markdown',
       };
 
-      const decoded = patchRulesSchema.decode(payload);
+      const decoded = PatchRuleRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);
-      const expected: PatchRulesSchema = {
+      const expected: PatchRuleRequestBody = {
         rule_id: 'rule-1',
         description: 'some description',
         from: 'now-5m',

@@ -7,6 +7,9 @@
 
 import * as t from 'io-ts';
 
+/**
+ * Request body parameters of the API route.
+ */
 export type ImportRulesRequestBody = t.TypeOf<typeof ImportRulesRequestBody>;
 export const ImportRulesRequestBody = t.exact(
   t.type({

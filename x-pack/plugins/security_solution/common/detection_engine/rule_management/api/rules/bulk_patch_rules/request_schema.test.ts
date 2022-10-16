@@ -6,7 +6,7 @@
  */
 
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
-import type { PatchRulesSchema } from '../patch_rule/patch_rules_schema';
+import type { PatchRuleRequestBody } from '../patch_rule/request_schema';
 import { BulkPatchRulesRequestBody } from './request_schema';
 
 // only the basics of testing are here.
@@ -73,7 +73,7 @@ describe('Bulk patch rules request schema', () => {
   });
 
   test('cannot set "note" to be anything other than a string', () => {
-    const payload: Array<Omit<PatchRulesSchema, 'note'> & { note?: object }> = [
+    const payload: Array<Omit<PatchRuleRequestBody, 'note'> & { note?: object }> = [
       { id: '4125761e-51da-4de9-a0c8-42824f532ddb' },
       { note: { someprop: 'some value here' } },
     ];

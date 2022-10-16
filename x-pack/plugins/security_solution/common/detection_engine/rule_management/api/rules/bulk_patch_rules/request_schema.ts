@@ -6,10 +6,10 @@
  */
 
 import * as t from 'io-ts';
-import { patchRulesSchema } from '../patch_rule/patch_rules_schema';
+import { PatchRuleRequestBody } from '../patch_rule/request_schema';
 
 /**
  * Request body parameters of the API route.
  */
 export type BulkPatchRulesRequestBody = t.TypeOf<typeof BulkPatchRulesRequestBody>;
-export const BulkPatchRulesRequestBody = t.array(patchRulesSchema);
+export const BulkPatchRulesRequestBody = t.array(PatchRuleRequestBody);

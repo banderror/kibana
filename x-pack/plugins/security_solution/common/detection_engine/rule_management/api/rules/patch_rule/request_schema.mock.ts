@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { PatchRulesSchema, ThresholdPatchSchema } from './patch_rules_schema';
+import type { PatchRuleRequestBody, ThresholdPatchRuleRequestBody } from './request_schema';
 
-export const getPatchRulesSchemaMock = (): PatchRulesSchema => ({
+export const getPatchRulesSchemaMock = (): PatchRuleRequestBody => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',
@@ -18,7 +18,7 @@ export const getPatchRulesSchemaMock = (): PatchRulesSchema => ({
   rule_id: 'rule-1',
 });
 
-export const getPatchThresholdRulesSchemaMock = (): ThresholdPatchSchema => ({
+export const getPatchThresholdRulesSchemaMock = (): ThresholdPatchRuleRequestBody => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',
