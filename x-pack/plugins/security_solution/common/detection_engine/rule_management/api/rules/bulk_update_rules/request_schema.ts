@@ -8,5 +8,8 @@
 import * as t from 'io-ts';
 import { updateRulesSchema } from '../../../../schemas/request/rule_schemas';
 
-export const updateRulesBulkSchema = t.array(updateRulesSchema);
-export type UpdateRulesBulkSchema = t.TypeOf<typeof updateRulesBulkSchema>;
+/**
+ * Request body parameters of the API route.
+ */
+export type BulkUpdateRulesRequestBody = t.TypeOf<typeof BulkUpdateRulesRequestBody>;
+export const BulkUpdateRulesRequestBody = t.array(updateRulesSchema);
