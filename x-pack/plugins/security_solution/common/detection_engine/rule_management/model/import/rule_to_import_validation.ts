@@ -5,9 +5,16 @@
  * 2.0.
  */
 
-import type { RuleToImport } from './request_schema';
+import type { RuleToImport } from './rule_to_import';
 
-export const validateTimelineId = (rule: RuleToImport): string[] => {
+/**
+ * Additional validation that is implemented outside of the schema itself.
+ */
+export const validateRuleToImport = (rule: RuleToImport): string[] => {
+  return [...validateTimelineId(rule), ...validateTimelineTitle(rule), ...validateThreshold(rule)];
+};
+
+const validateTimelineId = (rule: RuleToImport): string[] => {
   if (rule.timeline_id != null) {
     if (rule.timeline_title == null) {
       return ['when "timeline_id" exists, "timeline_title" must also exist'];
@@ -20,7 +27,7 @@ export const validateTimelineId = (rule: RuleToImport): string[] => {
   return [];
 };
 
-export const validateTimelineTitle = (rule: RuleToImport): string[] => {
+const validateTimelineTitle = (rule: RuleToImport): string[] => {
   if (rule.timeline_title != null) {
     if (rule.timeline_id == null) {
       return ['when "timeline_title" exists, "timeline_id" must also exist'];
@@ -33,7 +40,7 @@ export const validateTimelineTitle = (rule: RuleToImport): string[] => {
   return [];
 };
 
-export const validateThreshold = (rule: RuleToImport): string[] => {
+const validateThreshold = (rule: RuleToImport): string[] => {
   const errors: string[] = [];
   if (rule.type === 'threshold') {
     if (
@@ -47,8 +54,4 @@ export const validateThreshold = (rule: RuleToImport): string[] => {
     }
   }
   return errors;
-};
-
-export const importRuleValidateTypeDependents = (rule: RuleToImport): string[] => {
-  return [...validateTimelineId(rule), ...validateTimelineTitle(rule), ...validateThreshold(rule)];
 };

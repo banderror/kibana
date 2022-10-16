@@ -24,10 +24,9 @@ import type {
   ImportExceptionsListSchema,
 } from '@kbn/securitysolution-io-ts-list-types';
 
-import type { RuleToImport } from '../../../../../../common/detection_engine/rule_management';
 import {
   RuleToImport,
-  importRuleValidateTypeDependents,
+  validateRuleToImport,
 } from '../../../../../../common/detection_engine/rule_management';
 import {
   parseNdjsonStrings,
@@ -48,9 +47,7 @@ export const validateRulesStream = (): Transform => {
   }));
 };
 
-export const validateRules = (
-  rules: Array<RuleToImport | Error>
-): Array<RuleToImport | Error> => {
+export const validateRules = (rules: Array<RuleToImport | Error>): Array<RuleToImport | Error> => {
   return rules.map((obj: RuleToImport | Error) => {
     if (!(obj instanceof Error)) {
       const decoded = RuleToImport.decode(obj);
@@ -59,7 +56,7 @@ export const validateRules = (
         return new BadRequestError(formatErrors(errors).join());
       };
       const onRight = (schema: RuleToImport): BadRequestError | RuleToImport => {
-        const validationErrors = importRuleValidateTypeDependents(schema);
+        const validationErrors = validateRuleToImport(schema);
         if (validationErrors.length) {
           return new BadRequestError(validationErrors.join());
         } else {
