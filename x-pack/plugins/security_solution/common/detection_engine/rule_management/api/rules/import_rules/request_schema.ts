@@ -7,8 +7,8 @@
 
 import * as t from 'io-ts';
 
-export type ImportRulesPayloadSchema = t.TypeOf<typeof ImportRulesPayloadSchema>;
-export const ImportRulesPayloadSchema = t.exact(
+export type ImportRulesRequestBody = t.TypeOf<typeof ImportRulesRequestBody>;
+export const ImportRulesRequestBody = t.exact(
   t.type({
     file: t.object,
   })

@@ -5,22 +5,19 @@
  * 2.0.
  */
 
-import { PositiveInteger } from '@kbn/securitysolution-io-ts-types';
 import * as t from 'io-ts';
+import { PositiveInteger } from '@kbn/securitysolution-io-ts-types';
+import { errorSchema } from '../../../../schemas/response/error_schema';
 
-import { success, success_count } from '../common/schemas';
-import { errorSchema } from './error_schema';
-
-export const importRulesSchema = t.exact(
+export type ImportRulesResponse = t.TypeOf<typeof ImportRulesResponse>;
+export const ImportRulesResponse = t.exact(
   t.type({
     exceptions_success: t.boolean,
     exceptions_success_count: PositiveInteger,
     exceptions_errors: t.array(errorSchema),
     rules_count: PositiveInteger,
-    success,
-    success_count,
+    success: t.boolean,
+    success_count: PositiveInteger,
     errors: t.array(errorSchema),
   })
 );
-
-export type ImportRulesSchema = t.TypeOf<typeof importRulesSchema>;

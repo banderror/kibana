@@ -9,14 +9,14 @@ import { left } from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-import { ImportRulesPayloadSchema } from './request_schema';
+import { ImportRulesRequestBody } from './request_schema';
 
 describe('Import rules schema', () => {
-  describe('importRulesPayloadSchema', () => {
+  describe('ImportRulesRequestBody', () => {
     test('does not validate with an empty object', () => {
       const payload = {};
 
-      const decoded = ImportRulesPayloadSchema.decode(payload);
+      const decoded = ImportRulesRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -26,11 +26,11 @@ describe('Import rules schema', () => {
     });
 
     test('does not validate with a made string', () => {
-      const payload: Omit<ImportRulesPayloadSchema, 'file'> & { madeUpKey: string } = {
+      const payload: Omit<ImportRulesRequestBody, 'file'> & { madeUpKey: string } = {
         madeUpKey: 'madeupstring',
       };
 
-      const decoded = ImportRulesPayloadSchema.decode(payload);
+      const decoded = ImportRulesRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([
@@ -40,9 +40,9 @@ describe('Import rules schema', () => {
     });
 
     test('does validate with a file object', () => {
-      const payload: ImportRulesPayloadSchema = { file: {} };
+      const payload: ImportRulesRequestBody = { file: {} };
 
-      const decoded = ImportRulesPayloadSchema.decode(payload);
+      const decoded = ImportRulesRequestBody.decode(payload);
       const checked = exactCheck(payload, decoded);
       const message = pipe(checked, foldLeftRight);
       expect(getPaths(left(message.errors))).toEqual([]);

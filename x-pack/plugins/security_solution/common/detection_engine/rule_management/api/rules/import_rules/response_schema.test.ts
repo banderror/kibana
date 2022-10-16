@@ -8,15 +8,15 @@
 import { pipe } from 'fp-ts/lib/pipeable';
 import type { Either } from 'fp-ts/lib/Either';
 import { left } from 'fp-ts/lib/Either';
-import type { ImportRulesSchema } from './import_rules_schema';
-import { importRulesSchema } from './import_rules_schema';
-import type { ErrorSchema } from './error_schema';
 import type { Errors } from 'io-ts';
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-describe('import_rules_schema', () => {
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
+import type { ErrorSchema } from '../../../../schemas/response/error_schema';
+import { ImportRulesResponse } from './response_schema';
+
+describe('Import rules response schema', () => {
   test('it should validate an empty import response with no errors', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: true,
       success_count: 0,
       rules_count: 0,
@@ -25,7 +25,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -34,7 +34,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should validate an empty import response with a single error', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: 0,
       rules_count: 0,
@@ -43,7 +43,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -52,7 +52,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should validate an empty import response with a single exceptions error', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: 0,
       rules_count: 0,
@@ -61,7 +61,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -70,7 +70,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should validate an empty import response with two errors', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: 0,
       rules_count: 0,
@@ -82,7 +82,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -91,7 +91,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should validate an empty import response with two exception errors', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: 0,
       rules_count: 0,
@@ -103,7 +103,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -112,7 +112,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should NOT validate a success_count that is a negative number', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: -1,
       rules_count: 0,
@@ -121,7 +121,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -132,7 +132,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should NOT validate a exceptions_success_count that is a negative number', () => {
-    const payload: ImportRulesSchema = {
+    const payload: ImportRulesResponse = {
       success: false,
       success_count: 0,
       rules_count: 0,
@@ -141,7 +141,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: -1,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -170,7 +170,7 @@ describe('import_rules_schema', () => {
         >;
       }
     >;
-    const payload: Omit<ImportRulesSchema, 'success'> & { success: string } = {
+    const payload: Omit<ImportRulesResponse, 'success'> & { success: string } = {
       success: 'hello',
       success_count: 0,
       rules_count: 0,
@@ -179,7 +179,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded as UnsafeCastForTest);
     const message = pipe(checked, foldLeftRight);
 
@@ -207,17 +207,18 @@ describe('import_rules_schema', () => {
         >;
       }
     >;
-    const payload: Omit<ImportRulesSchema, 'exceptions_success'> & { exceptions_success: string } =
-      {
-        success: true,
-        success_count: 0,
-        rules_count: 0,
-        errors: [],
-        exceptions_errors: [],
-        exceptions_success: 'hello',
-        exceptions_success_count: 0,
-      };
-    const decoded = importRulesSchema.decode(payload);
+    const payload: Omit<ImportRulesResponse, 'exceptions_success'> & {
+      exceptions_success: string;
+    } = {
+      success: true,
+      success_count: 0,
+      rules_count: 0,
+      errors: [],
+      exceptions_errors: [],
+      exceptions_success: 'hello',
+      exceptions_success_count: 0,
+    };
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded as UnsafeCastForTest);
     const message = pipe(checked, foldLeftRight);
 
@@ -228,7 +229,7 @@ describe('import_rules_schema', () => {
   });
 
   test('it should NOT validate a success an extra invalid field', () => {
-    const payload: ImportRulesSchema & { invalid_field: string } = {
+    const payload: ImportRulesResponse & { invalid_field: string } = {
       success: true,
       success_count: 0,
       rules_count: 0,
@@ -238,7 +239,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
@@ -248,7 +249,7 @@ describe('import_rules_schema', () => {
 
   test('it should NOT validate an extra field in the second position of the errors array', () => {
     type InvalidError = ErrorSchema & { invalid_data?: string };
-    const payload: Omit<ImportRulesSchema, 'errors'> & {
+    const payload: Omit<ImportRulesResponse, 'errors'> & {
       errors: InvalidError[];
     } = {
       success: true,
@@ -262,7 +263,7 @@ describe('import_rules_schema', () => {
       exceptions_success: true,
       exceptions_success_count: 0,
     };
-    const decoded = importRulesSchema.decode(payload);
+    const decoded = ImportRulesResponse.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
 
