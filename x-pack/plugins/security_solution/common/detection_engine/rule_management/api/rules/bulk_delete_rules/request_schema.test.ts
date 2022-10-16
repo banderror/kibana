@@ -5,18 +5,17 @@
  * 2.0.
  */
 
-import type { QueryRulesBulkSchema } from './query_rules_bulk_schema';
-import { queryRulesBulkSchema } from './query_rules_bulk_schema';
 import { exactCheck, formatErrors, foldLeftRight } from '@kbn/securitysolution-io-ts-utils';
+import { BulkDeleteRulesRequestBody } from './request_schema';
 
 // only the basics of testing are here.
 // see: query_rules_schema.test.ts for the bulk of the validation tests
 // this just wraps queryRulesSchema in an array
-describe('query_rules_bulk_schema', () => {
+describe('Bulk delete rules request schema', () => {
   test('can take an empty array and validate it', () => {
-    const payload: QueryRulesBulkSchema = [];
+    const payload: BulkDeleteRulesRequestBody = [];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -24,13 +23,13 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('non uuid being supplied to id does not validate', () => {
-    const payload: QueryRulesBulkSchema = [
+    const payload: BulkDeleteRulesRequestBody = [
       {
         id: '1',
       },
     ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual(['Invalid value "1" supplied to "id"']);
@@ -38,14 +37,14 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('both rule_id and id being supplied do validate', () => {
-    const payload: QueryRulesBulkSchema = [
+    const payload: BulkDeleteRulesRequestBody = [
       {
         rule_id: '1',
         id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f',
       },
     ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -53,12 +52,12 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('only id validates with two elements', () => {
-    const payload: QueryRulesBulkSchema = [
+    const payload: BulkDeleteRulesRequestBody = [
       { id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' },
       { id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' },
     ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -66,9 +65,11 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('only rule_id validates', () => {
-    const payload: QueryRulesBulkSchema = [{ rule_id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' }];
+    const payload: BulkDeleteRulesRequestBody = [
+      { rule_id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' },
+    ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -76,12 +77,12 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('only rule_id validates with two elements', () => {
-    const payload: QueryRulesBulkSchema = [
+    const payload: BulkDeleteRulesRequestBody = [
       { rule_id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' },
       { rule_id: '2' },
     ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);
@@ -89,12 +90,12 @@ describe('query_rules_bulk_schema', () => {
   });
 
   test('both id and rule_id validates with two separate elements', () => {
-    const payload: QueryRulesBulkSchema = [
+    const payload: BulkDeleteRulesRequestBody = [
       { id: 'c1e1b359-7ac1-4e96-bc81-c683c092436f' },
       { rule_id: '2' },
     ];
 
-    const decoded = queryRulesBulkSchema.decode(payload);
+    const decoded = BulkDeleteRulesRequestBody.decode(payload);
     const checked = exactCheck(payload, decoded);
     const output = foldLeftRight(checked);
     expect(formatErrors(output.errors)).toEqual([]);

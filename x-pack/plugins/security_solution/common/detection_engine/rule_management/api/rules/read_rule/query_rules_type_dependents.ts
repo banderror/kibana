@@ -7,6 +7,10 @@
 
 import type { QueryRulesSchema } from './query_rules_schema';
 
+export const queryRuleValidateTypeDependents = (schema: QueryRulesSchema): string[] => {
+  return [...validateId(schema)];
+};
+
 export const validateId = (rule: QueryRulesSchema): string[] => {
   if (rule.id != null && rule.rule_id != null) {
     return ['both "id" and "rule_id" cannot exist, choose one or the other'];
@@ -15,8 +19,4 @@ export const validateId = (rule: QueryRulesSchema): string[] => {
   } else {
     return [];
   }
-};
-
-export const queryRuleValidateTypeDependents = (schema: QueryRulesSchema): string[] => {
-  return [...validateId(schema)];
 };
