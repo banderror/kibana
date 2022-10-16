@@ -8,8 +8,10 @@
 import type { Logger } from '@kbn/core/server';
 import { validate } from '@kbn/securitysolution-io-ts-utils';
 
-import { BulkUpdateRulesRequestBody } from '../../../../../../../common/detection_engine/rule_management';
-import { updateRuleValidateTypeDependents } from '../../../../../../../common/detection_engine/rule_management/api/rules/update_rule/update_rules_type_dependents';
+import {
+  BulkUpdateRulesRequestBody,
+  validateUpdateRuleSchema,
+} from '../../../../../../../common/detection_engine/rule_management';
 import { rulesBulkSchema } from '../../../../../../../common/detection_engine/schemas/response/rules_bulk_schema';
 
 import { buildRouteValidation } from '../../../../../../utils/build_validation/route_validation';
@@ -71,7 +73,7 @@ export const bulkUpdateRulesRoute = (
         request.body.map(async (payloadRule) => {
           const idOrRuleIdOrUnknown = payloadRule.id ?? payloadRule.rule_id ?? '(unknown id)';
           try {
-            const validationErrors = updateRuleValidateTypeDependents(payloadRule);
+            const validationErrors = validateUpdateRuleSchema(payloadRule);
             if (validationErrors.length) {
               return createBulkErrorObject({
                 ruleId: payloadRule.rule_id,

@@ -7,7 +7,29 @@
 
 import type { UpdateRulesSchema } from '../../../../schemas/request/rule_schemas';
 
-export const validateTimelineId = (rule: UpdateRulesSchema): string[] => {
+/**
+ * Additional validation that is implemented outside of the schema itself.
+ */
+export const validateUpdateRuleSchema = (rule: UpdateRulesSchema): string[] => {
+  return [
+    ...validateId(rule),
+    ...validateTimelineId(rule),
+    ...validateTimelineTitle(rule),
+    ...validateThreshold(rule),
+  ];
+};
+
+const validateId = (rule: UpdateRulesSchema): string[] => {
+  if (rule.id != null && rule.rule_id != null) {
+    return ['both "id" and "rule_id" cannot exist, choose one or the other'];
+  } else if (rule.id == null && rule.rule_id == null) {
+    return ['either "id" or "rule_id" must be set'];
+  } else {
+    return [];
+  }
+};
+
+const validateTimelineId = (rule: UpdateRulesSchema): string[] => {
   if (rule.timeline_id != null) {
     if (rule.timeline_title == null) {
       return ['when "timeline_id" exists, "timeline_title" must also exist'];
@@ -20,7 +42,7 @@ export const validateTimelineId = (rule: UpdateRulesSchema): string[] => {
   return [];
 };
 
-export const validateTimelineTitle = (rule: UpdateRulesSchema): string[] => {
+const validateTimelineTitle = (rule: UpdateRulesSchema): string[] => {
   if (rule.timeline_title != null) {
     if (rule.timeline_id == null) {
       return ['when "timeline_title" exists, "timeline_id" must also exist'];
@@ -33,17 +55,7 @@ export const validateTimelineTitle = (rule: UpdateRulesSchema): string[] => {
   return [];
 };
 
-export const validateId = (rule: UpdateRulesSchema): string[] => {
-  if (rule.id != null && rule.rule_id != null) {
-    return ['both "id" and "rule_id" cannot exist, choose one or the other'];
-  } else if (rule.id == null && rule.rule_id == null) {
-    return ['either "id" or "rule_id" must be set'];
-  } else {
-    return [];
-  }
-};
-
-export const validateThreshold = (rule: UpdateRulesSchema): string[] => {
+const validateThreshold = (rule: UpdateRulesSchema): string[] => {
   const errors: string[] = [];
   if (rule.type === 'threshold') {
     if (!rule.threshold) {
@@ -61,13 +73,4 @@ export const validateThreshold = (rule: UpdateRulesSchema): string[] => {
     }
   }
   return errors;
-};
-
-export const updateRuleValidateTypeDependents = (rule: UpdateRulesSchema): string[] => {
-  return [
-    ...validateId(rule),
-    ...validateTimelineId(rule),
-    ...validateTimelineTitle(rule),
-    ...validateThreshold(rule),
-  ];
 };

@@ -5,18 +5,18 @@
  * 2.0.
  */
 
-import { getUpdateRulesSchemaMock } from '../../../../schemas/request/rule_schemas.mock';
 import type { UpdateRulesSchema } from '../../../../schemas/request/rule_schemas';
-import { updateRuleValidateTypeDependents } from './update_rules_type_dependents';
+import { getUpdateRulesSchemaMock } from '../../../../schemas/request/rule_schemas.mock';
+import { validateUpdateRuleSchema } from './request_schema_validation';
 
-describe('update_rules_type_dependents', () => {
+describe('Update rule request schema, additional validation', () => {
   test('You cannot omit timeline_title when timeline_id is present', () => {
     const schema: UpdateRulesSchema = {
       ...getUpdateRulesSchemaMock(),
       timeline_id: '123',
     };
     delete schema.timeline_title;
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['when "timeline_id" exists, "timeline_title" must also exist']);
   });
 
@@ -26,7 +26,7 @@ describe('update_rules_type_dependents', () => {
       timeline_id: '123',
       timeline_title: '',
     };
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['"timeline_title" cannot be an empty string']);
   });
 
@@ -36,7 +36,7 @@ describe('update_rules_type_dependents', () => {
       timeline_id: '',
       timeline_title: 'some-title',
     };
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['"timeline_id" cannot be an empty string']);
   });
 
@@ -46,7 +46,7 @@ describe('update_rules_type_dependents', () => {
       timeline_title: 'some-title',
     };
     delete schema.timeline_id;
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['when "timeline_title" exists, "timeline_id" must also exist']);
   });
 
@@ -56,7 +56,7 @@ describe('update_rules_type_dependents', () => {
       id: 'some-id',
       rule_id: 'some-rule-id',
     };
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['both "id" and "rule_id" cannot exist, choose one or the other']);
   });
 
@@ -66,7 +66,7 @@ describe('update_rules_type_dependents', () => {
     };
     delete schema.id;
     delete schema.rule_id;
-    const errors = updateRuleValidateTypeDependents(schema);
+    const errors = validateUpdateRuleSchema(schema);
     expect(errors).toEqual(['either "id" or "rule_id" must be set']);
   });
 });
