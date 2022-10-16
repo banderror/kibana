@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import { getImportRulesSchemaMock } from './import_rules_schema.mock';
-import type { ImportRulesSchema } from './import_rules_schema';
-import { importRuleValidateTypeDependents } from './import_rules_type_dependents';
+import { getImportRulesSchemaMock } from './request_schema.mock';
+import type { RuleToImport } from './request_schema';
+import { importRuleValidateTypeDependents } from './rule_to_import_validation';
 
 describe('import_rules_type_dependents', () => {
   test('You cannot omit timeline_title when timeline_id is present', () => {
-    const schema: ImportRulesSchema = {
+    const schema: RuleToImport = {
       ...getImportRulesSchemaMock(),
       timeline_id: '123',
     };
@@ -21,7 +21,7 @@ describe('import_rules_type_dependents', () => {
   });
 
   test('You cannot have empty string for timeline_title when timeline_id is present', () => {
-    const schema: ImportRulesSchema = {
+    const schema: RuleToImport = {
       ...getImportRulesSchemaMock(),
       timeline_id: '123',
       timeline_title: '',
@@ -31,7 +31,7 @@ describe('import_rules_type_dependents', () => {
   });
 
   test('You cannot have timeline_title with an empty timeline_id', () => {
-    const schema: ImportRulesSchema = {
+    const schema: RuleToImport = {
       ...getImportRulesSchemaMock(),
       timeline_id: '',
       timeline_title: 'some-title',
@@ -41,7 +41,7 @@ describe('import_rules_type_dependents', () => {
   });
 
   test('You cannot have timeline_title without timeline_id', () => {
-    const schema: ImportRulesSchema = {
+    const schema: RuleToImport = {
       ...getImportRulesSchemaMock(),
       timeline_title: 'some-title',
     };

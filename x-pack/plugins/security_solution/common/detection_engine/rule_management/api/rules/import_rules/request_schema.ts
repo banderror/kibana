@@ -28,7 +28,8 @@ import { baseCreateParams, createTypeSpecific } from '../../../../schemas/reques
  *   - created_by is optional (but ignored in the import code)
  *   - updated_by is optional (but ignored in the import code)
  */
-export const importRulesSchema = t.intersection([
+export type RuleToImport = t.TypeOf<typeof RuleToImport>;
+export const RuleToImport = t.intersection([
   baseCreateParams,
   createTypeSpecific,
   t.exact(t.type({ rule_id: RuleSignatureId })),
@@ -47,12 +48,9 @@ export const importRulesSchema = t.intersection([
   ),
 ]);
 
-export type ImportRulesSchema = t.TypeOf<typeof importRulesSchema>;
-
-export const importRulesPayloadSchema = t.exact(
+export type ImportRulesPayloadSchema = t.TypeOf<typeof ImportRulesPayloadSchema>;
+export const ImportRulesPayloadSchema = t.exact(
   t.type({
     file: t.object,
   })
 );
-
-export type ImportRulesPayloadSchema = t.TypeOf<typeof importRulesPayloadSchema>;

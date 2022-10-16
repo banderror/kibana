@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { ImportRulesSchema } from './import_rules_schema';
+import type { RuleToImport } from './request_schema';
 
-export const getImportRulesSchemaMock = (ruleId = 'rule-1'): ImportRulesSchema => ({
+export const getImportRulesSchemaMock = (ruleId = 'rule-1'): RuleToImport => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',
@@ -18,7 +18,7 @@ export const getImportRulesSchemaMock = (ruleId = 'rule-1'): ImportRulesSchema =
   rule_id: ruleId,
 });
 
-export const getImportRulesWithIdSchemaMock = (ruleId = 'rule-1'): ImportRulesSchema => ({
+export const getImportRulesWithIdSchemaMock = (ruleId = 'rule-1'): RuleToImport => ({
   id: '6afb8ce1-ea94-4790-8653-fd0b021d2113',
   description: 'some description',
   name: 'Query with a rule id',
@@ -35,7 +35,7 @@ export const getImportRulesWithIdSchemaMock = (ruleId = 'rule-1'): ImportRulesSc
  * as we might import/export
  * @param rules Array of rule objects with which to generate rule JSON
  */
-export const rulesToNdJsonString = (rules: ImportRulesSchema[]) => {
+export const rulesToNdJsonString = (rules: RuleToImport[]) => {
   return rules.map((rule) => JSON.stringify(rule)).join('\r\n');
 };
 
@@ -49,7 +49,7 @@ export const ruleIdsToNdJsonString = (ruleIds: string[]) => {
   return rulesToNdJsonString(rules);
 };
 
-export const getImportThreatMatchRulesSchemaMock = (ruleId = 'rule-1'): ImportRulesSchema => ({
+export const getImportThreatMatchRulesSchemaMock = (ruleId = 'rule-1'): RuleToImport => ({
   description: 'some description',
   name: 'Query with a rule id',
   query: 'user.name: root or user.name: admin',

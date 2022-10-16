@@ -6,7 +6,7 @@
  */
 
 // TODO: https://github.com/elastic/kibana/pull/142950 Delete re-exports
-export * from '../../rule_management/api/rules/import_rules/import_rules_schema';
+export * from '../../rule_management/api/rules/import_rules/request_schema';
 export * from '../../rule_management/api/rules/patch_rule/patch_rules_schema';
 export * from '../../rule_management/api/rules/read_rule/query_rules_schema';
 export * from './query_signals_index_schema';

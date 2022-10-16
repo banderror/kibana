@@ -14,9 +14,9 @@ import type { RuleAction } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { PartialRule, FindResult } from '@kbn/alerting-plugin/server';
 import type { ActionsClient, FindActionResult } from '@kbn/actions-plugin/server';
 
+import type { RuleToImport } from '../../../../../common/detection_engine/rule_management';
 import type { RuleExecutionSummary } from '../../../../../common/detection_engine/rule_monitoring';
 import type { FullResponseSchema } from '../../../../../common/detection_engine/schemas/request';
-import type { ImportRulesSchema } from '../../../../../common/detection_engine/rule_management/api/rules/import_rules/import_rules_schema';
 import type { RuleAlertType, RuleParams } from '../../rule_schema';
 import { isAlertType } from '../../rule_schema';
 import type { BulkError, OutputError } from '../../routes/utils';
@@ -27,7 +27,7 @@ import { internalRuleToAPIResponse } from '../normalization/rule_converters';
 import type { LegacyRulesActionsSavedObject } from '../../rule_actions_legacy';
 import type { RuleExecutionSummariesByRuleId } from '../../rule_monitoring';
 
-type PromiseFromStreams = ImportRulesSchema | Error;
+type PromiseFromStreams = RuleToImport | Error;
 const MAX_CONCURRENT_SEARCHES = 10;
 
 export const getIdError = ({
@@ -238,7 +238,7 @@ export const migrateLegacyActionsIds = async (
   rules: PromiseFromStreams[],
   savedObjectsClient: SavedObjectsClientContract
 ): Promise<PromiseFromStreams[]> => {
-  const isImportRule = (r: unknown): r is ImportRulesSchema => !(r instanceof Error);
+  const isImportRule = (r: unknown): r is RuleToImport => !(r instanceof Error);
 
   const toReturn = await pMap(
     rules,
