@@ -9,9 +9,9 @@ import { left } from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-import type { FullResponseSchema } from '../../../../schemas/request';
+import type { FullResponseSchema } from '../../../../rule_schema';
+import { getRulesSchemaMock } from '../../../../rule_schema/mocks';
 import type { ErrorSchema } from '../../../../schemas/response/error_schema';
-import { getRulesSchemaMock } from '../../../../schemas/response/rules_schema.mocks';
 import { getErrorSchemaMock } from '../../../../schemas/response/error_schema.mocks';
 
 import { BulkCrudRulesResponse } from './response_schema';

@@ -6,7 +6,7 @@
  */
 
 import * as t from 'io-ts';
-import { updateRulesSchema } from '../../../../../schemas/request/rule_schemas';
+import { updateRulesSchema } from '../../../../../rule_schema';
 
 /**
  * Request body parameters of the API route.

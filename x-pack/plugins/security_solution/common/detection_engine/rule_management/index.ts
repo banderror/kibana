@@ -26,6 +26,7 @@ export * from './api/rules/find_rules/request_schema';
 export * from './api/rules/import_rules/request_schema';
 export * from './api/rules/import_rules/response_schema';
 
+// TODO: https://github.com/elastic/kibana/pull/142950
 // export * from './api/urls';
 
 export * from './model/export/export_rules_details_schema';

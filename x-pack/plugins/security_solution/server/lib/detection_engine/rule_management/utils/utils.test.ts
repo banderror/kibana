@@ -12,7 +12,7 @@ import type { RuleAction, ThreatMapping } from '@kbn/securitysolution-io-ts-aler
 import type { PartialRule } from '@kbn/alerting-plugin/server';
 
 import type { RuleToImport } from '../../../../../common/detection_engine/rule_management';
-import { getCreateRulesSchemaMock } from '../../../../../common/detection_engine/schemas/request/rule_schemas.mock';
+import { getCreateRulesSchemaMock } from '../../../../../common/detection_engine/rule_schema/mocks';
 
 import {
   getIdError,
