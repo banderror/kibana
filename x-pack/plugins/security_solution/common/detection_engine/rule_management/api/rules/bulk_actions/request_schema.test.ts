@@ -8,11 +8,11 @@
 import { left } from 'fp-ts/lib/Either';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
 
-import type { PerformBulkActionSchema } from './request_schema';
-import { performBulkActionSchema, BulkAction, BulkActionEditType } from './request_schema';
+import type { PerformBulkActionRequestBody } from './request_schema';
+import { PerformBulkActionRequestBody, BulkAction, BulkActionEditType } from './request_schema';
 
 const retrieveValidationMessage = (payload: unknown) => {
-  const decoded = performBulkActionSchema.decode(payload);
+  const decoded = PerformBulkActionRequestBody.decode(payload);
   const checked = exactCheck(payload, decoded);
   return foldLeftRight(checked);
 };
@@ -21,7 +21,7 @@ describe('Perform bulk action request schema', () => {
   describe('cases common to every bulk action', () => {
     // missing query means it will request for all rules
     test('valid request: missing query', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: undefined,
         action: BulkAction.enable,
       };
@@ -32,7 +32,7 @@ describe('Perform bulk action request schema', () => {
     });
 
     test('invalid request: missing action', () => {
-      const payload: Omit<PerformBulkActionSchema, 'action'> = {
+      const payload: Omit<PerformBulkActionRequestBody, 'action'> = {
         query: 'name: test',
       };
       const message = retrieveValidationMessage(payload);
@@ -45,7 +45,7 @@ describe('Perform bulk action request schema', () => {
     });
 
     test('invalid request: unknown action', () => {
-      const payload: Omit<PerformBulkActionSchema, 'action'> & { action: 'unknown' } = {
+      const payload: Omit<PerformBulkActionRequestBody, 'action'> & { action: 'unknown' } = {
         query: 'name: test',
         action: 'unknown',
       };
@@ -84,7 +84,7 @@ describe('Perform bulk action request schema', () => {
 
   describe('bulk enable', () => {
     test('valid request', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: 'name: test',
         action: BulkAction.enable,
       };
@@ -96,7 +96,7 @@ describe('Perform bulk action request schema', () => {
 
   describe('bulk disable', () => {
     test('valid request', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: 'name: test',
         action: BulkAction.disable,
       };
@@ -108,7 +108,7 @@ describe('Perform bulk action request schema', () => {
 
   describe('bulk export', () => {
     test('valid request', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: 'name: test',
         action: BulkAction.export,
       };
@@ -120,7 +120,7 @@ describe('Perform bulk action request schema', () => {
 
   describe('bulk delete', () => {
     test('valid request', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: 'name: test',
         action: BulkAction.delete,
       };
@@ -132,7 +132,7 @@ describe('Perform bulk action request schema', () => {
 
   describe('bulk duplicate', () => {
     test('valid request', () => {
-      const payload: PerformBulkActionSchema = {
+      const payload: PerformBulkActionRequestBody = {
         query: 'name: test',
         action: BulkAction.duplicate,
       };
@@ -268,7 +268,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: set_index_patterns edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [{ type: BulkActionEditType.set_index_patterns, value: ['logs-*'] }],
@@ -281,7 +281,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: add_index_patterns edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [{ type: BulkActionEditType.add_index_patterns, value: ['logs-*'] }],
@@ -294,7 +294,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: delete_index_patterns edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [
@@ -353,7 +353,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: set_timeline edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [
@@ -405,7 +405,7 @@ describe('Perform bulk action request schema', () => {
               },
             },
           ],
-        } as PerformBulkActionSchema;
+        } as PerformBulkActionRequestBody;
 
         const message = retrieveValidationMessage(payload);
 
@@ -431,7 +431,7 @@ describe('Perform bulk action request schema', () => {
               },
             },
           ],
-        } as PerformBulkActionSchema;
+        } as PerformBulkActionRequestBody;
 
         const message = retrieveValidationMessage(payload);
 
@@ -457,7 +457,7 @@ describe('Perform bulk action request schema', () => {
               },
             },
           ],
-        } as PerformBulkActionSchema;
+        } as PerformBulkActionRequestBody;
 
         const message = retrieveValidationMessage(payload);
 
@@ -472,7 +472,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: set_schedule edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [
@@ -484,7 +484,7 @@ describe('Perform bulk action request schema', () => {
               },
             },
           ],
-        } as PerformBulkActionSchema;
+        } as PerformBulkActionRequestBody;
 
         const message = retrieveValidationMessage(payload);
 
@@ -587,7 +587,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: add_rule_actions edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [
@@ -618,7 +618,7 @@ describe('Perform bulk action request schema', () => {
       });
 
       test('valid request: set_rule_actions edit action', () => {
-        const payload: PerformBulkActionSchema = {
+        const payload: PerformBulkActionRequestBody = {
           query: 'name: test',
           action: BulkAction.edit,
           [BulkAction.edit]: [
