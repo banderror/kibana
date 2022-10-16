@@ -7,8 +7,6 @@
 
 import { left } from 'fp-ts/lib/Either';
 import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-
-import type { PerformBulkActionRequestBody } from './request_schema';
 import { PerformBulkActionRequestBody, BulkAction, BulkActionEditType } from './request_schema';
 
 const retrieveValidationMessage = (payload: unknown) => {

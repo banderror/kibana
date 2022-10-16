@@ -24,7 +24,7 @@ import { legacyMigrate } from '../../../logic/rule_actions/legacy_action_migrati
 import { readRules } from '../../../logic/crud/read_rules';
 import { checkDefaultRuleExceptionListReferences } from '../../../logic/exceptions/check_for_default_rule_exception_list';
 
-export const updateRulesRoute = (router: SecuritySolutionPluginRouter, ml: SetupPlugins['ml']) => {
+export const updateRuleRoute = (router: SecuritySolutionPluginRouter, ml: SetupPlugins['ml']) => {
   router.put(
     {
       path: DETECTION_ENGINE_RULES_URL,

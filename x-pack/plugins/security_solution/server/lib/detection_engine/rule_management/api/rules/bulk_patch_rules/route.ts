@@ -27,7 +27,7 @@ import { getDeprecatedBulkEndpointHeader, logDeprecatedBulkEndpoint } from '../.
 /**
  * @deprecated since version 8.2.0. Use the detection_engine/rules/_bulk_action API instead
  */
-export const patchRulesBulkRoute = (
+export const bulkPatchRulesRoute = (
   router: SecuritySolutionPluginRouter,
   ml: SetupPlugins['ml'],
   logger: Logger

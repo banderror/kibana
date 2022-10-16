@@ -20,7 +20,7 @@ import { readRules } from '../../../logic/crud/read_rules';
 // eslint-disable-next-line no-restricted-imports
 import { legacyGetRuleActionsSavedObject } from '../../../../rule_actions_legacy';
 
-export const readRulesRoute = (router: SecuritySolutionPluginRouter, logger: Logger) => {
+export const readRuleRoute = (router: SecuritySolutionPluginRouter, logger: Logger) => {
   router.get(
     {
       path: DETECTION_ENGINE_RULES_URL,

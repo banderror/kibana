@@ -149,6 +149,9 @@ export type BulkActionEditForRuleParams =
   | BulkActionEditPayloadTimeline
   | BulkActionEditPayloadSchedule;
 
+/**
+ * Request body parameters of the API route.
+ */
 export type PerformBulkActionRequestBody = t.TypeOf<typeof PerformBulkActionRequestBody>;
 export const PerformBulkActionRequestBody = t.intersection([
   t.exact(
@@ -178,6 +181,9 @@ export const PerformBulkActionRequestBody = t.intersection([
   ]),
 ]);
 
+/**
+ * Query string parameters of the API route.
+ */
 export type PerformBulkActionRequestQuery = t.TypeOf<typeof PerformBulkActionRequestQuery>;
 export const PerformBulkActionRequestQuery = t.exact(
   t.partial({

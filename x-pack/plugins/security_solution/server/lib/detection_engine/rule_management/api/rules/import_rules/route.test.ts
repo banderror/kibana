@@ -33,7 +33,7 @@ import { getQueryRuleParams } from '../../../../rule_schema/mocks';
 
 jest.mock('../../../../../machine_learning/authz', () => mockMlAuthzFactory.create());
 
-describe('import_rules_route', () => {
+describe('Import rules route', () => {
   let config: ReturnType<typeof createMockConfig>;
   let server: ReturnType<typeof serverMock.create>;
   let request: ReturnType<typeof requestMock.create>;

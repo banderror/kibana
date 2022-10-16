@@ -43,7 +43,7 @@ type Handler = RequestHandler<
 /**
  * @deprecated since version 8.2.0. Use the detection_engine/rules/_bulk_action API instead
  */
-export const deleteRulesBulkRoute = (router: SecuritySolutionPluginRouter, logger: Logger) => {
+export const bulkDeleteRulesRoute = (router: SecuritySolutionPluginRouter, logger: Logger) => {
   const config: Config = {
     validate: {
       body: buildRouteValidation<typeof queryRulesBulkSchema, QueryRulesBulkSchemaDecoded>(

@@ -5,15 +5,15 @@
  * 2.0.
  */
 
-import { countBy, partition } from 'lodash/fp';
-import uuid from 'uuid';
-import type { RuleAction } from '@kbn/securitysolution-io-ts-alerting-types';
-import type { SavedObjectsClientContract } from '@kbn/core/server';
+import { partition } from 'lodash/fp';
 import pMap from 'p-map';
+import uuid from 'uuid';
 
+import type { SavedObjectsClientContract } from '@kbn/core/server';
+import type { RuleAction } from '@kbn/securitysolution-io-ts-alerting-types';
 import type { PartialRule, FindResult } from '@kbn/alerting-plugin/server';
 import type { ActionsClient, FindActionResult } from '@kbn/actions-plugin/server';
-import type { CreateRulesBulkSchema } from '../../../../../common/detection_engine/rule_management';
+
 import type { RuleExecutionSummary } from '../../../../../common/detection_engine/rule_monitoring';
 import type { FullResponseSchema } from '../../../../../common/detection_engine/schemas/request';
 import type { ImportRulesSchema } from '../../../../../common/detection_engine/rule_management/api/rules/import_rules/import_rules_schema';
@@ -130,18 +130,6 @@ export const transform = (
   }
 
   return null;
-};
-
-export const getDuplicates = (ruleDefinitions: CreateRulesBulkSchema, by: 'rule_id'): string[] => {
-  const mappedDuplicates = countBy(
-    by,
-    ruleDefinitions.filter((r) => r[by] != null)
-  );
-  const hasDuplicates = Object.values(mappedDuplicates).some((i) => i > 1);
-  if (hasDuplicates) {
-    return Object.keys(mappedDuplicates).filter((key) => mappedDuplicates[key] > 1);
-  }
-  return [];
 };
 
 export const getTupleDuplicateErrorsAndUniqueRules = (

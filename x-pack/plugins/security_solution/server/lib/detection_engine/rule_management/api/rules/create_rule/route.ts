@@ -21,7 +21,7 @@ import { createRuleValidateTypeDependents } from '../../../../../../../common/de
 import { createRules } from '../../../logic/crud/create_rules';
 import { checkDefaultRuleExceptionListReferences } from '../../../logic/exceptions/check_for_default_rule_exception_list';
 
-export const createRulesRoute = (
+export const createRuleRoute = (
   router: SecuritySolutionPluginRouter,
   ml: SetupPlugins['ml']
 ): void => {

@@ -20,7 +20,7 @@ import { readRules } from '../../../logic/crud/read_rules';
 // eslint-disable-next-line no-restricted-imports
 import { legacyMigrate } from '../../../logic/rule_actions/legacy_action_migration';
 
-export const deleteRulesRoute = (router: SecuritySolutionPluginRouter) => {
+export const deleteRuleRoute = (router: SecuritySolutionPluginRouter) => {
   router.delete(
     {
       path: DETECTION_ENGINE_RULES_URL,
