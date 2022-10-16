@@ -5,17 +5,16 @@
  * 2.0.
  */
 
-import type { QueryRulesSchema } from './query_rules_schema';
-import { queryRulesSchema } from './query_rules_schema';
-import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
-import { pipe } from 'fp-ts/lib/pipeable';
 import { left } from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { exactCheck, foldLeftRight, getPaths } from '@kbn/securitysolution-io-ts-utils';
+import { QueryRuleByIds } from './query_rule_by_ids';
 
-describe('query_rules_schema', () => {
+describe('Query rule by IDs schema', () => {
   test('empty objects do validate', () => {
-    const payload: Partial<QueryRulesSchema> = {};
+    const payload: Partial<QueryRuleByIds> = {};
 
-    const decoded = queryRulesSchema.decode(payload);
+    const decoded = QueryRuleByIds.decode(payload);
     const checked = exactCheck(payload, decoded);
     const message = pipe(checked, foldLeftRight);
     expect(getPaths(left(message.errors))).toEqual([]);

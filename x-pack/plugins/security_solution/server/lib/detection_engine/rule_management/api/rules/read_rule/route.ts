@@ -5,16 +5,19 @@
  * 2.0.
  */
 
-import { transformError } from '@kbn/securitysolution-es-utils';
 import type { Logger } from '@kbn/core/server';
-import { queryRuleValidateTypeDependents } from '../../../../../../../common/detection_engine/rule_management/api/rules/read_rule/query_rules_type_dependents';
-import type { QueryRulesSchemaDecoded } from '../../../../../../../common/detection_engine/rule_management/api/rules/read_rule/query_rules_schema';
-import { queryRulesSchema } from '../../../../../../../common/detection_engine/rule_management/api/rules/read_rule/query_rules_schema';
-import { buildRouteValidation } from '../../../../../../utils/build_validation/route_validation';
-import type { SecuritySolutionPluginRouter } from '../../../../../../types';
+import { transformError } from '@kbn/securitysolution-es-utils';
+
 import { DETECTION_ENGINE_RULES_URL } from '../../../../../../../common/constants';
-import { getIdError, transform } from '../../../utils/utils';
+import {
+  QueryRuleByIds,
+  validateQueryRuleByIds,
+} from '../../../../../../../common/detection_engine/rule_management';
+
+import type { SecuritySolutionPluginRouter } from '../../../../../../types';
+import { buildRouteValidation } from '../../../../../../utils/build_validation/route_validation';
 import { buildSiemResponse } from '../../../../routes/utils';
+import { getIdError, transform } from '../../../utils/utils';
 
 import { readRules } from '../../../logic/crud/read_rules';
 // eslint-disable-next-line no-restricted-imports
@@ -25,9 +28,7 @@ export const readRuleRoute = (router: SecuritySolutionPluginRouter, logger: Logg
     {
       path: DETECTION_ENGINE_RULES_URL,
       validate: {
-        query: buildRouteValidation<typeof queryRulesSchema, QueryRulesSchemaDecoded>(
-          queryRulesSchema
-        ),
+        query: buildRouteValidation(QueryRuleByIds),
       },
       options: {
         tags: ['access:securitySolution'],
@@ -35,7 +36,7 @@ export const readRuleRoute = (router: SecuritySolutionPluginRouter, logger: Logg
     },
     async (context, request, response) => {
       const siemResponse = buildSiemResponse(response);
-      const validationErrors = queryRuleValidateTypeDependents(request.query);
+      const validationErrors = validateQueryRuleByIds(request.query);
       if (validationErrors.length) {
         return siemResponse.error({ statusCode: 400, body: validationErrors });
       }

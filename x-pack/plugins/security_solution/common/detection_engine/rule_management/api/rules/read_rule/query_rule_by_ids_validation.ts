@@ -5,13 +5,16 @@
  * 2.0.
  */
 
-import type { QueryRulesSchema } from './query_rules_schema';
+import type { QueryRuleByIds } from './query_rule_by_ids';
 
-export const queryRuleValidateTypeDependents = (schema: QueryRulesSchema): string[] => {
+/**
+ * Additional validation that is implemented outside of the schema itself.
+ */
+export const validateQueryRuleByIds = (schema: QueryRuleByIds): string[] => {
   return [...validateId(schema)];
 };
 
-export const validateId = (rule: QueryRulesSchema): string[] => {
+const validateId = (rule: QueryRuleByIds): string[] => {
   if (rule.id != null && rule.rule_id != null) {
     return ['both "id" and "rule_id" cannot exist, choose one or the other'];
   } else if (rule.id == null && rule.rule_id == null) {

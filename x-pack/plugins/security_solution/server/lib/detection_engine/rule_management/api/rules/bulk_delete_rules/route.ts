@@ -9,8 +9,10 @@ import type { RouteConfig, RequestHandler, Logger } from '@kbn/core/server';
 import { validate } from '@kbn/securitysolution-io-ts-utils';
 
 import { DETECTION_ENGINE_RULES_BULK_DELETE } from '../../../../../../../common/constants';
-import { BulkDeleteRulesRequestBody } from '../../../../../../../common/detection_engine/rule_management';
-import { queryRuleValidateTypeDependents } from '../../../../../../../common/detection_engine/rule_management/api/rules/read_rule/query_rules_type_dependents';
+import {
+  BulkDeleteRulesRequestBody,
+  validateQueryRuleByIds,
+} from '../../../../../../../common/detection_engine/rule_management';
 import { rulesBulkSchema } from '../../../../../../../common/detection_engine/schemas/response/rules_bulk_schema';
 
 import { buildRouteValidation } from '../../../../../../utils/build_validation/route_validation';
@@ -69,7 +71,7 @@ export const bulkDeleteRulesRoute = (router: SecuritySolutionPluginRouter, logge
       request.body.map(async (payloadRule) => {
         const { id, rule_id: ruleId } = payloadRule;
         const idOrRuleIdOrUnknown = id ?? ruleId ?? '(unknown id)';
-        const validationErrors = queryRuleValidateTypeDependents(payloadRule);
+        const validationErrors = validateQueryRuleByIds(payloadRule);
         if (validationErrors.length) {
           return createBulkErrorObject({
             ruleId: idOrRuleIdOrUnknown,

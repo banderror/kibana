@@ -8,12 +8,10 @@
 import * as t from 'io-ts';
 import { RuleObjectId, RuleSignatureId } from '../../../../rule_schema';
 
-export const queryRulesSchema = t.exact(
+export type QueryRuleByIds = t.TypeOf<typeof QueryRuleByIds>;
+export const QueryRuleByIds = t.exact(
   t.partial({
     rule_id: RuleSignatureId,
     id: RuleObjectId,
   })
 );
-
-export type QueryRulesSchema = t.TypeOf<typeof queryRulesSchema>;
-export type QueryRulesSchemaDecoded = QueryRulesSchema;

@@ -5,22 +5,22 @@
  * 2.0.
  */
 
-import type { QueryRulesSchema } from './query_rules_schema';
-import { queryRuleValidateTypeDependents } from './query_rules_type_dependents';
+import type { QueryRuleByIds } from './query_rule_by_ids';
+import { validateQueryRuleByIds } from './query_rule_by_ids_validation';
 
-describe('query_rules_type_dependents', () => {
+describe('Query rule by IDs schema, additional validation', () => {
   test('You cannot have both an id and a rule_id', () => {
-    const schema: QueryRulesSchema = {
+    const schema: QueryRuleByIds = {
       id: 'some-id',
       rule_id: 'some-rule-id',
     };
-    const errors = queryRuleValidateTypeDependents(schema);
+    const errors = validateQueryRuleByIds(schema);
     expect(errors).toEqual(['both "id" and "rule_id" cannot exist, choose one or the other']);
   });
 
   test('You must set either an id or a rule_id', () => {
-    const schema: QueryRulesSchema = {};
-    const errors = queryRuleValidateTypeDependents(schema);
+    const schema: QueryRuleByIds = {};
+    const errors = validateQueryRuleByIds(schema);
     expect(errors).toEqual(['either "id" or "rule_id" must be set']);
   });
 });
