@@ -12,7 +12,7 @@ import type { DetectionMetrics } from '@kbn/security-solution-plugin/server/usag
 import type {
   ThreatMatchCreateSchema,
   ThresholdCreateSchema,
-} from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+} from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { getInitialMlJobUsage } from '@kbn/security-solution-plugin/server/usage/detections/ml_jobs/get_initial_usage';
 import { getInitialDetectionMetrics } from '@kbn/security-solution-plugin/server/usage/detections/get_initial_usage';
 import {

@@ -9,9 +9,9 @@ import expect from '@kbn/expect';
 import { orderBy } from 'lodash';
 import { RuleExecutionStatus } from '@kbn/security-solution-plugin/common/detection_engine/rule_monitoring';
 import {
-  EqlCreateSchema,
+  EqlRuleCreateProps,
   QueryCreateSchema,
-} from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+} from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { ALERT_ORIGINAL_TIME } from '@kbn/security-solution-plugin/common/field_maps/field_names';
 
 import { FtrProviderContext } from '../../common/ftr_provider_context';
@@ -106,7 +106,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('should still use the @timestamp field even with an override field. It should never use the override field', async () => {
-          const rule: EqlCreateSchema = {
+          const rule: EqlRuleCreateProps = {
             ...getEqlRuleForSignalTesting(['myfakeindex-5']),
             timestamp_override: 'event.ingested',
           };
@@ -294,7 +294,7 @@ export default ({ getService }: FtrProviderContext) => {
 
       describe('EQL', () => {
         it('should generate 2 signals with @timestamp', async () => {
-          const rule: EqlCreateSchema = getEqlRuleForSignalTesting(['myfa*']);
+          const rule: EqlRuleCreateProps = getEqlRuleForSignalTesting(['myfa*']);
 
           const { id } = await createRule(supertest, log, rule);
 
@@ -313,7 +313,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('should generate 2 signals when timestamp override does not exist', async () => {
-          const rule: EqlCreateSchema = {
+          const rule: EqlRuleCreateProps = {
             ...getEqlRuleForSignalTesting(['myfa*']),
             timestamp_override: 'event.fakeingestfield',
           };
@@ -334,7 +334,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('should not generate any signals when timestamp override does not exist and timestamp fallback is disabled', async () => {
-          const rule: EqlCreateSchema = {
+          const rule: EqlRuleCreateProps = {
             ...getEqlRuleForSignalTesting(['myfa*']),
             timestamp_override: 'event.fakeingestfield',
             timestamp_override_fallback_disabled: true,

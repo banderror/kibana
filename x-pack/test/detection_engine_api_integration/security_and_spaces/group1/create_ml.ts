@@ -17,7 +17,7 @@ import {
   SPACE_IDS,
   VERSION,
 } from '@kbn/rule-data-utils';
-import { MachineLearningCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+import { MachineLearningCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import {
   ALERT_ANCESTORS,
   ALERT_DEPTH,

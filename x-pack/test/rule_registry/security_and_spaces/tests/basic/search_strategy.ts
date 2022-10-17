@@ -8,7 +8,7 @@ import expect from '@kbn/expect';
 import { AlertConsumers } from '@kbn/rule-data-utils';
 
 import { RuleRegistrySearchResponse } from '@kbn/rule-registry-plugin/common/search_strategy';
-import { QueryCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+import { QueryCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { FtrProviderContext } from '../../../common/ftr_provider_context';
 import {
   deleteSignalsIndex,

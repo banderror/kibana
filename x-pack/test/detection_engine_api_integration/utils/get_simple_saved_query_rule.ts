@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { SavedQueryCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+import type { SavedQueryCreateSchema } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 
 /**
  * This is a typical simple saved_query rule for e2e testing

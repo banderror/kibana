@@ -14,12 +14,12 @@ import {
 } from '@kbn/security-solution-plugin/common/constants';
 import { ThreatEcs } from '@kbn/security-solution-plugin/common/ecs/threat';
 import {
-  EqlCreateSchema,
+  EqlRuleCreateProps,
   QueryCreateSchema,
   SavedQueryCreateSchema,
   ThreatMatchCreateSchema,
   ThresholdCreateSchema,
-} from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+} from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import {
   createRule,
   createSignalsIndex,
@@ -612,7 +612,7 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with legacy index pattern', async () => {
-        const rule: EqlCreateSchema = getEqlRuleForSignalTesting(['.siem-signals-*']);
+        const rule: EqlRuleCreateProps = getEqlRuleForSignalTesting(['.siem-signals-*']);
         const { id } = await createRule(supertest, log, rule);
         await waitForRuleSuccessOrStatus(supertest, log, id);
         await waitForSignalsToBePresent(supertest, log, 1, [id]);
@@ -623,7 +623,7 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with AAD index pattern', async () => {
-        const rule: EqlCreateSchema = getEqlRuleForSignalTesting([
+        const rule: EqlRuleCreateProps = getEqlRuleForSignalTesting([
           `.alerts-security.alerts-default`,
         ]);
         const { id } = await createRule(supertest, log, rule);

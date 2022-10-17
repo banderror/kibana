@@ -8,10 +8,10 @@
 import expect from '@kbn/expect';
 
 import {
-  EqlCreateSchema,
+  EqlRuleCreateProps,
   QueryCreateSchema,
   ThresholdCreateSchema,
-} from '@kbn/security-solution-plugin/common/detection_engine/schemas/request';
+} from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { ALERT_THRESHOLD_RESULT } from '@kbn/security-solution-plugin/common/field_maps/field_names';
 import { FtrProviderContext } from '../../../common/ftr_provider_context';
 import {
@@ -73,7 +73,7 @@ export default ({ getService }: FtrProviderContext) => {
 
     describe('"eql" rule type', () => {
       it('should detect the "dataset_name_1" from "event.dataset"', async () => {
-        const rule: EqlCreateSchema = {
+        const rule: EqlRuleCreateProps = {
           ...getEqlRuleForSignalTesting(['keyword']),
           query: 'any where event.dataset=="dataset_name_1"',
         };

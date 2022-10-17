@@ -24,8 +24,8 @@ import {
 } from '../../../../../../common/constants';
 import { validateCreateRuleProps } from '../../../../../../common/detection_engine/rule_management';
 import { RuleExecutionStatus } from '../../../../../../common/detection_engine/rule_monitoring';
-import type { RulePreviewLogs } from '../../../../../../common/detection_engine/schemas/request';
-import { previewRulesSchema } from '../../../../../../common/detection_engine/schemas/request';
+import type { RulePreviewLogs } from '../../../../../../common/detection_engine/rule_schema';
+import { previewRulesSchema } from '../../../../../../common/detection_engine/rule_schema';
 
 import type { StartPlugins, SetupPlugins } from '../../../../../plugin';
 import { buildSiemResponse } from '../../../routes/utils';
