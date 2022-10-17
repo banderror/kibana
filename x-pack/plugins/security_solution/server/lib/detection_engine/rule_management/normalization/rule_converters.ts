@@ -32,7 +32,6 @@ import type {
   QueryPatchParams,
   TypeSpecificResponse,
   SavedQueryPatchParams,
-  ThreatMatchPatchParams,
   ThresholdPatchParams,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
@@ -41,7 +40,7 @@ import {
   newTermsPatchParams,
   queryPatchParams,
   savedQueryPatchParams,
-  threatMatchPatchParams,
+  ThreatMatchPatchParams,
   thresholdPatchParams,
 } from '../../../../../common/detection_engine/rule_schema';
 
@@ -343,7 +342,7 @@ export const patchTypeSpecificSnakeToCamel = (
       return patchEqlParams(validated, existingRule);
     }
     case 'threat_match': {
-      const [validated, error] = validateNonExact(params, threatMatchPatchParams);
+      const [validated, error] = validateNonExact(params, ThreatMatchPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }

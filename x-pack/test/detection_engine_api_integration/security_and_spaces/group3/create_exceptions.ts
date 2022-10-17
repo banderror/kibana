@@ -14,7 +14,7 @@ import type {
   RuleCreateProps,
   EqlRuleCreateProps,
   QueryCreateSchema,
-  ThreatMatchCreateSchema,
+  ThreatMatchRuleCreateProps,
   ThresholdCreateSchema,
 } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { getCreateExceptionListItemMinimalSchemaMock } from '@kbn/lists-plugin/common/schemas/request/create_exception_list_item_schema.mock';
@@ -719,7 +719,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('generates no signals when an exception is added for a threat match rule', async () => {
-          const rule: ThreatMatchCreateSchema = {
+          const rule: ThreatMatchRuleCreateProps = {
             description: 'Detecting root and admin users',
             name: 'Query with a rule id',
             severity: 'high',
@@ -804,7 +804,7 @@ export default ({ getService }: FtrProviderContext) => {
           it('generates no signals when a value list exception is added for a threat match rule', async () => {
             const valueListId = 'value-list-id';
             await importFile(supertest, log, 'keyword', ['zeek-sensor-amsterdam'], valueListId);
-            const rule: ThreatMatchCreateSchema = {
+            const rule: ThreatMatchRuleCreateProps = {
               description: 'Detecting root and admin users',
               name: 'Query with a rule id',
               severity: 'high',

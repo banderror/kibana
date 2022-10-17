@@ -12,7 +12,7 @@ import type {
   QueryCreateSchema,
   QueryUpdateSchema,
   SavedQueryCreateSchema,
-  ThreatMatchCreateSchema,
+  ThreatMatchRuleCreateProps,
   ThresholdCreateSchema,
   NewTermsCreateSchema,
   NewTermsUpdateSchema,
@@ -56,7 +56,7 @@ export const getCreateSavedQueryRulesSchemaMock = (ruleId = 'rule-1'): SavedQuer
 export const getCreateThreatMatchRulesSchemaMock = (
   ruleId = 'rule-1',
   enabled = false
-): ThreatMatchCreateSchema => ({
+): ThreatMatchRuleCreateProps => ({
   description: 'Detecting root and admin users',
   enabled,
   index: ['auditbeat-*'],

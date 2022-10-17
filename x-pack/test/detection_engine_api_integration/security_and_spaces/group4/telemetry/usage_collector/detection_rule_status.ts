@@ -10,7 +10,7 @@ import type { MlJobUsageMetric } from '@kbn/security-solution-plugin/server/usag
 import type { RulesTypeUsage } from '@kbn/security-solution-plugin/server/usage/detections/rules/types';
 import type { DetectionMetrics } from '@kbn/security-solution-plugin/server/usage/detections/types';
 import type {
-  ThreatMatchCreateSchema,
+  ThreatMatchRuleCreateProps,
   ThresholdCreateSchema,
 } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { getInitialMlJobUsage } from '@kbn/security-solution-plugin/server/usage/detections/ml_jobs/get_initial_usage';
@@ -614,7 +614,7 @@ export default ({ getService }: FtrProviderContext) => {
     describe('"indicator_match/threat_match" rule type', () => {
       let stats: DetectionMetrics | undefined;
       before(async () => {
-        const rule: ThreatMatchCreateSchema = {
+        const rule: ThreatMatchRuleCreateProps = {
           ...getSimpleThreatMatch('rule-1', true),
           index: ['telemetry'],
           threat_index: ['telemetry'],

@@ -12,7 +12,7 @@ import type {
   QueryResponseSchema,
   SavedQueryResponseSchema,
   SharedResponseProps,
-  ThreatMatchResponseSchema,
+  ThreatMatchRule,
 } from './rule_schemas';
 import { getListArrayMock } from '../../schemas/types/lists.mock';
 
@@ -102,9 +102,7 @@ export const getRulesMlSchemaMock = (
   };
 };
 
-export const getThreatMatchingSchemaMock = (
-  anchorDate: string = ANCHOR_DATE
-): ThreatMatchResponseSchema => {
+export const getThreatMatchingSchemaMock = (anchorDate: string = ANCHOR_DATE): ThreatMatchRule => {
   return {
     ...getResponseBaseParams(anchorDate),
     type: 'threat_match',
@@ -146,9 +144,7 @@ export const getThreatMatchingSchemaMock = (
  * Useful for e2e backend tests where it doesn't have date time and other
  * server side properties attached to it.
  */
-export const getThreatMatchingSchemaPartialMock = (
-  enabled = false
-): Partial<ThreatMatchResponseSchema> => {
+export const getThreatMatchingSchemaPartialMock = (enabled = false): Partial<ThreatMatchRule> => {
   return {
     author: [],
     created_by: 'elastic',
