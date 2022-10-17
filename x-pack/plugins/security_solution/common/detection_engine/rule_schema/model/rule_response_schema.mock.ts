@@ -8,9 +8,9 @@
 import { DEFAULT_INDICATOR_SOURCE_PATH } from '../../../constants';
 import type {
   EqlRule,
-  MachineLearningResponseSchema,
-  QueryResponseSchema,
-  SavedQueryResponseSchema,
+  MachineLearningRule,
+  QueryRule,
+  SavedQueryRule,
   SharedResponseProps,
   ThreatMatchRule,
 } from './rule_schemas';
@@ -65,7 +65,7 @@ const getResponseBaseParams = (anchorDate: string = ANCHOR_DATE): SharedResponse
   namespace: undefined,
 });
 
-export const getRulesSchemaMock = (anchorDate: string = ANCHOR_DATE): QueryResponseSchema => ({
+export const getRulesSchemaMock = (anchorDate: string = ANCHOR_DATE): QueryRule => ({
   ...getResponseBaseParams(anchorDate),
   query: 'user.name: root or user.name: admin',
   type: 'query',
@@ -77,9 +77,7 @@ export const getRulesSchemaMock = (anchorDate: string = ANCHOR_DATE): QueryRespo
   response_actions: undefined,
 });
 
-export const getSavedQuerySchemaMock = (
-  anchorDate: string = ANCHOR_DATE
-): SavedQueryResponseSchema => ({
+export const getSavedQuerySchemaMock = (anchorDate: string = ANCHOR_DATE): SavedQueryRule => ({
   ...getResponseBaseParams(anchorDate),
   query: 'user.name: root or user.name: admin',
   type: 'saved_query',
@@ -91,9 +89,7 @@ export const getSavedQuerySchemaMock = (
   response_actions: undefined,
 });
 
-export const getRulesMlSchemaMock = (
-  anchorDate: string = ANCHOR_DATE
-): MachineLearningResponseSchema => {
+export const getRulesMlSchemaMock = (anchorDate: string = ANCHOR_DATE): MachineLearningRule => {
   return {
     ...getResponseBaseParams(anchorDate),
     type: 'machine_learning',

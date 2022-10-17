@@ -198,11 +198,6 @@ export const SharedResponseProps = t.intersection([
   t.exact(t.partial(responseOptionalFields)),
 ]);
 
-type CreateSchema<T> = SharedCreateProps & T;
-type UpdateSchema<T> = SharedUpdateProps & T;
-type PatchSchema<T> = SharedPatchProps & T;
-type ResponseSchema<T> = SharedResponseProps & T;
-
 // -------------------------------------------------------------------------------------------------
 // EQL rule schema
 
@@ -309,12 +304,20 @@ const querySchema = buildRuleSchemas({
   },
 });
 
-export type QueryCreateSchema = CreateSchema<t.TypeOf<typeof querySchema.create>>;
-export type QueryUpdateSchema = UpdateSchema<t.TypeOf<typeof querySchema.create>>;
-export type QueryPatchParams = t.TypeOf<typeof querySchema.patch>;
-export type QueryResponseSchema = ResponseSchema<t.TypeOf<typeof querySchema.response>>;
+export type QueryRule = t.TypeOf<typeof QueryRule>;
+export const QueryRule = t.intersection([SharedResponseProps, querySchema.response]);
 
-export const queryPatchParams = querySchema.patch;
+export type QueryRuleCreateProps = t.TypeOf<typeof QueryRuleCreateProps>;
+export const QueryRuleCreateProps = t.intersection([SharedCreateProps, querySchema.create]);
+
+export type QueryRuleUpdateProps = t.TypeOf<typeof QueryRuleUpdateProps>;
+export const QueryRuleUpdateProps = t.intersection([SharedUpdateProps, querySchema.create]);
+
+export type QueryRulePatchProps = t.TypeOf<typeof QueryRulePatchProps>;
+export const QueryRulePatchProps = t.intersection([SharedPatchProps, querySchema.patch]);
+
+export type QueryPatchParams = t.TypeOf<typeof QueryPatchParams>;
+export const QueryPatchParams = querySchema.patch;
 
 // -------------------------------------------------------------------------------------------------
 // Saved Query rule schema
@@ -338,16 +341,31 @@ const savedQuerySchema = buildRuleSchemas({
   },
 });
 
-export type SavedQueryCreateSchema = CreateSchema<t.TypeOf<typeof savedQuerySchema.create>>;
-export type SavedQueryPatchParams = t.TypeOf<typeof savedQuerySchema.patch>;
-export type SavedQueryResponseSchema = ResponseSchema<t.TypeOf<typeof savedQuerySchema.response>>;
+export type SavedQueryRule = t.TypeOf<typeof SavedQueryRule>;
+export const SavedQueryRule = t.intersection([SharedResponseProps, savedQuerySchema.response]);
 
-export const savedQueryPatchParams = savedQuerySchema.patch;
+export type SavedQueryRuleCreateProps = t.TypeOf<typeof SavedQueryRuleCreateProps>;
+export const SavedQueryRuleCreateProps = t.intersection([
+  SharedCreateProps,
+  savedQuerySchema.create,
+]);
+
+export type SavedQueryRuleUpdateProps = t.TypeOf<typeof SavedQueryRuleUpdateProps>;
+export const SavedQueryRuleUpdateProps = t.intersection([
+  SharedUpdateProps,
+  savedQuerySchema.create,
+]);
+
+export type SavedQueryRulePatchProps = t.TypeOf<typeof SavedQueryRulePatchProps>;
+export const SavedQueryRulePatchProps = t.intersection([SharedPatchProps, savedQuerySchema.patch]);
+
+export type SavedQueryPatchParams = t.TypeOf<typeof SavedQueryPatchParams>;
+export const SavedQueryPatchParams = savedQuerySchema.patch;
 
 // -------------------------------------------------------------------------------------------------
 // Threshold rule schema
 
-const thresholdRuleParams = {
+const thresholdSchema = buildRuleSchemas({
   required: {
     type: t.literal('threshold'),
     query: RuleQuery,
@@ -362,27 +380,27 @@ const thresholdRuleParams = {
   defaultable: {
     language: t.keyof({ kuery: null, lucene: null }),
   },
-};
+});
 
-const {
-  create: thresholdCreateParams,
-  patch: thresholdPatchParams,
-  response: thresholdResponseParams,
-} = buildRuleSchemas(thresholdRuleParams);
+export type ThresholdRule = t.TypeOf<typeof ThresholdRule>;
+export const ThresholdRule = t.intersection([SharedResponseProps, thresholdSchema.response]);
 
-export type ThresholdCreateSchema = CreateSchema<t.TypeOf<typeof thresholdCreateParams>>;
-export type ThresholdPatchParams = t.TypeOf<typeof thresholdPatchParams>;
-export type ThresholdResponseSchema = ResponseSchema<t.TypeOf<typeof thresholdResponseParams>>;
+export type ThresholdRuleCreateProps = t.TypeOf<typeof ThresholdRuleCreateProps>;
+export const ThresholdRuleCreateProps = t.intersection([SharedCreateProps, thresholdSchema.create]);
+
+export type ThresholdRuleUpdateProps = t.TypeOf<typeof ThresholdRuleUpdateProps>;
+export const ThresholdRuleUpdateProps = t.intersection([SharedUpdateProps, thresholdSchema.create]);
 
 export type ThresholdRulePatchProps = t.TypeOf<typeof ThresholdRulePatchProps>;
-export const ThresholdRulePatchProps = t.intersection([thresholdPatchParams, SharedPatchProps]);
+export const ThresholdRulePatchProps = t.intersection([SharedPatchProps, thresholdSchema.patch]);
 
-export { thresholdCreateParams, thresholdPatchParams, thresholdResponseParams };
+export type ThresholdPatchParams = t.TypeOf<typeof ThresholdPatchParams>;
+export const ThresholdPatchParams = thresholdSchema.patch;
 
 // -------------------------------------------------------------------------------------------------
 // Machine Learning rule schema
 
-const machineLearningRuleParams = {
+const machineLearningSchema = buildRuleSchemas({
   required: {
     type: t.literal('machine_learning'),
     anomaly_threshold,
@@ -390,31 +408,39 @@ const machineLearningRuleParams = {
   },
   optional: {},
   defaultable: {},
-};
+});
 
-const {
-  create: machineLearningCreateParams,
-  patch: machineLearningPatchParams,
-  response: machineLearningResponseParams,
-} = buildRuleSchemas(machineLearningRuleParams);
+export type MachineLearningRule = t.TypeOf<typeof MachineLearningRule>;
+export const MachineLearningRule = t.intersection([
+  SharedResponseProps,
+  machineLearningSchema.response,
+]);
 
-export type MachineLearningCreateSchema = CreateSchema<
-  t.TypeOf<typeof machineLearningCreateParams>
->;
-export type MachineLearningUpdateSchema = UpdateSchema<
-  t.TypeOf<typeof machineLearningCreateParams>
->;
-export type MachineLearningPatchParams = t.TypeOf<typeof machineLearningPatchParams>;
-export type MachineLearningResponseSchema = ResponseSchema<
-  t.TypeOf<typeof machineLearningResponseParams>
->;
+export type MachineLearningRuleCreateProps = t.TypeOf<typeof MachineLearningRuleCreateProps>;
+export const MachineLearningRuleCreateProps = t.intersection([
+  SharedCreateProps,
+  machineLearningSchema.create,
+]);
 
-export { machineLearningCreateParams, machineLearningPatchParams, machineLearningResponseParams };
+export type MachineLearningRuleUpdateProps = t.TypeOf<typeof MachineLearningRuleUpdateProps>;
+export const MachineLearningRuleUpdateProps = t.intersection([
+  SharedUpdateProps,
+  machineLearningSchema.create,
+]);
+
+export type MachineLearningRulePatchProps = t.TypeOf<typeof MachineLearningRulePatchProps>;
+export const MachineLearningRulePatchProps = t.intersection([
+  SharedPatchProps,
+  machineLearningSchema.patch,
+]);
+
+export type MachineLearningPatchParams = t.TypeOf<typeof MachineLearningPatchParams>;
+export const MachineLearningPatchParams = machineLearningSchema.patch;
 
 // -------------------------------------------------------------------------------------------------
 // New Terms rule schema
 
-const newTermsRuleParams = {
+const newTermsSchema = buildRuleSchemas({
   required: {
     type: t.literal('new_terms'),
     query: RuleQuery,
@@ -429,20 +455,22 @@ const newTermsRuleParams = {
   defaultable: {
     language: t.keyof({ kuery: null, lucene: null }),
   },
-};
+});
 
-const {
-  create: newTermsCreateParams,
-  patch: newTermsPatchParams,
-  response: newTermsResponseParams,
-} = buildRuleSchemas(newTermsRuleParams);
+export type NewTermsRule = t.TypeOf<typeof NewTermsRule>;
+export const NewTermsRule = t.intersection([SharedResponseProps, newTermsSchema.response]);
 
-export type NewTermsCreateSchema = CreateSchema<t.TypeOf<typeof newTermsCreateParams>>;
-export type NewTermsUpdateSchema = UpdateSchema<t.TypeOf<typeof newTermsCreateParams>>;
-export type NewTermsPatchParams = t.TypeOf<typeof newTermsPatchParams>;
-export type NewTermsResponseSchema = ResponseSchema<t.TypeOf<typeof newTermsResponseParams>>;
+export type NewTermsRuleCreateProps = t.TypeOf<typeof NewTermsRuleCreateProps>;
+export const NewTermsRuleCreateProps = t.intersection([SharedCreateProps, newTermsSchema.create]);
 
-export { newTermsCreateParams, newTermsPatchParams, newTermsResponseParams };
+export type NewTermsRuleUpdateProps = t.TypeOf<typeof NewTermsRuleUpdateProps>;
+export const NewTermsRuleUpdateProps = t.intersection([SharedUpdateProps, newTermsSchema.create]);
+
+export type NewTermsRulePatchProps = t.TypeOf<typeof NewTermsRulePatchProps>;
+export const NewTermsRulePatchProps = t.intersection([SharedPatchProps, newTermsSchema.patch]);
+
+export type NewTermsPatchParams = t.TypeOf<typeof NewTermsPatchParams>;
+export const NewTermsPatchParams = newTermsSchema.patch;
 
 // -------------------------------------------------------------------------------------------------
 // Combined type specific schemas
@@ -452,10 +480,10 @@ export const TypeSpecificCreateProps = t.union([
   eqlSchema.create,
   threatMatchSchema.create,
   querySchema.create,
-  savedQueryCreateParams,
-  thresholdCreateParams,
-  machineLearningCreateParams,
-  newTermsCreateParams,
+  savedQuerySchema.create,
+  thresholdSchema.create,
+  machineLearningSchema.create,
+  newTermsSchema.create,
 ]);
 
 export type TypeSpecificPatchProps = t.TypeOf<typeof TypeSpecificPatchProps>;
@@ -463,10 +491,10 @@ export const TypeSpecificPatchProps = t.union([
   eqlSchema.patch,
   threatMatchSchema.patch,
   querySchema.patch,
-  savedQueryPatchParams,
-  thresholdPatchParams,
-  machineLearningPatchParams,
-  newTermsPatchParams,
+  savedQuerySchema.patch,
+  thresholdSchema.patch,
+  machineLearningSchema.patch,
+  newTermsSchema.patch,
 ]);
 
 export type TypeSpecificResponse = t.TypeOf<typeof TypeSpecificResponse>;
@@ -474,10 +502,10 @@ export const TypeSpecificResponse = t.union([
   eqlSchema.response,
   threatMatchSchema.response,
   querySchema.response,
-  savedQueryResponseParams,
-  thresholdResponseParams,
-  machineLearningResponseParams,
-  newTermsResponseParams,
+  savedQuerySchema.response,
+  thresholdSchema.response,
+  machineLearningSchema.response,
+  newTermsSchema.response,
 ]);
 
 // -------------------------------------------------------------------------------------------------

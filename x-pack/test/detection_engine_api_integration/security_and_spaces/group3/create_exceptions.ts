@@ -13,9 +13,9 @@ import { EXCEPTION_LIST_ITEM_URL, EXCEPTION_LIST_URL } from '@kbn/securitysoluti
 import type {
   RuleCreateProps,
   EqlRuleCreateProps,
-  QueryCreateSchema,
+  QueryRuleCreateProps,
   ThreatMatchRuleCreateProps,
-  ThresholdCreateSchema,
+  ThresholdRuleCreateProps,
 } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { getCreateExceptionListItemMinimalSchemaMock } from '@kbn/lists-plugin/common/schemas/request/create_exception_list_item_schema.mock';
 import { getCreateExceptionListMinimalSchemaMock } from '@kbn/lists-plugin/common/schemas/request/create_exception_list_schema.mock';
@@ -651,7 +651,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('should be able to execute against an exception list that does include valid entries and get back 0 signals', async () => {
-          const rule: QueryCreateSchema = {
+          const rule: QueryRuleCreateProps = {
             name: 'Simple Rule Query',
             description: 'Simple Rule Query',
             enabled: true,
@@ -697,7 +697,7 @@ export default ({ getService }: FtrProviderContext) => {
         });
 
         it('generates no signals when an exception is added for a threshold rule', async () => {
-          const rule: ThresholdCreateSchema = {
+          const rule: ThresholdRuleCreateProps = {
             ...getThresholdRuleForSignalTesting(['auditbeat-*']),
             threshold: {
               field: 'host.id',
@@ -772,7 +772,7 @@ export default ({ getService }: FtrProviderContext) => {
           it('generates no signals when a value list exception is added for a query rule', async () => {
             const valueListId = 'value-list-id';
             await importFile(supertest, log, 'keyword', ['suricata-sensor-amsterdam'], valueListId);
-            const rule: QueryCreateSchema = {
+            const rule: QueryRuleCreateProps = {
               name: 'Simple Rule Query',
               description: 'Simple Rule Query',
               enabled: true,
@@ -852,7 +852,7 @@ export default ({ getService }: FtrProviderContext) => {
           it('generates no signals when a value list exception is added for a threshold rule', async () => {
             const valueListId = 'value-list-id';
             await importFile(supertest, log, 'keyword', ['zeek-sensor-amsterdam'], valueListId);
-            const rule: ThresholdCreateSchema = {
+            const rule: ThresholdRuleCreateProps = {
               description: 'Detecting root and admin users',
               name: 'Query with a rule id',
               severity: 'high',

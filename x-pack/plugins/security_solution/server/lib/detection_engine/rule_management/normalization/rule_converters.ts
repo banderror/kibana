@@ -25,23 +25,18 @@ import type {
   RequiredFieldArray,
   SetupGuide,
   RuleCreateProps,
-  TypeSpecificCreateProps,
   RuleResponse,
-  MachineLearningPatchParams,
-  NewTermsPatchParams,
-  QueryPatchParams,
+  TypeSpecificCreateProps,
   TypeSpecificResponse,
-  SavedQueryPatchParams,
-  ThresholdPatchParams,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
   EqlPatchParams,
-  machineLearningPatchParams,
-  newTermsPatchParams,
-  queryPatchParams,
-  savedQueryPatchParams,
+  MachineLearningPatchParams,
+  NewTermsPatchParams,
+  QueryPatchParams,
+  SavedQueryPatchParams,
   ThreatMatchPatchParams,
-  thresholdPatchParams,
+  ThresholdPatchParams,
 } from '../../../../../common/detection_engine/rule_schema';
 
 import {
@@ -349,35 +344,35 @@ export const patchTypeSpecificSnakeToCamel = (
       return patchThreatMatchParams(validated, existingRule);
     }
     case 'query': {
-      const [validated, error] = validateNonExact(params, queryPatchParams);
+      const [validated, error] = validateNonExact(params, QueryPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }
       return patchQueryParams(validated, existingRule);
     }
     case 'saved_query': {
-      const [validated, error] = validateNonExact(params, savedQueryPatchParams);
+      const [validated, error] = validateNonExact(params, SavedQueryPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }
       return patchSavedQueryParams(validated, existingRule);
     }
     case 'threshold': {
-      const [validated, error] = validateNonExact(params, thresholdPatchParams);
+      const [validated, error] = validateNonExact(params, ThresholdPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }
       return patchThresholdParams(validated, existingRule);
     }
     case 'machine_learning': {
-      const [validated, error] = validateNonExact(params, machineLearningPatchParams);
+      const [validated, error] = validateNonExact(params, MachineLearningPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }
       return patchMachineLearningParams(validated, existingRule);
     }
     case 'new_terms': {
-      const [validated, error] = validateNonExact(params, newTermsPatchParams);
+      const [validated, error] = validateNonExact(params, NewTermsPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }

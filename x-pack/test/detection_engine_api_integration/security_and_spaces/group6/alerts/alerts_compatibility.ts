@@ -15,10 +15,10 @@ import {
 import { ThreatEcs } from '@kbn/security-solution-plugin/common/ecs/threat';
 import {
   EqlRuleCreateProps,
-  QueryCreateSchema,
-  SavedQueryCreateSchema,
+  QueryRuleCreateProps,
+  SavedQueryRuleCreateProps,
   ThreatMatchRuleCreateProps,
-  ThresholdCreateSchema,
+  ThresholdRuleCreateProps,
 } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import {
   createRule,
@@ -222,7 +222,7 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with legacy index pattern', async () => {
-        const rule: QueryCreateSchema = getRuleForSignalTesting([`.siem-signals-*`]);
+        const rule: QueryRuleCreateProps = getRuleForSignalTesting([`.siem-signals-*`]);
         const { id } = await createRule(supertest, log, rule);
         await waitForRuleSuccessOrStatus(supertest, log, id);
         await waitForSignalsToBePresent(supertest, log, 1, [id]);
@@ -389,7 +389,7 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with AAD index pattern', async () => {
-        const rule: QueryCreateSchema = getRuleForSignalTesting([
+        const rule: QueryRuleCreateProps = getRuleForSignalTesting([
           `.alerts-security.alerts-default`,
         ]);
         const { id } = await createRule(supertest, log, rule);
@@ -573,7 +573,9 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with legacy index pattern', async () => {
-        const rule: SavedQueryCreateSchema = getSavedQueryRuleForSignalTesting([`.siem-signals-*`]);
+        const rule: SavedQueryRuleCreateProps = getSavedQueryRuleForSignalTesting([
+          `.siem-signals-*`,
+        ]);
         const { id } = await createRule(supertest, log, rule);
         await waitForRuleSuccessOrStatus(supertest, log, id);
         await waitForSignalsToBePresent(supertest, log, 1, [id]);
@@ -584,7 +586,7 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with AAD index pattern', async () => {
-        const rule: SavedQueryCreateSchema = getSavedQueryRuleForSignalTesting([
+        const rule: SavedQueryRuleCreateProps = getSavedQueryRuleForSignalTesting([
           `.alerts-security.alerts-default`,
         ]);
         const { id } = await createRule(supertest, log, rule);
@@ -651,10 +653,10 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with legacy index pattern', async () => {
-        const baseRule: ThresholdCreateSchema = getThresholdRuleForSignalTesting([
+        const baseRule: ThresholdRuleCreateProps = getThresholdRuleForSignalTesting([
           '.siem-signals-*',
         ]);
-        const rule: ThresholdCreateSchema = {
+        const rule: ThresholdRuleCreateProps = {
           ...baseRule,
           threshold: {
             ...baseRule.threshold,
@@ -672,10 +674,10 @@ export default ({ getService }: FtrProviderContext) => {
       });
 
       it('should generate a signal-on-legacy-signal with AAD index pattern', async () => {
-        const baseRule: ThresholdCreateSchema = getThresholdRuleForSignalTesting([
+        const baseRule: ThresholdRuleCreateProps = getThresholdRuleForSignalTesting([
           `.alerts-security.alerts-default`,
         ]);
-        const rule: ThresholdCreateSchema = {
+        const rule: ThresholdRuleCreateProps = {
           ...baseRule,
           threshold: {
             ...baseRule.threshold,

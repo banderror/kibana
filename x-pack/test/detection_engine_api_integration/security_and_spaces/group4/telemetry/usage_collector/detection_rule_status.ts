@@ -11,7 +11,7 @@ import type { RulesTypeUsage } from '@kbn/security-solution-plugin/server/usage/
 import type { DetectionMetrics } from '@kbn/security-solution-plugin/server/usage/detections/types';
 import type {
   ThreatMatchRuleCreateProps,
-  ThresholdCreateSchema,
+  ThresholdRuleCreateProps,
 } from '@kbn/security-solution-plugin/common/detection_engine/rule_schema';
 import { getInitialMlJobUsage } from '@kbn/security-solution-plugin/server/usage/detections/ml_jobs/get_initial_usage';
 import { getInitialDetectionMetrics } from '@kbn/security-solution-plugin/server/usage/detections/get_initial_usage';
@@ -426,7 +426,7 @@ export default ({ getService }: FtrProviderContext) => {
     describe('"threshold" rule type', () => {
       let stats: DetectionMetrics | undefined;
       before(async () => {
-        const rule: ThresholdCreateSchema = {
+        const rule: ThresholdRuleCreateProps = {
           ...getThresholdRuleForSignalTesting(['telemetry']),
           threshold: {
             field: 'keyword',
