@@ -7,18 +7,18 @@
 
 import { DEFAULT_INDICATOR_SOURCE_PATH } from '../../../constants';
 import type {
-  EqlResponseSchema,
+  EqlRule,
   MachineLearningResponseSchema,
   QueryResponseSchema,
   SavedQueryResponseSchema,
-  SharedResponseSchema,
+  SharedResponseProps,
   ThreatMatchResponseSchema,
-} from '../../schemas/request';
+} from './rule_schemas';
 import { getListArrayMock } from '../../schemas/types/lists.mock';
 
 export const ANCHOR_DATE = '2020-02-20T03:57:54.037Z';
 
-const getResponseBaseParams = (anchorDate: string = ANCHOR_DATE): SharedResponseSchema => ({
+const getResponseBaseParams = (anchorDate: string = ANCHOR_DATE): SharedResponseProps => ({
   author: [],
   id: '7a7065d7-6e8b-4aae-8d20-c93613dec9f9',
   created_at: new Date(anchorDate).toISOString(),
@@ -76,6 +76,7 @@ export const getRulesSchemaMock = (anchorDate: string = ANCHOR_DATE): QueryRespo
   saved_id: undefined,
   response_actions: undefined,
 });
+
 export const getSavedQuerySchemaMock = (
   anchorDate: string = ANCHOR_DATE
 ): SavedQueryResponseSchema => ({
@@ -216,7 +217,7 @@ export const getThreatMatchingSchemaPartialMock = (
   };
 };
 
-export const getRulesEqlSchemaMock = (anchorDate: string = ANCHOR_DATE): EqlResponseSchema => {
+export const getRulesEqlSchemaMock = (anchorDate: string = ANCHOR_DATE): EqlRule => {
   return {
     ...getResponseBaseParams(anchorDate),
     language: 'eql',

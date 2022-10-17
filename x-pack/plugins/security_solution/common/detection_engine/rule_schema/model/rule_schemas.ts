@@ -84,9 +84,9 @@ import {
 import { buildRuleSchemas } from './build_rule_schemas';
 
 // -------------------------------------------------------------------------------------------------
-// Base rule fields
+// Base schema
 
-const baseRuleFields = {
+const baseSchema = buildRuleSchemas({
   required: {
     name: RuleName,
     description: RuleDescription,
@@ -138,7 +138,7 @@ const baseRuleFields = {
     max_signals: MaxSignals,
     threat: ThreatArray,
   },
-};
+});
 
 const responseRequiredFields = {
   id: RuleObjectId,
@@ -162,43 +162,38 @@ const responseOptionalFields = {
   execution_summary: RuleExecutionSummary,
 };
 
-const {
-  create: baseCreateParams,
-  patch: basePatchParams,
-  response: baseResponseParams,
-} = buildRuleSchemas(baseRuleFields);
-
-export { baseCreateParams };
+export type BaseCreateProps = t.TypeOf<typeof BaseCreateProps>;
+export const BaseCreateProps = baseSchema.create;
 
 // -------------------------------------------------------------------------------------------------
-// Helper types and schemas
+// Shared schemas
 
-// "Shared" types are the same across all rule types, and built from "baseParams" above
+// "Shared" types are the same across all rule types, and built from "baseSchema" above
 // with some variations for each route. These intersect with type specific schemas below
 // to create the full schema for each route.
 
 type SharedCreateProps = t.TypeOf<typeof SharedCreateProps>;
 const SharedCreateProps = t.intersection([
-  baseCreateParams,
+  baseSchema.create,
   t.exact(t.partial({ rule_id: RuleSignatureId })),
 ]);
 
 type SharedUpdateProps = t.TypeOf<typeof SharedUpdateProps>;
 const SharedUpdateProps = t.intersection([
-  baseCreateParams,
+  baseSchema.create,
   t.exact(t.partial({ rule_id: RuleSignatureId })),
   t.exact(t.partial({ id: RuleObjectId })),
 ]);
 
-export type SharedPatchProps = t.TypeOf<typeof SharedPatchProps>;
-export const SharedPatchProps = t.intersection([
-  basePatchParams,
+type SharedPatchProps = t.TypeOf<typeof SharedPatchProps>;
+const SharedPatchProps = t.intersection([
+  baseSchema.patch,
   t.exact(t.partial({ rule_id: RuleSignatureId, id: RuleObjectId })),
 ]);
 
-export type SharedResponseSchema = t.TypeOf<typeof sharedResponseSchema>;
-const sharedResponseSchema = t.intersection([
-  baseResponseParams,
+export type SharedResponseProps = t.TypeOf<typeof SharedResponseProps>;
+export const SharedResponseProps = t.intersection([
+  baseSchema.response,
   t.exact(t.type(responseRequiredFields)),
   t.exact(t.partial(responseOptionalFields)),
 ]);
@@ -206,12 +201,12 @@ const sharedResponseSchema = t.intersection([
 type CreateSchema<T> = SharedCreateProps & T;
 type UpdateSchema<T> = SharedUpdateProps & T;
 type PatchSchema<T> = SharedPatchProps & T;
-type ResponseSchema<T> = SharedResponseSchema & T;
+type ResponseSchema<T> = SharedResponseProps & T;
 
 // -------------------------------------------------------------------------------------------------
-// EQL rule fields
+// EQL rule schema
 
-const eqlRuleParams = {
+const eqlSchema = buildRuleSchemas({
   required: {
     type: t.literal('eql'),
     language: t.literal('eql'),
@@ -226,22 +221,25 @@ const eqlRuleParams = {
     tiebreaker_field: TiebreakerField,
   },
   defaultable: {},
-};
+});
 
-const {
-  create: eqlCreateParams,
-  patch: eqlPatchParams,
-  response: eqlResponseParams,
-} = buildRuleSchemas(eqlRuleParams);
+export type EqlRule = t.TypeOf<typeof EqlRule>;
+export const EqlRule = t.intersection([SharedResponseProps, eqlSchema.response]);
 
-export type EqlCreateSchema = CreateSchema<t.TypeOf<typeof eqlCreateParams>>;
-export type EqlPatchParams = t.TypeOf<typeof eqlPatchParams>;
-export type EqlResponseSchema = ResponseSchema<t.TypeOf<typeof eqlResponseParams>>;
+export type EqlRuleCreateProps = t.TypeOf<typeof EqlRuleCreateProps>;
+export const EqlRuleCreateProps = t.intersection([eqlSchema.create, SharedCreateProps]);
 
-export { eqlCreateParams, eqlPatchParams, eqlResponseParams };
+export type EqlRuleUpdateProps = t.TypeOf<typeof EqlRuleUpdateProps>;
+export const EqlRuleUpdateProps = t.intersection([eqlSchema.create, SharedUpdateProps]);
+
+export type EqlRulePatchProps = t.TypeOf<typeof EqlRulePatchProps>;
+export const EqlRulePatchProps = t.intersection([eqlSchema.patch, SharedPatchProps]);
+
+export type EqlPatchParams = t.TypeOf<typeof EqlPatchParams>;
+export const EqlPatchParams = eqlSchema.patch;
 
 // -------------------------------------------------------------------------------------------------
-// Indicator Match rule fields
+// Indicator Match rule schema
 
 const threatMatchRuleParams = {
   required: {
@@ -280,7 +278,7 @@ export type ThreatMatchResponseSchema = ResponseSchema<t.TypeOf<typeof threatMat
 export { threatMatchCreateParams, threatMatchPatchParams, threatMatchResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// Custom Query rule fields
+// Custom Query rule schema
 
 const queryRuleParams = {
   required: {
@@ -313,7 +311,7 @@ export type QueryResponseSchema = ResponseSchema<t.TypeOf<typeof queryResponsePa
 export { queryCreateParams, queryPatchParams, queryResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// Saved Query rule fields
+// Saved Query rule schema
 
 const savedQueryRuleParams = {
   required: {
@@ -347,7 +345,7 @@ export type SavedQueryResponseSchema = ResponseSchema<t.TypeOf<typeof savedQuery
 export { savedQueryCreateParams, savedQueryPatchParams, savedQueryResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// Threshold rule fields
+// Threshold rule schema
 
 const thresholdRuleParams = {
   required: {
@@ -376,13 +374,13 @@ export type ThresholdCreateSchema = CreateSchema<t.TypeOf<typeof thresholdCreate
 export type ThresholdPatchParams = t.TypeOf<typeof thresholdPatchParams>;
 export type ThresholdResponseSchema = ResponseSchema<t.TypeOf<typeof thresholdResponseParams>>;
 
-export type PatchThresholdRuleProps = t.TypeOf<typeof PatchThresholdRuleProps>;
-export const PatchThresholdRuleProps = t.intersection([thresholdPatchParams, SharedPatchProps]);
+export type ThresholdRulePatchProps = t.TypeOf<typeof ThresholdRulePatchProps>;
+export const ThresholdRulePatchProps = t.intersection([thresholdPatchParams, SharedPatchProps]);
 
 export { thresholdCreateParams, thresholdPatchParams, thresholdResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// Machine Learning rule fields
+// Machine Learning rule schema
 
 const machineLearningRuleParams = {
   required: {
@@ -414,7 +412,7 @@ export type MachineLearningResponseSchema = ResponseSchema<
 export { machineLearningCreateParams, machineLearningPatchParams, machineLearningResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// New Terms rule fields
+// New Terms rule schema
 
 const newTermsRuleParams = {
   required: {
@@ -447,11 +445,11 @@ export type NewTermsResponseSchema = ResponseSchema<t.TypeOf<typeof newTermsResp
 export { newTermsCreateParams, newTermsPatchParams, newTermsResponseParams };
 
 // -------------------------------------------------------------------------------------------------
-// Final combined schemas
+// Combined type specific schemas
 
-export type CreateTypeSpecific = t.TypeOf<typeof createTypeSpecific>;
-export const createTypeSpecific = t.union([
-  eqlCreateParams,
+export type TypeSpecificCreateProps = t.TypeOf<typeof TypeSpecificCreateProps>;
+export const TypeSpecificCreateProps = t.union([
+  eqlSchema.create,
   threatMatchCreateParams,
   queryCreateParams,
   savedQueryCreateParams,
@@ -460,8 +458,9 @@ export const createTypeSpecific = t.union([
   newTermsCreateParams,
 ]);
 
-export const patchTypeSpecific = t.union([
-  eqlPatchParams,
+export type TypeSpecificPatchProps = t.TypeOf<typeof TypeSpecificPatchProps>;
+export const TypeSpecificPatchProps = t.union([
+  eqlSchema.patch,
   threatMatchPatchParams,
   queryPatchParams,
   savedQueryPatchParams,
@@ -470,9 +469,9 @@ export const patchTypeSpecific = t.union([
   newTermsPatchParams,
 ]);
 
-export type ResponseTypeSpecific = t.TypeOf<typeof responseTypeSpecific>;
-const responseTypeSpecific = t.union([
-  eqlResponseParams,
+export type TypeSpecificResponse = t.TypeOf<typeof TypeSpecificResponse>;
+export const TypeSpecificResponse = t.union([
+  eqlSchema.response,
   threatMatchResponseParams,
   queryResponseParams,
   savedQueryResponseParams,
@@ -481,17 +480,20 @@ const responseTypeSpecific = t.union([
   newTermsResponseParams,
 ]);
 
+// -------------------------------------------------------------------------------------------------
+// Final combined schemas
+
 export type RuleCreateProps = t.TypeOf<typeof RuleCreateProps>;
-export const RuleCreateProps = t.intersection([SharedCreateProps, createTypeSpecific]);
+export const RuleCreateProps = t.intersection([SharedCreateProps, TypeSpecificCreateProps]);
 
 export type RuleUpdateProps = t.TypeOf<typeof RuleUpdateProps>;
-export const RuleUpdateProps = t.intersection([createTypeSpecific, SharedUpdateProps]);
+export const RuleUpdateProps = t.intersection([TypeSpecificCreateProps, SharedUpdateProps]);
 
 export type RulePatchProps = t.TypeOf<typeof RulePatchProps>;
-export const RulePatchProps = t.intersection([patchTypeSpecific, SharedPatchProps]);
+export const RulePatchProps = t.intersection([TypeSpecificPatchProps, SharedPatchProps]);
 
-export const fullResponseSchema = t.intersection([sharedResponseSchema, responseTypeSpecific]);
-export type FullResponseSchema = t.TypeOf<typeof fullResponseSchema>;
+export type RuleResponse = t.TypeOf<typeof RuleResponse>;
+export const RuleResponse = t.intersection([SharedResponseProps, TypeSpecificResponse]);
 
 // -------------------------------------------------------------------------------------------------
 // Rule preview schemas
@@ -499,7 +501,7 @@ export type FullResponseSchema = t.TypeOf<typeof fullResponseSchema>;
 export type PreviewRulesSchema = t.TypeOf<typeof previewRulesSchema>;
 export const previewRulesSchema = t.intersection([
   SharedCreateProps,
-  createTypeSpecific,
+  TypeSpecificCreateProps,
   t.type({ invocationCount: t.number, timeframeEnd: t.string }),
 ]);
 

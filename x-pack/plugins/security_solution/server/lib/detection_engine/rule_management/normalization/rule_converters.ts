@@ -25,19 +25,18 @@ import type {
   RequiredFieldArray,
   SetupGuide,
   RuleCreateProps,
-  CreateTypeSpecific,
-  EqlPatchParams,
-  FullResponseSchema,
+  TypeSpecificCreateProps,
+  RuleResponse,
   MachineLearningPatchParams,
   NewTermsPatchParams,
   QueryPatchParams,
-  ResponseTypeSpecific,
+  TypeSpecificResponse,
   SavedQueryPatchParams,
   ThreatMatchPatchParams,
   ThresholdPatchParams,
 } from '../../../../../common/detection_engine/rule_schema';
 import {
-  eqlPatchParams,
+  EqlPatchParams,
   machineLearningPatchParams,
   newTermsPatchParams,
   queryPatchParams,
@@ -98,7 +97,9 @@ import {
 // Converts params from the snake case API format to the internal camel case format AND applies default values where needed.
 // Notice that params.language is possibly undefined for most rule types in the API but we default it to kuery to match
 // the legacy API behavior
-export const typeSpecificSnakeToCamel = (params: CreateTypeSpecific): TypeSpecificRuleParams => {
+export const typeSpecificSnakeToCamel = (
+  params: TypeSpecificCreateProps
+): TypeSpecificRuleParams => {
   switch (params.type) {
     case 'eql': {
       return {
@@ -335,7 +336,7 @@ export const patchTypeSpecificSnakeToCamel = (
   // but would be assignable to the other rule types since they don't specify `event_category_override`.
   switch (existingRule.type) {
     case 'eql': {
-      const [validated, error] = validateNonExact(params, eqlPatchParams);
+      const [validated, error] = validateNonExact(params, EqlPatchParams);
       if (validated == null) {
         throw parseValidationError(error);
       }
@@ -533,7 +534,7 @@ export const convertCreateAPIToInternalSchema = (
 };
 
 // Converts the internal rule data structure to the response API schema
-export const typeSpecificCamelToSnake = (params: TypeSpecificRuleParams): ResponseTypeSpecific => {
+export const typeSpecificCamelToSnake = (params: TypeSpecificRuleParams): TypeSpecificResponse => {
   switch (params.type) {
     case 'eql': {
       return {
@@ -669,7 +670,7 @@ export const internalRuleToAPIResponse = (
   rule: SanitizedRule<RuleParams> | ResolvedSanitizedRule<RuleParams>,
   ruleExecutionSummary?: RuleExecutionSummary | null,
   legacyRuleActions?: LegacyRuleActions | null
-): FullResponseSchema => {
+): RuleResponse => {
   const mergedExecutionSummary = mergeRuleExecutionSummary(
     rule.executionStatus,
     ruleExecutionSummary ?? null
