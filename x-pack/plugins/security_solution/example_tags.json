@@ -6,5 +6,7 @@
   "Tactic: Defense Evasion",
   "Data Source: Elastic Endgame",
   "Data Source: Elastic Defend",
-  "Data Source: Sysmon"
+  "Data Source: Sysmon",
+  "Data Source: Microsoft Defender for Endpoint",
+  "Data Source: SentinelOne"
 ]
