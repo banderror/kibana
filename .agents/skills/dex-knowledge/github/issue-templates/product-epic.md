@@ -1,4 +1,4 @@
-# Product Epic Template
+# Product epic template
 
 Large or complex product feature, or a group of related features and fixes. Spans multiple releases. Created by Product Manager or Engineering Manager.
 
@@ -7,51 +7,69 @@ GitHub issue type: **Epic**
 ## Template
 
 ```markdown
+**Related to:** <!-- links to related issues/PRs, if any -->
+
 ## Summary
 
-<!-- What needs to be done and why, in 1-3 sentences -->
+<!-- What needs to be done and why, in 1-3 sentences. -->
 
-## Background and Rationale
+## Background and rationale
 
 <!-- Current situation, pain points, customer impact.
      Include data, customer examples, or enhancement requests if available. -->
 
-## User Stories
+## Value / impact
+
+<!-- Business value, strategic alignment. -->
+
+## Product requirements
+
+<!-- Link to the Product Requirements Document (PRD), if available. -->
+PRD: [PRD name](PRD url)
+
+### User stories
 
 <!-- Key user stories. Can also be defined in linked sub-issues. -->
 - As a [persona], I want to [action] so that [outcome].
 
-## Success Criteria
+### Success criteria
 
 <!-- Conditions that must be true for this epic to be considered complete.
      Can also be defined in linked sub-issues. -->
 - [ ] ...
 
-## Designs
+### Subscription tier (recommendation)
 
-<!-- Link to Figma or other design files -->
+<!-- License: Basic / Plati­num / Enter­prise -->
+<!-- Serverless PLI: Elastic Security Serverless (if available in Serverless) -->
+<!-- Serverless tier: Essentials / Complete -->
 
-## Value / Initiative
+## Product designs
 
-<!-- Business value, strategic alignment -->
+<!-- Link to Figma or other design files. -->
 
-## Subscription Tier (recommendation)
+## Technical requirements
 
-<!-- Basic / Standard / Essentials -->
+<!-- Non-functional requirements, if there are any. -->
+
+## Technical designs
+
+<!-- Link to the technical RFC describing the proposed software design and architecture, if available. -->
+RFC: [RFC name](RFC url)
 
 ## Related tickets
 
-<!-- Enhancement requests, customer asks, related epics, etc. -->
+<!-- Enhancement requests, SDHs, customer asks, related epics, etc. -->
 
-## Tasks
+## Implementation plan
 
-<!-- Implementation milestones and/or individual tickets -->
+<!-- Implementation phases and steps linking to individual tickets. -->
 
-### Milestone 1 — ...
+### Phase 1 — ...
 - [ ] #ticket1
 - [ ] #ticket2
 
-### Milestone 2 — ...
+### Phase 2 — ...
 - [ ] #ticket3
 
 ## Release progress checklist
@@ -59,6 +77,7 @@ GitHub issue type: **Epic**
 <!-- Track readiness across design, implementation, testing, docs, and release -->
 - [ ] UX design is done
 - [ ] Architecture design is done and approved
+- [ ] Implementation plan is created
 - [ ] Upcoming work is communicated to Docs team
 - [ ] Test plan is written and approved
 - [ ] Implementation is done
@@ -67,15 +86,15 @@ GitHub issue type: **Epic**
 - [ ] Exploratory testing is done
 - [ ] Documentation is written
 - [ ] Feature is released in Serverless
-- [ ] Feature is released in ESS
+- [ ] Feature is ready to be released in ESS
 ```
 
 ## Drafting guidance
 
 - **Summary**: Brief overview of the epic's scope.
-- **Background and Rationale**: This is the most important section for product epics. Include data, customer quotes, competitive comparisons, and enhancement request links when available.
-- **User Stories**: Define key user stories inline or note they're in sub-issues. Focus on the personas affected.
-- **Success Criteria**: High-level criteria. Detailed criteria can live in sub-issues.
-- **Tasks**: Organize by milestones if the epic has a phased approach. Link to sub-issues.
+- **Background and rationale**: This is the most important section for product epics. Include data, customer quotes, competitive comparisons, and enhancement request links when available.
+- **User stories**: Define key user stories inline or note they're in sub-issues. Focus on the personas affected.
+- **Success criteria**: High-level criteria. Detailed criteria can live in sub-issues.
+- **Implementation plan**: Organize by phases if the epic has a phased approach. Link to sub-issues.
 - **Release progress checklist**: Adapt to the epic's needs — not every item applies to every epic.
 - Product epics are rich documents. Include as much context as the user provides.

@@ -1,4 +1,4 @@
-# Product Initiative Template
+# Product initiative template
 
 Top-level roadmap item representing a broad, strategic product goal. Spans multiple quarters or years. Decomposes into workstreams and/or epics.
 
@@ -7,27 +7,45 @@ GitHub issue type: **Initiative**
 ## Template
 
 ```markdown
-## Background and Description
+## Summary
+
+<!-- What needs to be done and why, in 1-3 sentences. -->
+
+## Background
 
 <!-- What is the current situation? What problem exists? Why does this matter strategically? -->
 
-## Goal
+## Goals
 
 <!-- What does this initiative aim to achieve? 2-5 bullet points. -->
 
-## Value / Impact
+## Value / impact
 
-<!-- Business value, strategic alignment, competitive positioning -->
+<!-- Business value, strategic alignment, competitive positioning. -->
 
-## Product requirements document
+## Product requirements
 
-<!-- Link to PRD if available -->
+<!-- Link to the Product Requirements Document (PRD), if available. -->
+PRD: [PRD name](PRD url)
 
-## Epics
+## Workstreams
 
-<!-- Linked epics that implement this initiative -->
+<!-- Linked workstreams that belong to this initiative. Remove this section if no workstreams. -->
+
+## Milestones
+
+<!-- Epics that implement this initiative. Linked directly or through the workstreams. Grouped into milestones for prioritization. -->
+
+### Milestone 1 — ...
 - [ ] #epic1
 - [ ] #epic2
+
+### Milestone 2 — ...
+- [ ] #epic3
+
+### Not prioritized
+- [ ] #epic4
+- [ ] #epic5
 
 ## Related links
 
@@ -36,7 +54,7 @@ GitHub issue type: **Initiative**
 
 ## Drafting guidance
 
-- **Background and Description**: Explain the current situation, pain points, and strategic context. Include data or customer examples if the user provides them.
+- **Background**: Explain the current situation, pain points, and strategic context. Include data or customer examples if the user provides them.
 - **Goal**: Distill into concrete, high-level outcomes (not implementation details).
-- **Value / Impact**: Connect to business metrics, competitive positioning, or strategic themes.
-- **Epics**: List any known sub-epics. This section is often populated later as the initiative is broken down.
+- **Value / impact**: Connect to business metrics, competitive positioning, or strategic themes.
+- **Milestones**: List any known sub-epics. This section is often populated later as the initiative is broken down.

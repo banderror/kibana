@@ -1,6 +1,6 @@
-# Product Implementation Task Template
+# Product implementation task template
 
-Concrete engineering work to deliver a product feature. Describes the **what** and **how** — the exact implementation plan with phases and steps. Part of a product epic.
+One of the concrete engineering tasks from the implementation plan to deliver a product feature. Describes the **what** and **how** — the exact changes to make. Part of a product epic.
 
 GitHub issue type: **Task**
 
@@ -9,15 +9,21 @@ GitHub issue type: **Task**
 ```markdown
 **Epic:** <!-- link to parent epic -->
 **Depends on:** <!-- link to blocking issues/PRs, if any -->
+**Related to:** <!-- link to related issues/PRs -->
 
 ## Summary
 
-<!-- What needs to be done and how, in 1-3 sentences -->
+<!-- What needs to be done and how, in 1-3 sentences. -->
 
 ## Details
 
-<!-- Implementation plan: what exactly needs to be done and, if known, how.
-     Include phases, steps, technical approach, API changes, etc. -->
+<!-- Implementation details: what exactly needs to be done and, if known, how.
+     Describe technical approach, API changes, etc. -->
+
+## Todo
+
+<!-- A list of specific actions or steps, if known -->
+- [ ] ...
 
 ## Resources
 

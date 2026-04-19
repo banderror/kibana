@@ -1,4 +1,4 @@
-# Product Workstream Template
+# Product workstream template
 
 Groups related product epics under an initiative. Represents an area of the product or a workflow consisting of complex features. Does not necessarily have a fixed end date.
 
@@ -16,15 +16,18 @@ GitHub issue type: **Workstream**
 <!-- Context and motivation. How does this workstream fit into the parent initiative?
      What user needs or product gaps does it address? -->
 
-## Epics
+## Product requirements
 
-<!-- Linked epics that belong to this workstream -->
-- [ ] #epic1
-- [ ] #epic2
+<!-- Link to the Product Requirements Document (PRD), if available. -->
+PRD: [PRD name](PRD url)
 
-## Designs
+## Product designs
 
 <!-- Link to Figma or other design files, if available -->
+
+## Epics
+
+See the epics that belong to this workstream in the linked sub-issues.
 
 ## Related links
 
@@ -35,5 +38,4 @@ GitHub issue type: **Workstream**
 
 - **Summary**: Concise description of the workstream's scope and purpose.
 - **Background**: Explain how this fits into the broader initiative. Include user research or product context if available.
-- **Epics**: List the epics this workstream groups together. Often populated as the workstream is broken down.
 - Workstreams are structural — they organize epics, not implementation details.

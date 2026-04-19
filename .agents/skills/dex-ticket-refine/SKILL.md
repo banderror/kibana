@@ -162,12 +162,31 @@ Beyond template compliance, check for:
 - **Issue type** — is it set? Does it match the ticket type per the mapping in `../dex-knowledge/github/github-ticket-types.md`?
 - **Parent issue** — for implementation tasks, features, and bugs that belong to an epic, is the parent set?
 
-### Step 2.4: Interview the user
+### Step 2.4: Cross-reference validation
 
-Present the combined findings from steps 2.2 and 2.3 as a prioritized list. Then ask clarifying questions:
+Check that issue references in the ticket body are consistent with the actual GitHub relationships fetched in Phase 1.
+
+**Body references vs GitHub parent:**
+- If the body contains an `**Epic:**` or `**Parent:**` link, check that it matches the actual parent issue from GitHub. Flag if they differ or if one is set but the other is missing.
+
+**Body references vs GitHub sub-issues:**
+- If the body contains an implementation plan, task list, or milestone section with linked issues (e.g. `#12345`, `elastic/security-team#6987`), compare them against the actual sub-issues from GitHub.
+- Flag issues listed in the body that are not actual sub-issues in GitHub.
+- Flag actual sub-issues in GitHub that are not listed in the body.
+
+**Broken references:**
+- Extract all issue references from the body (patterns: `#N`, `org/repo#N`, full GitHub issue URLs).
+- For each reference, verify the issue exists using `gh issue view <N> --repo <REPO> --json state --jq '.state'`. Use the ticket's own repo for bare `#N` references.
+- Flag references that point to non-existent issues.
+
+Include any mismatches in the findings presented to the user in the next step.
+
+### Step 2.5: Interview the user
+
+Present the combined findings from steps 2.2, 2.3, and 2.4 as a prioritized list. Then ask clarifying questions:
 
 - Ask one question at a time, then wait for the user's reply
-- Prioritize: (1) missing required template sections, (2) vague content in existing sections, (3) metadata gaps (labels, type, projects), (4) optional improvements
+- Prioritize: (1) missing required template sections, (2) vague content in existing sections, (3) cross-reference mismatches, (4) metadata gaps (labels, type, projects), (5) optional improvements
 - Accept "skip" or "N/A" for optional items
 - If an answer is still vague after one follow-up, move on
 
