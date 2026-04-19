@@ -52,7 +52,7 @@ If both fail, report: "Issue #N was not found in elastic/kibana or elastic/secur
 Fetch standard fields via `gh`:
 
 ```bash
-gh issue view <NUMBER> --repo <REPO> --json number,title,body,labels,assignees,milestone,projectItems,state,url
+gh issue view <NUMBER> --repo <REPO> --json number,url,state,title,body,labels,assignees,milestone,projectItems
 ```
 
 Fetch fields that `gh issue view` cannot return (issue type, parent, sub-issues) via GraphQL:
