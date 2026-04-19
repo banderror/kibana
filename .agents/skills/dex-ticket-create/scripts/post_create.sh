@@ -80,9 +80,7 @@ fi
 # Add to projects
 for PROJECT_NUM in "${PROJECTS[@]}"; do
   ISSUE_URL="https://github.com/$REPO/issues/$ISSUE_NUMBER"
-  if gh project item-add "$PROJECT_NUM" --owner "$OWNER" --url "$ISSUE_URL" 2>/dev/null; then
-    echo "Added to project #$PROJECT_NUM"
-  else
-    echo "Warning: Could not add to project #$PROJECT_NUM — you may need to run: gh auth refresh -s project" >&2
-  fi
+  ERR=$(gh project item-add "$PROJECT_NUM" --owner "$OWNER" --url "$ISSUE_URL" 2>&1) && \
+    echo "Added to project #$PROJECT_NUM" || \
+    echo "Warning: Could not add to project #$PROJECT_NUM — $ERR. You may need to run: gh auth refresh -s project" >&2
 done

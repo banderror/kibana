@@ -1,6 +1,6 @@
 ---
 name: dex-ticket-create
-description: "Create a new GitHub issue in the elastic organization. Guides the user through drafting the content (title, description), choosing the right repo, labels, issue type, and projects. Supports feature requests, bug reports, and technical tasks. Use /dex-ticket-create when you want to file a ticket for one of the Detection Engineering Experience teams: Rule Management or Detection Engine."
+description: "Create a new GitHub issue in the elastic organization. Guides the user through drafting the content (title, description), choosing the right repo, labels, issue type, and projects. Supports all ticket types: initiatives, workstreams, epics, features, implementation tasks, and bugs. Use /dex-ticket-create when you want to file a ticket for one of the Detection Engineering Experience teams: Rule Management or Detection Engine."
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -37,23 +37,37 @@ If the description is too vague to classify or draft from, ask one or two target
 
 ### Step 1.2: Classify the ticket type
 
-Determine whether this is a **feature**, **bug**, or **technical task**:
+Read `references/github-ticket-types.md` for the full classification guide, hierarchy, and disambiguation rules. The 10 ticket types are:
 
-| Type | Signals |
-|------|---------|
-| Bug | broken, crash, error, fails, regression, unexpected behavior, not working |
-| Feature | new functionality, enhancement, user-facing improvement, "add support for", "allow", "should be able to" |
-| Technical task | refactoring, tech debt, infrastructure, performance, internal tooling, cleanup — no direct user-visible behavior change |
+1. Product initiative
+2. Technical initiative
+3. Product workstream
+4. Technical workstream
+5. Product epic
+6. Technical epic
+7. Feature
+8. Product implementation task
+9. Technical implementation task
+10. Bug
 
 If ambiguous, ask the user which type applies.
 
 ### Step 1.3: Draft the ticket description
 
-Read the corresponding template from the skill's `references/templates/` directory:
+Read the corresponding template from `references/templates/`:
 
-- Bug: `references/templates/bug.md`
-- Feature: `references/templates/feature.md`
-- Technical task: `references/templates/technical_task.md`
+| Ticket type | Template file |
+| --- | --- |
+| Product initiative | `product_initiative.md` |
+| Technical initiative | `technical_initiative.md` |
+| Product workstream | `product_workstream.md` |
+| Technical workstream | `technical_workstream.md` |
+| Product epic | `product_epic.md` |
+| Technical epic | `technical_epic.md` |
+| Feature | `feature.md` |
+| Product implementation task | `product_implementation_task.md` |
+| Technical implementation task | `technical_implementation_task.md` |
+| Bug | `bug.md` |
 
 Using the user's description and the template, draft the ticket:
 
@@ -62,10 +76,10 @@ Using the user's description and the template, draft the ticket:
 
 ### Step 1.4: Draft the ticket title
 
+Read the "Title prefix" section of `references/github-ticket-types.md` for prefix rules per type and repo.
+
 - Draft a concise title (under 80 characters) that captures the core ask or problem
-- Prefix with the relevant area in brackets:
-  - use `[Security Solution]` prefix for anything related to Security Solution: Rule Management, Detection Engine, Timeline, Cases, etc
-  - use other frequently used prefixes when apparent, e.g. `[Discover]`, `[Fleet]`, etc
+- Apply the correct prefix based on ticket type and target repository
 
 ### Step 1.5: Interview for weak spots
 
@@ -89,20 +103,15 @@ Based on the ticket type, title and description, determine the appropriate repos
 
 ### Step 2.1: Choose repository
 
-Read `references/github-repositories.md` for repo configuration.
+Read the "Repository defaults" section of `references/github-ticket-types.md` and `references/github-repositories.md`.
 
-Propose the most appropriate repository:
-
-- Default: `elastic/kibana` (public bugs, features, technical tasks)
-- Use `elastic/security-team` when the content is confidential (customer data, security vulnerabilities, internal infra) or is a high-level product item (initiative, workstream, epic)
+Propose the most appropriate repository based on the ticket type and content.
 
 ### Step 2.2: Choose issue type
 
-Propose the most appropriate GitHub issue type (set after creation via GraphQL):
+Read the "GitHub issue type" section of `references/github-ticket-types.md`.
 
-- Feature → `Enhancement`
-- Bug → `Bug`
-- Technical task → `Task`
+Propose the most appropriate GitHub issue type (set after creation via GraphQL).
 
 ### Step 2.3: Choose labels
 
@@ -110,9 +119,11 @@ Read `references/github-labels.md` for label conventions.
 
 Propose the most appropriate GitHub labels:
 
-- **Type-related label** - e.g. `bug` for bugs
-- **Team labels** - add all relevant ones based on the teams involved or affected
-- **Feature labels** - add all relevant ones, but avoid adding general ones if more specific ones apply (e.g. skip `Feature:Detection Rules` if `Feature:Rule Management` applies)
+- **Mandatory labels** — always add to every new ticket (e.g. `triage_needed`)
+- **Type-related label** — per the type labels table in the labels reference
+- **Team labels** — add all relevant ones based on the teams involved or affected
+- **Feature labels** — add all relevant ones, but avoid adding general ones if more specific ones apply (e.g. skip `Feature:Detection Rules` if `Feature:Rule Management` applies)
+- **Impact label** — for bugs, propose the appropriate `impact:*` label
 - Query the github repo for any other relevant labels, if needed
 
 ### Step 2.4: Choose projects
@@ -166,8 +177,8 @@ ISSUE_URL=$(gh issue create \
   --repo <REPO> \
   --title "<TITLE>" \
   --body "$ISSUE_BODY" \
-  --label "<label1>,<label2>" \
-  2>&1 | tail -1)
+  --label "<label1>" \
+  --label "<label2>")
 
 echo "Created: $ISSUE_URL"
 ```

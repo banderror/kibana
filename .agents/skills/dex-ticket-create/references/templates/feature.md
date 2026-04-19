@@ -1,6 +1,6 @@
-# Feature Request Template
+# Feature Template
 
-Use this template for new functionality, enhancements, or user-facing improvements.
+New functionality or enhancement to an existing feature. Single, focused deliverable. Describes the **what** and **why** (requirements), not the how.
 
 GitHub issue type: **Enhancement**
 
@@ -11,49 +11,30 @@ GitHub issue type: **Enhancement**
 
 <!-- What needs to be done and why, in 1-3 sentences -->
 
-## What
+## User Stories
 
-<!-- Describe what feature should be added. Note what's explicitly out of scope. -->
+<!-- Key user stories for this feature -->
+- As a [persona], I want to [action] so that [outcome].
 
-## Why
+## Success Criteria
 
-<!-- Why should this be added? What use-case does this enable?
-     How do users work around this today? Who would use this? -->
-
-## Acceptance criteria
-
-<!-- List conditions that must be true for this feature to be complete.
-     Each criterion should be independently verifiable — if you can't write a test for it, make it more specific.
-     Cover: happy path, edge cases (empty state, error state), affected user roles, deployment targets (Serverless/Hosted/On-prem). -->
-
-**Happy path**
+<!-- Conditions that must be true for this feature to be considered complete.
+     Each criterion should be independently verifiable. -->
 - [ ] ...
 
-**Edge / error cases**
-- [ ] ...
+## Designs
 
-**Deployment & rollout**
-- [ ] ...
+<!-- Link to Figma or other design files, if available -->
 
-## Priority
-
-<!-- Nice to have / Important / Urgent / Critical -->
-
-## Blocked by
-
-<!-- Issue(s) that must be resolved first, e.g. #12345 -->
-
-## Additional context
+## Additional Context
 
 <!-- Screenshots, mockups, links to related issues, or any other context -->
 ```
 
 ## Drafting guidance
 
-When populating this template from the user's description:
-
-- **What?**: Synthesize a clear statement of the feature. Note what's explicitly out of scope if apparent from the description.
-- **Why?**: Derive motivation from the use-case. Include the current workaround (how users accomplish this today) and who the target user is.
-- **Acceptance Criteria**: Draft from the described behavior. Include happy path and edge cases. Each criterion should be a binary pass/fail check.
-- **Priority**: Infer if clues are present (e.g. "blocking", "nice to have"), otherwise leave for the user.
-- **Blocked By**: Capture any mentioned dependencies.
+- **Summary**: Concise statement of the feature and its purpose. Include what's explicitly out of scope if apparent.
+- **User Stories**: Define who benefits and how. Even a single user story helps clarify the intent.
+- **Success Criteria**: Concrete, testable conditions. Each should be a binary pass/fail check. Include edge cases where relevant.
+- Features describe requirements — the "what" and "why". Leave implementation details to product implementation tasks.
+- If the feature is part of an epic, add a `**Parent epic:**` link at the top of the body.

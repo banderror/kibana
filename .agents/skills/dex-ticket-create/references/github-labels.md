@@ -1,12 +1,27 @@
 # GitHub labels
 
+## Mandatory labels
+
+Always add these labels to every new ticket:
+
+- `triage_needed`
+
 ## Type labels
 
-Labels that correspond to ticket types. Examples:
+Labels that correspond to ticket types:
 
-- Bug: `bug`
-- Feature: `enhancement`
-- Technical task: `technical debt`, `refactoring`
+| Ticket type | Type label(s) |
+|-------------|---------------|
+| Product initiative | (none) |
+| Technical initiative | (none) |
+| Product workstream | (none) |
+| Technical workstream | (none) |
+| Product epic | `Epic` |
+| Technical epic | `epic` (in `elastic/kibana`) or `Epic` (in `elastic/security-team`) |
+| Feature | `enhancement` |
+| Product implementation task | (none) |
+| Technical implementation task | `technical debt` (default). Add `refactoring` only for pure refactorings where no behavior changes. Add `performance` for performance work. Add `test` for testing work. |
+| Bug | `bug` |
 
 ## Team labels
 
@@ -82,5 +97,6 @@ Used to communicate impact and urgency of bugs. Every bug ticket should have one
 
 ## Other common labels
 
-- `triage_needed` - always add to new tickets
 - `good first issue` - low hanging fruit, very easy to address
+- `performance` - performance-related work (can apply to bugs and technical tasks)
+- `test` - testing-related work

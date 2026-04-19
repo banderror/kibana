@@ -16,11 +16,15 @@
 
 ## Project assignment guidance
 
-| Ticket type     | Project #699 | Project #1880 |
-| --------------- | ------------ | ------------- |
-| Bug             | Yes          | No            |
-| Feature         | Yes          | No            |
-| Technical task  | Yes          | No            |
-| Epic            | Yes          | Yes           |
-| Workstream      | Yes          | Yes           |
-| Initiative      | Yes          | Yes           |
+| Ticket type | Project #699 | Project #1880 |
+| --- | --- | --- |
+| Product initiative | Yes | Yes |
+| Technical initiative | Yes | Yes |
+| Product workstream | Yes | Yes |
+| Technical workstream | Yes | Yes |
+| Product epic | Yes | Yes |
+| Technical epic | Yes | Yes |
+| Feature | Yes | No |
+| Product implementation task | Yes | No |
+| Technical implementation task | Yes | No |
+| Bug | Yes | No |
