@@ -37,7 +37,7 @@ If the description is too vague to classify or draft from, ask one or two target
 
 ### Step 1.2: Classify the ticket type
 
-Read `references/github-ticket-types.md` for the full classification guide, hierarchy, and disambiguation rules. The 10 ticket types are:
+Read `../dex-knowledge/github/github-ticket-types.md` for the full classification guide, hierarchy, and disambiguation rules. The 10 ticket types are:
 
 1. Product initiative
 2. Technical initiative
@@ -54,19 +54,19 @@ If ambiguous, ask the user which type applies.
 
 ### Step 1.3: Draft the ticket description
 
-Read the corresponding template from `references/templates/`:
+Read the corresponding template from `../dex-knowledge/github/issue-templates/`:
 
 | Ticket type | Template file |
 | --- | --- |
-| Product initiative | `product_initiative.md` |
-| Technical initiative | `technical_initiative.md` |
-| Product workstream | `product_workstream.md` |
-| Technical workstream | `technical_workstream.md` |
-| Product epic | `product_epic.md` |
-| Technical epic | `technical_epic.md` |
+| Product initiative | `product-initiative.md` |
+| Technical initiative | `technical-initiative.md` |
+| Product workstream | `product-workstream.md` |
+| Technical workstream | `technical-workstream.md` |
+| Product epic | `product-epic.md` |
+| Technical epic | `technical-epic.md` |
 | Feature | `feature.md` |
-| Product implementation task | `product_implementation_task.md` |
-| Technical implementation task | `technical_implementation_task.md` |
+| Product implementation task | `product-implementation-task.md` |
+| Technical implementation task | `technical-implementation-task.md` |
 | Bug | `bug.md` |
 
 Using the user's description and the template, draft the ticket:
@@ -76,7 +76,7 @@ Using the user's description and the template, draft the ticket:
 
 ### Step 1.4: Draft the ticket title
 
-Read the "Title prefix" section of `references/github-ticket-types.md` for prefix rules per type and repo.
+Read the "Title prefix" section of `../dex-knowledge/github/github-ticket-types.md` for prefix rules per type and repo.
 
 - Draft a concise title (under 80 characters) that captures the core ask or problem
 - Apply the correct prefix based on ticket type and target repository
@@ -103,19 +103,19 @@ Based on the ticket type, title and description, determine the appropriate repos
 
 ### Step 2.1: Choose repository
 
-Read the "Repository defaults" section of `references/github-ticket-types.md` and `references/github-repositories.md`.
+Read the "Repository defaults" section of `../dex-knowledge/github/github-ticket-types.md` and `../dex-knowledge/github/github-repositories.md`.
 
 Propose the most appropriate repository based on the ticket type and content.
 
 ### Step 2.2: Choose issue type
 
-Read the "GitHub issue type" section of `references/github-ticket-types.md`.
+Read the "GitHub issue type" section of `../dex-knowledge/github/github-ticket-types.md`.
 
 Propose the most appropriate GitHub issue type (set after creation via GraphQL).
 
 ### Step 2.3: Choose labels
 
-Read `references/github-labels.md` for label conventions.
+Read `../dex-knowledge/github/github-labels.md` for label conventions.
 
 Propose the most appropriate GitHub labels:
 
@@ -128,7 +128,7 @@ Propose the most appropriate GitHub labels:
 
 ### Step 2.4: Choose projects
 
-Read `references/github-projects.md` for which projects apply to which ticket types.
+Read `../dex-knowledge/github/github-projects.md` for which projects apply to which ticket types.
 
 Propose the most appropriate GitHub projects to add the issue to, if any.
 
