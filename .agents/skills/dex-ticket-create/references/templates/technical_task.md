@@ -29,7 +29,7 @@ GitHub issue type: **Task**
 <!-- High-level technical approach or implementation plan.
      If there are multiple options, list them with trade-offs. -->
 
-## Acceptance Criteria
+## Acceptance criteria
 
 - [ ] ...
 
@@ -37,7 +37,7 @@ GitHub issue type: **Task**
 
 <!-- Related issues, PRs, or external dependencies that affect this work -->
 
-## Additional Context
+## Additional context
 
 <!-- Relevant diagrams, metrics, links, or other supporting information -->
 ```

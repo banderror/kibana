@@ -7,16 +7,20 @@ GitHub issue type: **Enhancement**
 ## Template
 
 ```markdown
-## What?
+## Summary
+
+<!-- What needs to be done and why, in 1-3 sentences -->
+
+## What
 
 <!-- Describe what feature should be added. Note what's explicitly out of scope. -->
 
-## Why?
+## Why
 
 <!-- Why should this be added? What use-case does this enable?
      How do users work around this today? Who would use this? -->
 
-## Acceptance Criteria
+## Acceptance criteria
 
 <!-- List conditions that must be true for this feature to be complete.
      Each criterion should be independently verifiable — if you can't write a test for it, make it more specific.
@@ -35,11 +39,11 @@ GitHub issue type: **Enhancement**
 
 <!-- Nice to have / Important / Urgent / Critical -->
 
-## Blocked By
+## Blocked by
 
 <!-- Issue(s) that must be resolved first, e.g. #12345 -->
 
-## Additional Context
+## Additional context
 
 <!-- Screenshots, mockups, links to related issues, or any other context -->
 ```

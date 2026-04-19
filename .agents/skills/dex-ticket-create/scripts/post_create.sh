@@ -1,5 +1,5 @@
 #!/bin/bash
-# Post-creation script for gh-create-issue skill.
+# Post-creation script for dex-ticket-create skill.
 # Sets the GitHub issue type via GraphQL and optionally adds the issue to projects.
 #
 # Usage:
