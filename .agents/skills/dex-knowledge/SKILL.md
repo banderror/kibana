@@ -1,6 +1,6 @@
 ---
 name: dex-knowledge
-description: "Shared knowledge base for Detection Engineering Experience (DEX) skills. Contains GitHub configuration (repositories, labels, projects, ticket types, issue templates) used by dex-ticket-create and other DEX skills. Not invocable directly."
+description: "Shared knowledge base for Detection Engineering Experience (DEX) skills. Contains GitHub configuration (repositories, labels, projects, ticket types, issue templates) used by dex-ticket-create, dex-ticket-refine, and other DEX skills. Not invocable directly."
 user-invocable: false
 disable-model-invocation: true
 ---
