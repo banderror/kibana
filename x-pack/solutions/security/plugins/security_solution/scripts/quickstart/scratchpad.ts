@@ -15,6 +15,7 @@ import { createToolingLogger } from '../../common/endpoint/data_loaders/utils';
 import { Client as DetectionsClient } from '../../common/api/quickstart_client.gen';
 import { duplicateRuleParams } from './modules/rules';
 import { basicRule } from './modules/rules/new_terms/basic_rule';
+import { createBirthdayRules } from './modules/birthdays';
 
 export const cli = () => {
   run(
@@ -58,15 +59,23 @@ ${HORIZONTAL_LINE}
        * START Custom data loader logic
        */
 
-      // Replace this code with whatever you want!
-      const ruleCopies = duplicateRuleParams(basicRule, 200);
-      const functions = ruleCopies.map((rule) => () => detectionsClient.createRule({ body: rule }));
-      await concurrentlyExec(functions);
+      // Madrid workshop demo: seed N birthday rules. Today's date is fine —
+      // freshly-created rules trivially celebrate their birthday today.
+      const today = new Date().toISOString().slice(0, 10);
+      await createBirthdayRules({
+        detectionsClient,
+        targetDate: today,
+        count: 6,
+      });
+      log.info(`Seeded 6 birthday rules for ${today}.`);
 
-      listsClient.findLists({ query: {} });
-      exceptionsClient.findExceptionLists({ query: {} });
-
-      esClient.indices.exists({ index: 'test' });
+      // Below: unused-but-kept references so the imports above stay valid.
+      void duplicateRuleParams;
+      void basicRule;
+      void concurrentlyExec;
+      void listsClient;
+      void exceptionsClient;
+      void esClient;
 
       /**
        * END Custom data loader logic
