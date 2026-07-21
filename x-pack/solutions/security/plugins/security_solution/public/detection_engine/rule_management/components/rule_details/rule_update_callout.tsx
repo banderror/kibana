@@ -24,7 +24,13 @@ const RuleUpdateCalloutComponent = ({
   actionButton,
   onUpgrade,
 }: RuleUpdateCalloutProps): JSX.Element | null => {
-  const { upgradeReviewResponse, rulePreviewFlyout, openRulePreview } = usePrebuiltRulesUpgrade({
+  const {
+    upgradeReviewResponse,
+    rulePreviewFlyout,
+    confirmLegacyMlJobsUpgradeModal,
+    upgradeConflictsModal,
+    openRulePreview,
+  } = usePrebuiltRulesUpgrade({
     pagination: {
       page: 1, // we only want to fetch one result
       perPage: 1,
@@ -66,6 +72,8 @@ const RuleUpdateCalloutComponent = ({
       </EuiCallOut>
       <EuiSpacer size="l" />
       {rulePreviewFlyout}
+      {confirmLegacyMlJobsUpgradeModal}
+      {upgradeConflictsModal}
     </>
   );
 };
