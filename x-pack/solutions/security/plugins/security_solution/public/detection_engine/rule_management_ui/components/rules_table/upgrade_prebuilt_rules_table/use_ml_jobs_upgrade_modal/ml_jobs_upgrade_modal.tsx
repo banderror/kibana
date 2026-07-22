@@ -34,13 +34,13 @@ const JobsUL = styled.ul`
 `;
 
 interface OutdatedMlJobsUpgradeModalProps {
-  jobs: MlSummaryJob[];
+  affectedJobs: MlSummaryJob[];
   onCancel: () => void;
   onConfirm: () => void;
 }
 
 export const OutdatedMlJobsUpgradeModal = memo(function LegacyMlJobsUpgradeModal({
-  jobs,
+  affectedJobs,
   onCancel,
   onConfirm,
 }: OutdatedMlJobsUpgradeModalProps): JSX.Element {
@@ -61,8 +61,8 @@ export const OutdatedMlJobsUpgradeModal = memo(function LegacyMlJobsUpgradeModal
       <i18n.MlJobUpgradeModalBody />
       {i18n.ML_JOB_UPGRADE_MODAL_AFFECTED_JOBS}
       <JobsUL>
-        {jobs.map((j) => {
-          return <li key={j.id}>{j.id}</li>;
+        {affectedJobs.map((job) => {
+          return <li key={job.id}>{job.id}</li>;
         })}
       </JobsUL>
     </EuiConfirmModal>

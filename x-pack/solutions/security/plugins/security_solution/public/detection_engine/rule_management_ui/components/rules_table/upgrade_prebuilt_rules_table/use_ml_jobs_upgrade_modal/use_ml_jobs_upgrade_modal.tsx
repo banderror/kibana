@@ -38,7 +38,11 @@ export function useOutdatedMlJobsUpgradeModal(): UseOutdatedMlJobsUpgradeModalRe
 
   return {
     modal: isVisible && (
-      <OutdatedMlJobsUpgradeModal jobs={jobs} onConfirm={confirm} onCancel={cancel} />
+      <OutdatedMlJobsUpgradeModal
+        affectedJobs={legacyJobsInstalled}
+        onConfirm={confirm}
+        onCancel={cancel}
+      />
     ),
     confirmLegacyMLJobs: handleLegacyMLJobsConfirm,
     isLoading: loading,

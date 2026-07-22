@@ -146,4 +146,21 @@ describe('Rule upgrade from the Rule Details page callout with legacy ML jobs', 
     await waitFor(() => expect(performUpgradeRequests().length).toBeGreaterThan(0));
     expect(screen.queryByText(ML_JOB_UPGRADE_MODAL_TITLE)).not.toBeInTheDocument();
   });
+
+  it('lists only affected ML jobs, not every installed Security job', async () => {
+    // Regression test for https://github.com/elastic/kibana/issues/239884: the modal used to
+    // render the full installed jobs list, so unaffected jobs (e.g. `high_count_*`, `_ea`)
+    // appeared under "Affected jobs" and users couldn't tell which job actually tripped the gate.
+    mockInstalledSecurityJobs([AFFECTED_ML_JOB, UNAFFECTED_ML_JOB]);
+
+    renderCallout();
+    await openUpgradeFlyout();
+    await clickUpdateRuleButton();
+
+    expect(await screen.findByText(ML_JOB_UPGRADE_MODAL_TITLE)).toBeInTheDocument();
+    // Only the allowlisted (affected) job is listed...
+    expect(screen.getByText(AFFECTED_ML_JOB.id)).toBeInTheDocument();
+    // ...the unaffected job is not.
+    expect(screen.queryByText(UNAFFECTED_ML_JOB.id)).not.toBeInTheDocument();
+  });
 });
