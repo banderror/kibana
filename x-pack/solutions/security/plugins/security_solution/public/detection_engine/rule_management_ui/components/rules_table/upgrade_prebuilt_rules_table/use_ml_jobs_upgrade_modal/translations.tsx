@@ -47,14 +47,12 @@ export const MlJobUpgradeModalBody = () => (
         <p>
           <FormattedMessage
             id="xpack.securitySolution.detectionEngine.mlJobUpgradeModal.messageBody.summary"
-            defaultMessage="New V3 machine learning jobs have been released,
-            and the latest corresponding prebuilt detection rules now use these
-            new ML jobs. You're currently running one or more V1/V2 jobs, which
-            only work with legacy prebuilt rules. To ensure continued coverage using
-            V1/V2 jobs, you may need to duplicate or create new rules before
-            updating your Elastic prebuilt detection rules. Check the documentation
-            below for instructions on how to keep using the V1/V2 jobs, and how to
-            start using the new V3 jobs."
+            defaultMessage="Some of your installed machine learning jobs are an earlier
+            generation that the latest Elastic prebuilt rules no longer use. Updating these
+            rules repoints them to newer ML jobs, so the affected rules may stop using your
+            existing jobs. To keep detection coverage from the older jobs, duplicate or
+            recreate the affected rules before updating. See the documentation below for how
+            to keep using your current jobs and how to move to the newer ones."
           />
         </p>
       ),
