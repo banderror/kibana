@@ -5,11 +5,13 @@
  * 2.0.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import hash from 'object-hash';
 
 import type { CallOutMessage } from '../../../../common/components/callouts';
-import { CallOutSwitcher } from '../../../../common/components/callouts';
+import { CallOut } from '../../../../common/components/callouts';
 import { useInstalledSecurityJobs } from '../../../../common/components/ml/hooks/use_installed_security_jobs';
+import { useTimedDismissal } from '../../../../common/hooks/use_timed_dismissal';
 import { affectedJobIds } from '../../../../../common/machine_learning/affected_job_ids';
 import * as i18n from './translations';
 
@@ -20,17 +22,47 @@ const mlJobCompatibilityCalloutMessage: CallOutMessage = {
   description: <i18n.MlJobCompatibilityCalloutBody />,
 };
 
+const localStorageKey = (fingerprint: string) =>
+  `kibana.securitySolution.detections.mlJobCompatibilityCallout.${fingerprint}.dismissedAt`;
+
 const MlJobCompatibilityCalloutComponent = () => {
   const { loading, jobs } = useInstalledSecurityJobs();
-  const newJobsInstalled = jobs.some((job) => affectedJobIds.includes(job.id));
-
-  return (
-    <CallOutSwitcher
-      namespace="detections"
-      condition={!loading && newJobsInstalled}
-      message={mlJobCompatibilityCalloutMessage}
-    />
+  const affectedInstalledJobIds = useMemo(
+    () =>
+      jobs
+        .map((job) => job.id)
+        .filter((id) => affectedJobIds.includes(id))
+        .sort(),
+    [jobs]
   );
+
+  // When the callout is dismissed, it will reappear in two cases:
+  // 1. The set of affected installed job IDs changes (e.g. a new job is installed).
+  // 2. The dismissal expires after 7 days (see `useTimedDismissal`).
+  // The storage key is based on a hash of the set of affected installed job IDs.
+  const storageKey = useMemo(() => {
+    const fingerprint = hash(affectedInstalledJobIds);
+    return localStorageKey(fingerprint);
+  }, [affectedInstalledJobIds]);
+
+  if (loading || affectedInstalledJobIds.length === 0) {
+    return null;
+  }
+
+  // The storage key is used as a React `key` so the inner component remounts
+  // whenever the set changes, causing `useTimedDismissal` to re-read the
+  // set-specific storage key.
+  return <DismissibleMlJobCompatibilityCallout key={storageKey} storageKey={storageKey} />;
+};
+
+const DismissibleMlJobCompatibilityCallout = ({ storageKey }: { storageKey: string }) => {
+  const [isDismissed, dismiss] = useTimedDismissal(storageKey);
+
+  if (isDismissed) {
+    return null;
+  }
+
+  return <CallOut message={mlJobCompatibilityCalloutMessage} onDismiss={dismiss} />;
 };
 
 export const MlJobCompatibilityCallout = memo(MlJobCompatibilityCalloutComponent);
