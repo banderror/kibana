@@ -21,6 +21,11 @@ import * as i18n from './translations';
 import { ConflictsDescription, type RulesConflictStats } from './conflicts_description';
 
 export interface UpgradeWithConflictsModalProps extends RulesConflictStats {
+  /**
+   * When `true`, offers an "Update all to Elastic's version" action for the non-solvable
+   * (ML coverage-loss) conflicts. Used on the below-Enterprise path.
+   */
+  canUpgradeToTarget?: boolean;
   onCancel: () => void;
   onConfirm: (result: ConfirmRulesUpgrade) => void;
 }
@@ -29,6 +34,7 @@ export const UpgradeWithConflictsModal = memo(function ConfirmUpgradeWithConflic
   numOfRulesWithoutConflicts,
   numOfRulesWithSolvableConflicts,
   numOfRulesWithNonSolvableConflicts,
+  canUpgradeToTarget = false,
   onCancel,
   onConfirm,
 }: UpgradeWithConflictsModalProps): JSX.Element {
@@ -38,6 +44,10 @@ export const UpgradeWithConflictsModal = memo(function ConfirmUpgradeWithConflic
   );
   const confirmUpgradingRulesWithSolvableConflicts = useCallback(
     () => onConfirm(ConfirmRulesUpgrade.WithSolvableConflicts),
+    [onConfirm]
+  );
+  const confirmUpgradingAllRulesToTarget = useCallback(
+    () => onConfirm(ConfirmRulesUpgrade.AllToTarget),
     [onConfirm]
   );
 
@@ -60,6 +70,7 @@ export const UpgradeWithConflictsModal = memo(function ConfirmUpgradeWithConflic
           numOfRulesWithoutConflicts={numOfRulesWithoutConflicts}
           numOfRulesWithSolvableConflicts={numOfRulesWithSolvableConflicts}
           numOfRulesWithNonSolvableConflicts={numOfRulesWithNonSolvableConflicts}
+          canUpgradeToTarget={canUpgradeToTarget}
         />
       </EuiModalBody>
 
@@ -80,6 +91,17 @@ export const UpgradeWithConflictsModal = memo(function ConfirmUpgradeWithConflic
           >
             {i18n.UPGRADE_RULES_WITH_CONFLICTS(
               numOfRulesWithoutConflicts + numOfRulesWithSolvableConflicts
+            )}
+          </EuiButton>
+        )}
+        {canUpgradeToTarget && numOfRulesWithNonSolvableConflicts > 0 && (
+          <EuiButton
+            onClick={confirmUpgradingAllRulesToTarget}
+            color="warning"
+            data-test-subj="conflicts-modal-upgrade-all-rules-to-target"
+          >
+            {i18n.UPGRADE_ALL_RULES_TO_TARGET(
+              numOfRulesWithoutConflicts + numOfRulesWithNonSolvableConflicts
             )}
           </EuiButton>
         )}

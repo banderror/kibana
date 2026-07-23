@@ -43,6 +43,36 @@ export const UPGRADE_RULES_WITH_CONFLICTS = (numOfRules: number) =>
     }
   );
 
+export const UPGRADE_ALL_RULES_TO_TARGET = (numOfRules: number) =>
+  i18n.translate(
+    'xpack.securitySolution.detectionEngine.upgradeConflictsModal.upgradeAllRulesToTarget',
+    {
+      defaultMessage: "Update {numOfRules, plural, =1 {rule} other {rules}} to Elastic's version",
+      values: { numOfRules },
+    }
+  );
+
+export const RULES_WITH_COVERAGE_LOSS_TOTAL = (numOfRulesWithCoverageLoss: number) => (
+  <FormattedMessage
+    id="xpack.securitySolution.detectionEngine.upgradeConflictsModal.rulesWithCoverageLossTotal"
+    defaultMessage="Rules that will stop using an existing machine learning job: {numOfRulesWithCoverageLossStrong}"
+    values={{
+      numOfRulesWithCoverageLossStrong: <strong>{numOfRulesWithCoverageLoss}</strong>,
+    }}
+  />
+);
+
+export const RULES_WITH_COVERAGE_LOSS_GUIDANCE = (numOfRulesWithCoverageLoss: number) => (
+  <FormattedMessage
+    id="xpack.securitySolution.detectionEngine.upgradeConflictsModal.rulesWithCoverageLossGuidance"
+    defaultMessage="Updating {numOfRulesWithCoverageLossStrong} {numOfRulesWithCoverageLoss, plural, =1 {rule} other {rules}} will repoint {numOfRulesWithCoverageLoss, plural, =1 {it} other {them}} to a newer machine learning job, so {numOfRulesWithCoverageLoss, plural, =1 {it} other {they}} will stop using your existing {numOfRulesWithCoverageLoss, plural, =1 {job} other {jobs}} and anomaly detection coverage may be lost. Update to Elastic's version to accept this, or update only the rules without conflicts and address {numOfRulesWithCoverageLoss, plural, =1 {this rule} other {these rules}} separately."
+    values={{
+      numOfRulesWithCoverageLoss,
+      numOfRulesWithCoverageLossStrong: <strong>{numOfRulesWithCoverageLoss}</strong>,
+    }}
+  />
+);
+
 export const RULES_WITH_NON_SOLVABLE_CONFLICTS_TOTAL = (
   numOfRulesWithNonSolvableConflicts: number
 ) => (

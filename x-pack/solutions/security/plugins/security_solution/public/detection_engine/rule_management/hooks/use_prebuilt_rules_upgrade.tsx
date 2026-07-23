@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { EuiButton, EuiToolTip } from '@elastic/eui';
+import { EuiButton, EuiSpacer, EuiToolTip } from '@elastic/eui';
 import { useUserPrivileges } from '../../../common/components/user_privileges';
 import { RuleUpgradeEventTypes } from '../../../common/lib/telemetry/events/rule_upgrade/types';
 import { FieldUpgradeStateEnum, type RuleUpgradeState } from '../model/prebuilt_rule_upgrade';
@@ -29,7 +29,6 @@ import {
   UpgradeConflictResolutionEnum,
 } from '../../../../common/api/detection_engine';
 import { usePrebuiltRulesUpgradeState } from '../../rule_management_ui/components/rules_table/upgrade_prebuilt_rules_table/use_prebuilt_rules_upgrade_state';
-import { useOutdatedMlJobsUpgradeModal } from '../../rule_management_ui/components/rules_table/upgrade_prebuilt_rules_table/use_ml_jobs_upgrade_modal';
 import {
   ConfirmRulesUpgrade,
   useUpgradeWithConflictsModal,
@@ -40,6 +39,7 @@ import { UpgradeFlyoutSubHeader } from '../../rule_management_ui/components/rule
 import { CustomizationDisabledCallout } from '../../rule_management_ui/components/rules_table/upgrade_prebuilt_rules_table/customization_disabled_callout';
 import { RuleUpgradeTab } from '../components/rule_details/three_way_diff';
 import { RuleTypeChangeCallout } from '../../rule_management_ui/components/rules_table/upgrade_prebuilt_rules_table/rule_type_change_callout';
+import { MlJobCoverageLossCallout } from '../../rule_management_ui/components/rules_table/upgrade_prebuilt_rules_table/ml_job_coverage_loss_callout';
 import { RuleDiffTab } from '../components/rule_details/rule_diff_tab';
 import type { RulePreviewFlyoutCloseReason } from '../../rule_management_ui/components/rules_table/use_rule_preview_flyout';
 import { useRulePreviewFlyout } from '../../rule_management_ui/components/rules_table/use_rule_preview_flyout';
@@ -135,11 +135,6 @@ export function usePrebuiltRulesUpgrade({
     usePrebuiltRulesUpgradeState(upgradeableRules);
   const ruleUpgradeStates = useMemo(() => Object.values(rulesUpgradeState), [rulesUpgradeState]);
 
-  const {
-    modal: confirmLegacyMlJobsUpgradeModal,
-    confirmLegacyMLJobs,
-    isLoading: areMlJobsLoading,
-  } = useOutdatedMlJobsUpgradeModal();
   const { modal: upgradeConflictsModal, confirmConflictsUpgrade } = useUpgradeWithConflictsModal();
 
   const { mutateAsync: upgradeRulesRequest } = usePerformUpgradeRules();
@@ -157,11 +152,6 @@ export function usePrebuiltRulesUpgrade({
       setLoadingRules((prev) => [...prev, ...ruleIds]);
 
       try {
-        // Handle MLJobs modal
-        if (!(await confirmLegacyMLJobs())) {
-          return;
-        }
-
         await upgradeRulesWithDryRun({
           mode: 'SPECIFIC_RULES',
           pick_version: 'MERGED',
@@ -179,9 +169,14 @@ export function usePrebuiltRulesUpgrade({
         setLoadingRules((prev) => prev.filter((id) => !upgradedRuleIdsSet.has(id)));
       }
     },
-    [rulesUpgradeState, confirmLegacyMLJobs, upgradeRulesWithDryRun, onUpgrade]
+    [rulesUpgradeState, upgradeRulesWithDryRun, onUpgrade]
   );
 
+  /**
+   * Direct upgrade to the target version with no dry run or conflicts modal. Used by the flyout
+   * "Update" button (below-Enterprise / rule-type change), where the user has already
+   * acknowledged any ML coverage-loss warning in the flyout itself.
+   */
   const upgradeRulesToTarget = useCallback(
     async (ruleIds: RuleSignatureId[]) => {
       const ruleUpgradeSpecifiers: RuleUpgradeSpecifier[] = ruleIds.map((ruleId) => ({
@@ -193,11 +188,6 @@ export function usePrebuiltRulesUpgrade({
       setLoadingRules((prev) => [...prev, ...ruleIds]);
 
       try {
-        // Handle MLJobs modal
-        if (!(await confirmLegacyMLJobs())) {
-          return;
-        }
-
         await upgradeRulesRequest({
           mode: 'SPECIFIC_RULES',
           pick_version: 'TARGET',
@@ -215,7 +205,47 @@ export function usePrebuiltRulesUpgrade({
         setLoadingRules((prev) => prev.filter((id) => !upgradedRuleIdsSet.has(id)));
       }
     },
-    [confirmLegacyMLJobs, onUpgrade, rulesUpgradeState, upgradeRulesRequest]
+    [onUpgrade, rulesUpgradeState, upgradeRulesRequest]
+  );
+
+  /**
+   * Below-Enterprise bulk/selection upgrade to the target version. Runs a dry run first so rules
+   * that would drop a legacy ML job (coverage loss) surface in the conflicts modal, where the
+   * user can either update only the conflict-free rules or acknowledge the coverage loss and
+   * update everything to Elastic's version.
+   */
+  const upgradeRulesToTargetWithDryRun = useCallback(
+    async (ruleIds: RuleSignatureId[]) => {
+      const ruleUpgradeSpecifiers: RuleUpgradeSpecifier[] = ruleIds.map((ruleId) => ({
+        rule_id: ruleId,
+        version: rulesUpgradeState[ruleId].target_rule.version,
+        revision: rulesUpgradeState[ruleId].revision,
+      }));
+
+      setLoadingRules((prev) => [...prev, ...ruleIds]);
+
+      try {
+        await upgradeRulesWithDryRun(
+          {
+            mode: 'SPECIFIC_RULES',
+            pick_version: 'TARGET',
+            rules: ruleUpgradeSpecifiers,
+          },
+          { canUpgradeToTarget: true }
+        );
+      } catch {
+        // Error is handled by the mutation's onError callback, so no need to do anything here
+      } finally {
+        const upgradedRuleIdsSet = new Set(ruleIds);
+
+        if (onUpgrade) {
+          onUpgrade();
+        }
+
+        setLoadingRules((prev) => prev.filter((id) => !upgradedRuleIdsSet.has(id)));
+      }
+    },
+    [rulesUpgradeState, upgradeRulesWithDryRun, onUpgrade]
   );
 
   const upgradeRules = useCallback(
@@ -223,10 +253,10 @@ export function usePrebuiltRulesUpgrade({
       if (isRulesCustomizationEnabled) {
         await upgradeRulesToResolved(ruleIds);
       } else {
-        await upgradeRulesToTarget(ruleIds);
+        await upgradeRulesToTargetWithDryRun(ruleIds);
       }
     },
-    [isRulesCustomizationEnabled, upgradeRulesToResolved, upgradeRulesToTarget]
+    [isRulesCustomizationEnabled, upgradeRulesToResolved, upgradeRulesToTargetWithDryRun]
   );
 
   const upgradeAllRules = useCallback(async () => {
@@ -238,11 +268,6 @@ export function usePrebuiltRulesUpgrade({
     setLoadingRules((prev) => [...prev, ...upgradeableRules.map((rule) => rule.rule_id)]);
 
     try {
-      // Handle MLJobs modal
-      if (!(await confirmLegacyMLJobs())) {
-        return;
-      }
-
       if (isRulesCustomizationEnabled) {
         await upgradeRulesWithDryRun({
           mode: 'ALL_RULES',
@@ -250,13 +275,17 @@ export function usePrebuiltRulesUpgrade({
           filter: performUpgradeFilter,
         });
       } else {
-        // Upgrading prebuilt rules to TARGET version will erase any rule customizations.
-        // It's unnecessary to run a dry run request since we don't expect skipped rules.
-        await upgradeRulesRequest({
-          mode: 'ALL_RULES',
-          pick_version: 'TARGET',
-          filter: performUpgradeFilter,
-        });
+        // Below-Enterprise upgrades take the TARGET version. Run a dry run so rules that would
+        // drop a legacy ML job (coverage loss) surface in the conflicts modal instead of being
+        // silently repointed.
+        await upgradeRulesWithDryRun(
+          {
+            mode: 'ALL_RULES',
+            pick_version: 'TARGET',
+            filter: performUpgradeFilter,
+          },
+          { canUpgradeToTarget: true }
+        );
       }
     } catch {
       // Error is handled by the mutation's onError callback, so no need to do anything here
@@ -268,8 +297,6 @@ export function usePrebuiltRulesUpgrade({
     upgradeRules,
     upgradeableRules,
     upgradeRulesWithDryRun,
-    upgradeRulesRequest,
-    confirmLegacyMLJobs,
     isRulesCustomizationEnabled,
     performUpgradeFilter,
   ]);
@@ -282,13 +309,26 @@ export function usePrebuiltRulesUpgrade({
     [rulesUpgradeState]
   );
   const ruleActionsFactory = useCallback(
-    (rule: RuleResponse, closeRulePreview: () => void, isEditingRule: boolean) => {
+    (
+      rule: RuleResponse,
+      closeRulePreview: () => void,
+      isEditingRule: boolean,
+      isCoverageLossAcknowledged: boolean
+    ) => {
       const ruleUpgradeState = rulesUpgradeState[rule.rule_id];
       if (!ruleUpgradeState) {
         return null;
       }
 
       const hasRuleTypeChange = ruleUpgradeState.diff.fields.type?.has_update ?? false;
+      // Below-Enterprise users can't resolve the ML coverage-loss conflict (they can only take
+      // the target version), so instead of blocking they must explicitly acknowledge the
+      // potential coverage loss before upgrading. Enterprise users resolve it via the three-way
+      // diff, which is already covered by `hasUnresolvedConflicts`.
+      const needsCoverageLossAcknowledgment =
+        !isRulesCustomizationEnabled &&
+        ruleUpgradeState.hasMlCoverageLossConflict &&
+        !isCoverageLossAcknowledged;
       return (
         <EuiButton
           disabled={
@@ -297,6 +337,7 @@ export function usePrebuiltRulesUpgrade({
             isRefetching ||
             isInitializingPrebuiltRulesPackage ||
             (ruleUpgradeState.hasUnresolvedConflicts && !hasRuleTypeChange) ||
+            needsCoverageLossAcknowledgment ||
             isEditingRule
           }
           onClick={() => {
@@ -339,12 +380,35 @@ export function usePrebuiltRulesUpgrade({
         ruleUpgradeState.current_rule.rule_source.type === 'external' &&
         ruleUpgradeState.current_rule.rule_source.is_customized;
 
-      let headerCallout = null;
+      let primaryCallout: React.ReactNode = null;
       if (hasCustomizations && !isRulesCustomizationEnabled) {
-        headerCallout = <CustomizationDisabledCallout />;
+        primaryCallout = <CustomizationDisabledCallout />;
       } else if (hasRuleTypeChange && isRulesCustomizationEnabled) {
-        headerCallout = <RuleTypeChangeCallout hasCustomizations={hasCustomizations} />;
+        primaryCallout = <RuleTypeChangeCallout hasCustomizations={hasCustomizations} />;
       }
+
+      // Below-Enterprise users can't resolve the coverage-loss conflict via the three-way diff,
+      // so surface it as an acknowledgment gate in the read-only diff tab. Enterprise users see
+      // it as a NON_SOLVABLE conflict in the resolver tab instead.
+      const mlCoverageLossCallout =
+        ruleUpgradeState.hasMlCoverageLossConflict && !isRulesCustomizationEnabled ? (
+          <MlJobCoverageLossCallout showAcknowledgment />
+        ) : null;
+
+      const headerCallout =
+        primaryCallout || mlCoverageLossCallout ? (
+          <>
+            {primaryCallout}
+            {primaryCallout && mlCoverageLossCallout ? <EuiSpacer size="s" /> : null}
+            {mlCoverageLossCallout}
+          </>
+        ) : null;
+
+      // Second surfacing option (to compare against the header callout): a per-field "action
+      // required" badge next to the machine_learning_job_id field in the read-only diff.
+      const fieldsWithConflictBadge = mlCoverageLossCallout
+        ? new Set(['machine_learning_job_id'])
+        : undefined;
 
       let updateTabContent = (
         <PerFieldRuleDiffTab
@@ -354,6 +418,7 @@ export function usePrebuiltRulesUpgrade({
           rightDiffSideLabel={i18n.ELASTIC_UPDATE_VERSION}
           leftDiffSideDescription={i18n.CURRENT_VERSION_DESCRIPTION}
           rightDiffSideDescription={i18n.UPDATED_VERSION_DESCRIPTION}
+          fieldsWithConflictBadge={fieldsWithConflictBadge}
         />
       );
 
@@ -451,14 +516,13 @@ export function usePrebuiltRulesUpgrade({
     ruleUpgradeStates,
     upgradeReviewResponse,
     isFetched,
-    isLoading: isLoading || areMlJobsLoading,
+    isLoading,
     isFetching,
     isRefetching,
     isInitializingPrebuiltRulesPackage,
     loadingRules,
     lastUpdated: dataUpdatedAt,
     rulePreviewFlyout,
-    confirmLegacyMlJobsUpgradeModal,
     upgradeConflictsModal,
     openRulePreview,
     reFetchRules: refetch,
@@ -475,13 +539,17 @@ export function usePrebuiltRulesUpgrade({
  */
 function useRulesUpgradeWithDryRun(
   confirmConflictsUpgrade: (
-    conflictsStats: RulesConflictStats
+    conflictsStats: RulesConflictStats,
+    options?: { canUpgradeToTarget?: boolean }
   ) => Promise<ConfirmRulesUpgrade | boolean>
 ) {
   const { mutateAsync: upgradeRulesRequest } = usePerformUpgradeRules();
 
   return useCallback(
-    async (requestParams: PerformRuleUpgradeRequestBody) => {
+    async (
+      requestParams: PerformRuleUpgradeRequestBody,
+      options?: { canUpgradeToTarget?: boolean }
+    ) => {
       const dryRunResults = await upgradeRulesRequest({
         ...requestParams,
         dry_run: true,
@@ -506,13 +574,25 @@ function useRulesUpgradeWithDryRun(
           on_conflict: UpgradeConflictResolutionEnum.SKIP,
         });
       } else {
-        const result = await confirmConflictsUpgrade({
-          numOfRulesWithoutConflicts: dryRunResults.results.updated.length,
-          numOfRulesWithSolvableConflicts,
-          numOfRulesWithNonSolvableConflicts,
-        });
+        const result = await confirmConflictsUpgrade(
+          {
+            numOfRulesWithoutConflicts: dryRunResults.results.updated.length,
+            numOfRulesWithSolvableConflicts,
+            numOfRulesWithNonSolvableConflicts,
+          },
+          { canUpgradeToTarget: options?.canUpgradeToTarget ?? false }
+        );
 
         if (!result) {
+          return;
+        }
+
+        if (result === ConfirmRulesUpgrade.AllToTarget) {
+          // Below-Enterprise: the user acknowledged the ML coverage loss and chose to update
+          // every rule (including the affected ones) to Elastic's version. No `on_conflict` is
+          // sent, so nothing is skipped — this path is independent of the `on_conflict` behavior
+          // tracked in #214338.
+          await upgradeRulesRequest(requestParams);
           return;
         }
 

@@ -15,14 +15,12 @@ import { RuleUpdateCallout } from './rule_update_callout';
 jest.mock('../../hooks/use_prebuilt_rules_upgrade');
 
 const RULE_PREVIEW_FLYOUT_TEST_ID = 'test-rule-preview-flyout';
-const ML_JOBS_MODAL_TEST_ID = 'test-ml-jobs-upgrade-modal';
 const CONFLICTS_MODAL_TEST_ID = 'test-upgrade-conflicts-modal';
 
 const mockUsePrebuiltRulesUpgrade = ({ total = 1 }: { total?: number } = {}) => {
   (usePrebuiltRulesUpgrade as jest.Mock).mockReturnValue({
     upgradeReviewResponse: { total },
     rulePreviewFlyout: <div data-test-subj={RULE_PREVIEW_FLYOUT_TEST_ID} />,
-    confirmLegacyMlJobsUpgradeModal: <div data-test-subj={ML_JOBS_MODAL_TEST_ID} />,
     upgradeConflictsModal: <div data-test-subj={CONFLICTS_MODAL_TEST_ID} />,
     openRulePreview: jest.fn(),
   });
@@ -33,18 +31,17 @@ describe('RuleUpdateCallout', () => {
     jest.clearAllMocks();
   });
 
-  it('renders the flyout together with the ML jobs and conflicts modals when the rule is upgradeable', () => {
+  it('renders the flyout together with the conflicts modal when the rule is upgradeable', () => {
     mockUsePrebuiltRulesUpgrade();
 
     render(<RuleUpdateCallout rule={savedRuleMock} message="Rule update available" />, {
       wrapper: TestProviders,
     });
 
-    // The flyout was always rendered; the two modals are the ones that regressed
-    // (see https://github.com/elastic/kibana/issues/279791). Without them mounted,
-    // confirming the legacy ML jobs / conflicts upgrade hangs forever.
+    // The flyout was always rendered; the conflicts modal is the one that regressed
+    // (see https://github.com/elastic/kibana/issues/279791). Without it mounted,
+    // confirming the conflicts upgrade hangs forever.
     expect(screen.getByTestId(RULE_PREVIEW_FLYOUT_TEST_ID)).toBeInTheDocument();
-    expect(screen.getByTestId(ML_JOBS_MODAL_TEST_ID)).toBeInTheDocument();
     expect(screen.getByTestId(CONFLICTS_MODAL_TEST_ID)).toBeInTheDocument();
   });
 
@@ -57,7 +54,6 @@ describe('RuleUpdateCallout', () => {
     );
 
     expect(container).toBeEmptyDOMElement();
-    expect(screen.queryByTestId(ML_JOBS_MODAL_TEST_ID)).not.toBeInTheDocument();
     expect(screen.queryByTestId(CONFLICTS_MODAL_TEST_ID)).not.toBeInTheDocument();
   });
 });

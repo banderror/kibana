@@ -20,7 +20,8 @@ interface UseRulePreviewFlyoutBaseParams {
   ruleActionsFactory: (
     rule: RuleResponse,
     closeRulePreview: () => void,
-    isEditingRule: boolean
+    isEditingRule: boolean,
+    isCoverageLossAcknowledged: boolean
   ) => ReactNode;
   extraTabsFactory?: (rule: RuleResponse) => EuiTabbedContentTab[];
   subHeaderFactory?: (rule: RuleResponse) => ReactNode;
@@ -106,11 +107,18 @@ const RulePreviewFlyoutInternal = memo(function RulePreviewFlyoutInternal({
   rule: RuleResponse | undefined;
   closeRulePreview: (reason: RulePreviewFlyoutCloseReason) => void;
 }) {
-  const { isEditingRule } = useRulePreviewContext();
+  const { isEditingRule, isCoverageLossAcknowledged } = useRulePreviewContext();
 
   const ruleActions = useMemo(
-    () => rule && ruleActionsFactory(rule, () => closeRulePreview('call_to_action'), isEditingRule),
-    [rule, ruleActionsFactory, closeRulePreview, isEditingRule]
+    () =>
+      rule &&
+      ruleActionsFactory(
+        rule,
+        () => closeRulePreview('call_to_action'),
+        isEditingRule,
+        isCoverageLossAcknowledged
+      ),
+    [rule, ruleActionsFactory, closeRulePreview, isEditingRule, isCoverageLossAcknowledged]
   );
   const extraTabs = useMemo(
     () => (rule && extraTabsFactory ? extraTabsFactory(rule) : []),

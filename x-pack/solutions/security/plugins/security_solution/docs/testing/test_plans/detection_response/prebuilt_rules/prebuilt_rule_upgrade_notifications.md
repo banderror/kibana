@@ -69,8 +69,8 @@ https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
   - a notification callout shown on the Rule Details page that encourages the user to upgrade the rule to its latest version;
   - a notification callout shown on the Rule Editing page that encourages the user to upgrade the rule to its latest version before editing it.
 - **rule customization**: a change to a customizable field of a prebuilt rule. Full list of customizable rule fields can be found in [Common information about prebuilt rules](./prebuilt_rules_common_info.md#customizable-rule-fields).
-- **legacy ML jobs upgrade modal**: a confirmation modal ("ML rule updates may override your existing rules") shown before a prebuilt rule upgrade when at least one installed ML job's id is in the affected jobs allowlist (`common/machine_learning/affected_job_ids.ts`). The user must confirm it before the upgrade proceeds. It is shown regardless of whether the rule being upgraded is an ML rule.
-- **affected ML job**: an installed anomaly detection job whose id is in the affected jobs allowlist (`common/machine_learning/affected_job_ids.ts`).
+- **affected ML job**: a legacy anomaly detection job whose id is in the affected jobs allowlist (`common/machine_learning/affected_job_ids.ts`) — a superseded ML job generation that the latest prebuilt rules no longer reference.
+- **ML job coverage-loss conflict**: a `NON_SOLVABLE` three-way-diff conflict raised on a prebuilt ML rule's `machine_learning_job_id` field when the current version references an affected ML job that the target version drops. Upgrading would repoint the rule to a newer job, so it would stop using the installed legacy job (potential detection-coverage gap). It is detected purely from the rule version triad and the allowlist — independently of which jobs are actually installed — and replaces the former blocking "ML rule updates may override your existing rules" modal (removed). Enterprise users resolve it in the three-way-diff resolver (they can keep the current job); below-Enterprise users must acknowledge it before upgrading to the target version.
 
 ## Requirements
 
@@ -294,40 +294,58 @@ And user should see a success message
 And the callout to upgrade the rule should disappear
 ```
 
-#### **Scenario: User is warned about legacy ML jobs before upgrading the rule from the Rule Details page**
+#### **Scenario: Below-Enterprise user must acknowledge an ML coverage-loss conflict before upgrading from the Rule Details page**
 
-This is a regression test for [#279791](https://github.com/elastic/kibana/issues/279791): the legacy ML jobs upgrade modal was never mounted on the Rule Details page, so clicking "Update rule" silently hung and the rule was never upgraded.
+This also covers the fix for [#279791](https://github.com/elastic/kibana/issues/279791): the upgrade confirmation is now surfaced inside the flyout (a three-way-diff conflict) rather than a separate modal that was never mounted on the Rule Details page.
 
 **Automation**: 1 FE integration test + 1 e2e test.
 
 ```Gherkin
-Given a prebuilt rule is installed in Kibana
+Given a prebuilt ML rule is installed in Kibana under an insufficient license
 And the rule is outdated (a new version is available for this rule)
-And at least one affected ML job is installed
+And the update drops an affected ML job the rule currently references
 When user opens the Rule Details page
 And user opens the Rule Upgrade flyout from the callout
+Then user should see the ML job coverage-loss warning in the read-only diff
+And the "Update rule" button should be disabled
+When user acknowledges the coverage-loss warning
 And user clicks the "Update rule" button in the flyout
-Then user should see the legacy ML jobs upgrade modal
-When user confirms the modal
-Then the rule should be upgraded to the new version
+Then the rule should be upgraded to the target version
+And user should see a success message
+And the callout to upgrade the rule should disappear
+```
+
+#### **Scenario: Enterprise user resolves an ML coverage-loss conflict before upgrading from the Rule Details page**
+
+**Automation**: 1 e2e test.
+
+```Gherkin
+Given a prebuilt ML rule is installed in Kibana under a sufficient license
+And the rule is outdated (a new version is available for this rule)
+And the update drops an affected ML job the rule currently references
+When user opens the Rule Details page
+And user opens the Rule Upgrade flyout from the callout
+Then the "machine_learning_job_id" field should show an unresolved conflict
+And the "Update rule" button should be disabled
+When user resolves the conflict
+And user clicks the "Update rule" button in the flyout
+Then the rule should be upgraded
 And user should see a success message
 ```
 
-#### **Scenario: User can cancel the legacy ML jobs upgrade modal on the Rule Details page**
+#### **Scenario: A rule that does not drop an affected ML job upgrades without a coverage-loss gate**
 
 **Automation**: 1 FE integration test.
 
 ```Gherkin
 Given a prebuilt rule is installed in Kibana
 And the rule is outdated (a new version is available for this rule)
-And at least one affected ML job is installed
+And the update does not drop any affected ML job
 When user opens the Rule Details page
 And user opens the Rule Upgrade flyout from the callout
 And user clicks the "Update rule" button in the flyout
-Then user should see the legacy ML jobs upgrade modal
-When user cancels the modal
-Then the rule should NOT be upgraded
-And no rule upgrade request should be sent
+Then the rule should be upgraded to the new version
+And user should not see any ML coverage-loss warning
 ```
 
 #### **Scenario: User cannot dismiss the prebuilt rule upgrade callout on the Rule Details page**

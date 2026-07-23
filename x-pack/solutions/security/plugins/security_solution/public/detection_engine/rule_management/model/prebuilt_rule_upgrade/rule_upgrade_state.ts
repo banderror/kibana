@@ -28,4 +28,11 @@ export interface RuleUpgradeState extends RuleUpgradeInfoForReview {
    * Indicates whether there are non-solvable conflicts blocking rule upgrading.
    */
   hasNonSolvableUnresolvedConflicts: boolean;
+  /**
+   * Indicates whether upgrading this rule would drop a legacy ("affected") ML job it currently
+   * references (a potential detection-coverage gap). Derived solely from the
+   * `machine_learning_job_id` field diff and is independent of the customization license tier,
+   * so it can gate the upgrade for below-Enterprise users too.
+   */
+  hasMlCoverageLossConflict: boolean;
 }

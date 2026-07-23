@@ -22,6 +22,12 @@ interface PerFieldRuleDiffTabProps extends RuleDiffHeaderBarProps {
   ruleDiff: PartialThreeWayRuleDiff;
   header?: React.ReactNode;
   diffLayout?: DiffLayout;
+  /**
+   * Names of field groups that should render an "action required" conflict badge next to their
+   * header. The caller decides which fields warrant it (e.g. `machine_learning_job_id` when the
+   * upgrade would drop a legacy ML job).
+   */
+  fieldsWithConflictBadge?: Set<string>;
 }
 
 export const PerFieldRuleDiffTab = ({
@@ -32,6 +38,7 @@ export const PerFieldRuleDiffTab = ({
   leftDiffSideDescription,
   rightDiffSideDescription,
   diffLayout,
+  fieldsWithConflictBadge,
 }: PerFieldRuleDiffTabProps) => {
   const fieldsToRender = useMemo(() => {
     const fields: FieldsGroupDiff[] = [];
@@ -40,7 +47,11 @@ export const PerFieldRuleDiffTab = ({
     for (const field of Object.keys(filteredFieldDiffs)) {
       const typedField = field as keyof ThreeWayRuleFieldsDiff;
       const formattedDiffs = getFormattedFieldDiffGroups(typedField, filteredFieldDiffs);
-      fields.push({ formattedDiffs, fieldsGroupName: typedField });
+      fields.push({
+        formattedDiffs,
+        fieldsGroupName: typedField,
+        showConflictBadge: fieldsWithConflictBadge?.has(typedField) ?? false,
+      });
     }
     const sortedFields = fields.sort(
       (a, b) =>
@@ -48,7 +59,7 @@ export const PerFieldRuleDiffTab = ({
         UPGRADE_FIELD_ORDER.indexOf(b.fieldsGroupName)
     );
     return sortedFields;
-  }, [ruleDiff.fields]);
+  }, [ruleDiff.fields, fieldsWithConflictBadge]);
 
   const { aboutFields, definitionFields, scheduleFields, setupFields } = useMemo(
     () => getSectionedFieldDiffs(fieldsToRender),

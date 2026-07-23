@@ -15,12 +15,23 @@ import { UpgradeWithConflictsModal } from './upgrade_modal';
 export enum ConfirmRulesUpgrade {
   WithoutConflicts = 'WithoutConflicts',
   WithSolvableConflicts = 'WithSolvableConflicts',
+  AllToTarget = 'AllToTarget',
+}
+
+interface ConfirmConflictsUpgradeOptions {
+  /**
+   * When `true`, the modal offers an "Update all to Elastic's version" action for rules with
+   * non-solvable conflicts. Used on the below-Enterprise path, where those conflicts are ML
+   * coverage-loss warnings the user can acknowledge (they can only take the target version).
+   */
+  canUpgradeToTarget?: boolean;
 }
 
 interface UseUpgradeWithConflictsModalResult {
   modal: ReactNode;
   confirmConflictsUpgrade: (
-    conflictsStats: RulesConflictStats
+    conflictsStats: RulesConflictStats,
+    options?: ConfirmConflictsUpgradeOptions
   ) => Promise<ConfirmRulesUpgrade | boolean>;
 }
 
@@ -35,10 +46,12 @@ export function useUpgradeWithConflictsModal(): UseUpgradeWithConflictsModalResu
     numOfRulesWithSolvableConflicts: 0,
     numOfRulesWithNonSolvableConflicts: 0,
   });
+  const [canUpgradeToTarget, setCanUpgradeToTarget] = useState(false);
 
   const confirmConflictsUpgrade = useCallback(
-    (conflictsStats: RulesConflictStats) => {
+    (conflictsStats: RulesConflictStats, options?: ConfirmConflictsUpgradeOptions) => {
       setRulesUpgradeConflictsStats(conflictsStats);
+      setCanUpgradeToTarget(options?.canUpgradeToTarget ?? false);
 
       return initConfirmation();
     },
@@ -49,6 +62,7 @@ export function useUpgradeWithConflictsModal(): UseUpgradeWithConflictsModalResu
     modal: isVisible && (
       <UpgradeWithConflictsModal
         {...rulesUpgradeConflictsStats}
+        canUpgradeToTarget={canUpgradeToTarget}
         onConfirm={confirm}
         onCancel={cancel}
       />

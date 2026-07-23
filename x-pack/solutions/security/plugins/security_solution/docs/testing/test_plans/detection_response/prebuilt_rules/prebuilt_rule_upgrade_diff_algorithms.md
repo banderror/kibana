@@ -223,6 +223,25 @@ Examples:
 
 Notes: `type` field can only be changed between `query` and `saved_query` rule types in the UI and API via normal conventions, but the logic for others is still covered
 
+#### **Scenario: `AAB` - Rule field is `machine_learning_job_id` dropping an affected ML job**
+
+**Automation**: unit tests for the `machine_learning_job_id` diff algorithm + FE integration tests.
+
+```Gherkin
+Given machine_learning_job_id field is not customized by the user (current version == base version)
+And machine_learning_job_id field is updated by Elastic in this upgrade (target version != base version)
+And the current version references an affected ML job (id in common/machine_learning/affected_job_ids.ts) that the target version drops
+Then for machine_learning_job_id field the diff algorithm should output the current version as the merged one with a non-solvable conflict
+And machine_learning_job_id field should be returned from the `upgrade/_review` API endpoint
+And machine_learning_job_id field should be shown in the upgrade preview UI
+
+Examples:
+| algorithm              | field_name              | base_version                      | current_version                   | target_version                          | merged_version                    |
+| machine_learning_job_id | machine_learning_job_id | ["v2_windows_rare_metadata_user"] | ["v2_windows_rare_metadata_user"] | ["v3_windows_rare_metadata_user_ea"]    | ["v2_windows_rare_metadata_user"] |
+```
+
+Notes: this is the ML coverage-loss conflict — the detection is purely content-based (version triad + the allowlist), independent of which jobs are installed. When the target keeps the affected job, or the referenced job is not in the allowlist, the field behaves like the normal `AAB` case above (target merged, no conflict). See the `ML job coverage-loss conflict` terminology in [prebuilt_rule_upgrade_notifications.md](./prebuilt_rule_upgrade_notifications.md).
+
 ### Rule field has an update and a custom value that are the same - `ABB`
 
 #### **Scenario: `ABB` - Rule field is any type except rule `type`**

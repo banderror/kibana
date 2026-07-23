@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { EuiFlexGroup, EuiHorizontalRule, EuiTitle } from '@elastic/eui';
+import { EuiFlexGroup, EuiFlexItem, EuiHorizontalRule, EuiTitle } from '@elastic/eui';
 import { camelCase, startCase } from 'lodash';
 import React from 'react';
 import { SplitAccordion } from '../../../../../common/components/split_accordion';
@@ -15,6 +15,7 @@ import {
   type FieldDiff,
   DiffLayout,
 } from '../../../model/rule_details/rule_field_diff';
+import { ActionRequiredBadge } from '../three_way_diff/badges/action_required';
 import { fieldToDisplayNameMap } from './translations';
 import { convertFieldToDisplayName } from '../helpers';
 
@@ -51,21 +52,34 @@ export interface FieldDiffComponentProps {
   ruleDiffs: FormattedFieldDiff;
   fieldsGroupName: string;
   diffLayout?: DiffLayout;
+  showConflictBadge?: boolean;
 }
 
 export const FieldGroupDiffComponent = ({
   ruleDiffs,
   fieldsGroupName,
   diffLayout = DiffLayout.LeftToRight,
+  showConflictBadge = false,
 }: FieldDiffComponentProps) => {
   const { fieldDiffs, shouldShowSubtitles } = ruleDiffs;
 
   return (
     <SplitAccordion
       header={
-        <EuiTitle data-test-subj="ruleUpgradePerFieldDiffLabel" size="xs">
-          <h5>{fieldToDisplayNameMap[fieldsGroupName] ?? startCase(camelCase(fieldsGroupName))}</h5>
-        </EuiTitle>
+        <EuiFlexGroup alignItems="center" gutterSize="s" responsive={false}>
+          <EuiFlexItem grow={false}>
+            <EuiTitle data-test-subj="ruleUpgradePerFieldDiffLabel" size="xs">
+              <h5>
+                {fieldToDisplayNameMap[fieldsGroupName] ?? startCase(camelCase(fieldsGroupName))}
+              </h5>
+            </EuiTitle>
+          </EuiFlexItem>
+          {showConflictBadge ? (
+            <EuiFlexItem grow={false} data-test-subj="ruleUpgradePerFieldConflictBadge">
+              <ActionRequiredBadge />
+            </EuiFlexItem>
+          ) : null}
+        </EuiFlexGroup>
       }
       initialIsOpen={true}
       data-test-subj="ruleUpgradePerFieldDiff"

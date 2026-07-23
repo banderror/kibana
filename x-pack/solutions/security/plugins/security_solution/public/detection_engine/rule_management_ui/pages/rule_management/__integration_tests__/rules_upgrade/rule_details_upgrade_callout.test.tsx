@@ -14,49 +14,65 @@ import {
   ThreeWayDiffOutcome,
 } from '../../../../../../../common/api/detection_engine';
 import { KibanaServices } from '../../../../../../common/lib/kibana';
-import { useInstalledSecurityJobs } from '../../../../../../common/components/ml/hooks/use_installed_security_jobs';
 import { savedRuleMock } from '../../../../../rule_management/logic/mock';
+import { usePrebuiltRulesCustomizationStatus } from '../../../../../rule_management/logic/prebuilt_rules/use_prebuilt_rules_customization_status';
 import { RuleUpdateCallout } from '../../../../../rule_management/components/rule_details/rule_update_callout';
 import { HAS_RULE_UPDATE_CALLOUT_BUTTON } from '../../../../../rule_management/components/rule_details/translations';
 import {
-  ML_JOB_UPGRADE_MODAL_TITLE,
-  ML_JOB_UPGRADE_MODAL_CONFIRM,
-  ML_JOB_UPGRADE_MODAL_CANCEL,
-} from '../../../../components/rules_table/upgrade_prebuilt_rules_table/use_ml_jobs_upgrade_modal/translations';
-import {
+  extractSingleKibanaFetchBodyBy,
   mockKibanaFetchResponse,
   mockRuleUpgradeReviewData,
   renderRuleUpgradeContainer,
 } from './test_utils/rule_upgrade_flyout';
 
-jest.mock('../../../../../../common/components/ml/hooks/use_installed_security_jobs');
 // `renderRuleUpgradeContainer` sets edit privileges on this mock so the "Update rule" button is enabled.
 jest.mock('../../../../../../common/components/user_privileges');
+jest.mock(
+  '../../../../../rule_management/logic/prebuilt_rules/use_prebuilt_rules_customization_status'
+);
 
-// A job whose id is in `common/machine_learning/affected_job_ids.ts` triggers the modal gate.
-const AFFECTED_ML_JOB = { id: 'v2_windows_rare_metadata_user', groups: ['security'] };
-// A job that is NOT in the allowlist does not trigger the modal.
-const UNAFFECTED_ML_JOB = { id: 'high_count_network_denies', groups: ['security'] };
+// `v2_windows_rare_metadata_user` is in `common/machine_learning/affected_job_ids.ts`; the `_ea`
+// variant and `high_count_network_denies` are not.
+const AFFECTED_JOB_ID = 'v2_windows_rare_metadata_user';
+const REPLACEMENT_JOB_ID = 'v3_windows_rare_metadata_user_ea';
+const UNAFFECTED_JOB_ID = 'high_count_network_denies';
 
 const PERFORM_UPGRADE_RESPONSE = {
   summary: { total: 1, succeeded: 1, skipped: 0, failed: 0 },
-  results: { updated: [], skipped: [], created: [] },
+  results: { updated: [], skipped: [] },
   errors: [],
 };
 
-const mockInstalledSecurityJobs = (jobs: Array<{ id: string; groups: string[] }>): void => {
-  (useInstalledSecurityJobs as jest.Mock).mockReturnValue({
-    loading: false,
-    jobs,
-    isMlUser: true,
-    isLicensed: true,
+/**
+ * Toggles prebuilt rule customization. Enabled = Enterprise (three-way-diff resolver);
+ * disabled = below-Enterprise (read-only diff, TARGET-only upgrades).
+ */
+const mockRulesCustomization = (enabled: boolean): void => {
+  (usePrebuiltRulesCustomizationStatus as jest.Mock).mockReturnValue({
+    isRulesCustomizationEnabled: enabled,
   });
 };
 
-const performUpgradeRequests = () =>
-  (KibanaServices.get().http.fetch as jest.Mock).mock.calls.filter(
-    ([path, options]) => path === PERFORM_RULE_UPGRADE_URL && options?.method === 'POST'
-  );
+/**
+ * Mocks the `_review` response with a `machine_learning_job_id` field diff moving from
+ * `currentJobId` to `targetJobId`.
+ */
+const mockMlJobIdReviewData = (currentJobId: string, targetJobId: string): void => {
+  mockRuleUpgradeReviewData({
+    ruleType: 'machine_learning',
+    fieldName: 'machine_learning_job_id',
+    fieldVersions: {
+      base: currentJobId,
+      current: currentJobId,
+      target: targetJobId,
+      merged: currentJobId,
+    },
+    diffOutcome: ThreeWayDiffOutcome.StockValueCanUpdate,
+    // The server forces NON_SOLVABLE for the coverage-loss case; the client re-derives the
+    // coverage-loss condition from the job ids regardless.
+    conflict: ThreeWayDiffConflict.NON_SOLVABLE,
+  });
+};
 
 const renderCallout = () =>
   renderRuleUpgradeContainer(
@@ -70,97 +86,73 @@ const openUpgradeFlyout = async (): Promise<void> => {
   await userEvent.click(await screen.findByText(HAS_RULE_UPDATE_CALLOUT_BUTTON));
 };
 
-const clickUpdateRuleButton = async (): Promise<void> => {
-  const button = await screen.findByTestId('updatePrebuiltRuleFromFlyoutButton');
+const getUpdateButton = async (): Promise<HTMLElement> =>
+  screen.findByTestId('updatePrebuiltRuleFromFlyoutButton');
 
-  await waitFor(() => expect(button).toBeEnabled(), { timeout: 1000 });
+const performUpgradeRequests = () =>
+  (KibanaServices.get().http.fetch as jest.Mock).mock.calls.filter(
+    ([path, options]) => path === PERFORM_RULE_UPGRADE_URL && options?.method === 'POST'
+  );
 
-  await act(async () => {
-    fireEvent.click(button);
-  });
-};
-
-describe('Rule upgrade from the Rule Details page callout with legacy ML jobs', () => {
+describe('Rule upgrade from the Rule Details page callout with an ML coverage-loss conflict', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockRuleUpgradeReviewData({
-      ruleType: 'query',
-      fieldName: 'name',
-      fieldVersions: {
-        base: 'Initial name',
-        current: 'Initial name',
-        target: 'Updated name',
-        merged: 'Updated name',
-      },
-      diffOutcome: ThreeWayDiffOutcome.StockValueCanUpdate,
-      conflict: ThreeWayDiffConflict.NONE,
-    });
     mockKibanaFetchResponse(PERFORM_RULE_UPGRADE_URL, PERFORM_UPGRADE_RESPONSE);
+    // Default to Enterprise; individual blocks override as needed.
+    mockRulesCustomization(true);
   });
 
-  it('shows the legacy ML jobs modal and upgrades the rule once confirmed', async () => {
-    // Regression test for https://github.com/elastic/kibana/issues/279791. Before the fix
-    // the callout did not render `confirmLegacyMlJobsUpgradeModal`, so the confirmation
-    // Promise never resolved: the flyout closed and nothing else happened.
-    mockInstalledSecurityJobs([AFFECTED_ML_JOB]);
-
-    renderCallout();
-    await openUpgradeFlyout();
-    await clickUpdateRuleButton();
-
-    // The modal is mounted by the callout and gates the upgrade.
-    expect(await screen.findByText(ML_JOB_UPGRADE_MODAL_TITLE)).toBeInTheDocument();
-    // Nothing is sent until the user confirms.
-    expect(performUpgradeRequests()).toHaveLength(0);
-
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: ML_JOB_UPGRADE_MODAL_CONFIRM }));
+  describe('below Enterprise (customization disabled)', () => {
+    beforeEach(() => {
+      mockRulesCustomization(false);
     });
 
-    await waitFor(() => expect(performUpgradeRequests().length).toBeGreaterThan(0));
-  });
+    it('gates the upgrade behind acknowledging the coverage-loss warning, then upgrades to TARGET', async () => {
+      mockMlJobIdReviewData(AFFECTED_JOB_ID, REPLACEMENT_JOB_ID);
 
-  it('aborts the upgrade when the legacy ML jobs modal is cancelled', async () => {
-    mockInstalledSecurityJobs([AFFECTED_ML_JOB]);
+      renderCallout();
+      await openUpgradeFlyout();
 
-    renderCallout();
-    await openUpgradeFlyout();
-    await clickUpdateRuleButton();
+      // The coverage-loss callout is shown and the Update button is gated on acknowledgment.
+      expect(await screen.findByTestId('mlJobCoverageLossCallout')).toBeInTheDocument();
+      expect(await getUpdateButton()).toBeDisabled();
+      expect(performUpgradeRequests()).toHaveLength(0);
 
-    expect(await screen.findByText(ML_JOB_UPGRADE_MODAL_TITLE)).toBeInTheDocument();
+      // Acknowledging enables the Update button.
+      await act(async () => {
+        fireEvent.click(screen.getByTestId('mlJobCoverageLossAcknowledgeCheckbox'));
+      });
+      await waitFor(async () => expect(await getUpdateButton()).toBeEnabled());
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: ML_JOB_UPGRADE_MODAL_CANCEL }));
+      await act(async () => {
+        fireEvent.click(await getUpdateButton());
+      });
+
+      await waitFor(() => expect(performUpgradeRequests().length).toBeGreaterThan(0));
+
+      // The upgrade takes the target version and does not rely on `on_conflict`.
+      const body = extractSingleKibanaFetchBodyBy({
+        path: PERFORM_RULE_UPGRADE_URL,
+        method: 'POST',
+      });
+      expect(body).toMatchObject({ mode: 'SPECIFIC_RULES', pick_version: 'TARGET' });
+      expect(body).not.toHaveProperty('on_conflict');
     });
 
-    expect(performUpgradeRequests()).toHaveLength(0);
-  });
+    it('upgrades directly without a coverage-loss gate when no affected ML job is dropped', async () => {
+      mockMlJobIdReviewData(UNAFFECTED_JOB_ID, REPLACEMENT_JOB_ID);
 
-  it('upgrades the rule directly without a modal when no affected ML jobs are installed', async () => {
-    mockInstalledSecurityJobs([UNAFFECTED_ML_JOB]);
+      renderCallout();
+      await openUpgradeFlyout();
 
-    renderCallout();
-    await openUpgradeFlyout();
-    await clickUpdateRuleButton();
+      expect(screen.queryByTestId('mlJobCoverageLossCallout')).not.toBeInTheDocument();
+      await waitFor(async () => expect(await getUpdateButton()).toBeEnabled());
 
-    await waitFor(() => expect(performUpgradeRequests().length).toBeGreaterThan(0));
-    expect(screen.queryByText(ML_JOB_UPGRADE_MODAL_TITLE)).not.toBeInTheDocument();
-  });
+      await act(async () => {
+        fireEvent.click(await getUpdateButton());
+      });
 
-  it('lists only affected ML jobs, not every installed Security job', async () => {
-    // Regression test for https://github.com/elastic/kibana/issues/239884: the modal used to
-    // render the full installed jobs list, so unaffected jobs (e.g. `high_count_*`, `_ea`)
-    // appeared under "Affected jobs" and users couldn't tell which job actually tripped the gate.
-    mockInstalledSecurityJobs([AFFECTED_ML_JOB, UNAFFECTED_ML_JOB]);
-
-    renderCallout();
-    await openUpgradeFlyout();
-    await clickUpdateRuleButton();
-
-    expect(await screen.findByText(ML_JOB_UPGRADE_MODAL_TITLE)).toBeInTheDocument();
-    // Only the allowlisted (affected) job is listed...
-    expect(screen.getByText(AFFECTED_ML_JOB.id)).toBeInTheDocument();
-    // ...the unaffected job is not.
-    expect(screen.queryByText(UNAFFECTED_ML_JOB.id)).not.toBeInTheDocument();
+      await waitFor(() => expect(performUpgradeRequests().length).toBeGreaterThan(0));
+    });
   });
 });

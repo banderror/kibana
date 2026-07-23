@@ -38,7 +38,7 @@ export const RuleDiffSection = ({
         </EuiTitle>
       }
     >
-      {fieldGroups.map(({ fieldsGroupName, formattedDiffs }) => {
+      {fieldGroups.map(({ fieldsGroupName, formattedDiffs, showConflictBadge }) => {
         return (
           <React.Fragment key={fieldsGroupName}>
             <EuiSpacer size="m" />
@@ -46,6 +46,7 @@ export const RuleDiffSection = ({
               ruleDiffs={formattedDiffs}
               fieldsGroupName={fieldsGroupName}
               diffLayout={diffLayout}
+              showConflictBadge={showConflictBadge}
             />
           </React.Fragment>
         );

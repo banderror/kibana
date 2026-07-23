@@ -20,6 +20,12 @@ export interface FormattedFieldDiff {
 export interface FieldsGroupDiff {
   formattedDiffs: FormattedFieldDiff;
   fieldsGroupName: keyof AllThreeWayFieldsDiff;
+  /**
+   * When `true`, an "action required" conflict badge is shown next to this field group's header
+   * in the read-only per-field diff. The caller decides which fields warrant it (e.g. a
+   * machine_learning_job_id coverage-loss conflict).
+   */
+  showConflictBadge?: boolean;
 }
 
 export enum DiffLayout {

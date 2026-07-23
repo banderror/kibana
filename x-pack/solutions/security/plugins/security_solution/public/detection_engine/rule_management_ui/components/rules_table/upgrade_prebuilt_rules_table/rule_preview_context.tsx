@@ -7,7 +7,7 @@
 
 import { invariant } from '@formatjs/intl-utils';
 import useSet from 'react-use/lib/useSet';
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import usePrevious from 'react-use/lib/usePrevious';
 
 export interface RulePreviewContextType {
@@ -25,6 +25,19 @@ export interface RulePreviewContextType {
    * Returns whether the rule is being edited in the rule upgrade flyout
    */
   isEditingRule: boolean;
+
+  /**
+   * Whether the user has acknowledged that upgrading this rule would drop a legacy ("affected")
+   * ML job it currently references (a potential detection-coverage gap). Used to gate the
+   * upgrade for below-Enterprise users, who can only take the target version and therefore
+   * acknowledge the coverage loss rather than resolve it.
+   */
+  isCoverageLossAcknowledged: boolean;
+
+  /**
+   * Sets whether the ML coverage-loss warning has been acknowledged for the rule in the flyout.
+   */
+  setCoverageLossAcknowledged: (acknowledged: boolean) => void;
 }
 
 const RulePreviewContext = createContext<RulePreviewContextType | null>(null);
@@ -36,11 +49,13 @@ interface RulePreviewContextProviderProps {
 
 export function RulePreviewContextProvider({ children, ruleId }: RulePreviewContextProviderProps) {
   const [editedFields, { add, remove, reset }] = useSet<string>();
+  const [isCoverageLossAcknowledged, setCoverageLossAcknowledged] = useState(false);
   const prevRuleId = usePrevious(ruleId);
 
   useEffect(() => {
     if (ruleId !== prevRuleId) {
       reset();
+      setCoverageLossAcknowledged(false);
     }
   }, [reset, ruleId, prevRuleId]);
 
@@ -51,8 +66,10 @@ export function RulePreviewContextProvider({ children, ruleId }: RulePreviewCont
       isEditingRule,
       setFieldEditing: add,
       setFieldReadonly: remove,
+      isCoverageLossAcknowledged,
+      setCoverageLossAcknowledged,
     }),
-    [isEditingRule, add, remove]
+    [isEditingRule, add, remove, isCoverageLossAcknowledged]
   );
 
   return <RulePreviewContext.Provider value={contextValue}>{children}</RulePreviewContext.Provider>;
