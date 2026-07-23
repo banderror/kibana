@@ -24,7 +24,7 @@ import {
   NON_UPGRADEABLE_DIFFABLE_FIELDS,
   ThreeWayDiffOutcome,
 } from '../../../../../../common/api/detection_engine';
-import { isMlJobCoverageLossUpgrade } from '../../../../../../common/machine_learning/is_ml_job_coverage_loss_upgrade';
+import { isMlJobCoverageLossUpgrade } from '../../../../../../common/detection_engine/prebuilt_rules/diff/is_ml_job_coverage_loss_upgrade';
 import { assertUnreachable } from '../../../../../../common/utility_types';
 import * as i18n from './translations';
 
