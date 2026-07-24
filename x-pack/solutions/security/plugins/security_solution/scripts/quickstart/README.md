@@ -49,6 +49,10 @@ Functions to help setup mappings. Provides the ECS mapping as well as helpers to
 
 Functions to help create rules along with data specific to each rule (WIP). Each sample rule defined in this folder should have an associated function to generate data that triggers alerts for the rule.
 
+### ML Coverage Loss
+
+Seeds the state needed to reproduce the ML coverage-loss upgrade behavior (#239884 / #279791): a legacy ML job plus prebuilt ML rules whose upgrade would drop that job, surfacing a `machine_learning_job_id` NON_SOLVABLE conflict. Also seeds control fixtures (a clean ML upgrade and a non-ML rule) so you can confirm the conflict fires only when it should. Exposes `seedMlCoverageLossState`, `teardownMlCoverageLossState`, and `verifySeededUpgrades`. See the example below.
+
 ## Speed
 
 To run a number of API requests in parallel, use `concurrentlyExec` from @kbn/securitysolution-utils.
@@ -132,6 +136,28 @@ const results = (await concurrentlyExec(previewPromises, 50)).map(
   (result) => result.data.logs
 );
 ```
+
+### Seed ML coverage-loss upgrade conflict
+
+Reproduces the legacy-ML-job coverage-loss upgrade state (#239884 / #279791). Paste into the
+"Custom data loader logic" block of `scratchpad.ts` (after the client setup) and run
+`node scripts/quickstart/run.js`. It seeds a legacy ML job + four upgradeable prebuilt-rule
+fixtures, then logs a PASS/FAIL table of the expected vs actual `machine_learning_job_id` conflict.
+
+```
+import { seedMlCoverageLossState } from './modules/ml_coverage_loss';
+
+await seedMlCoverageLossState({ esClient, kbnClient, detectionsClient, log });
+```
+
+Notes:
+
+- Creating the ML job needs a trial/platinum license. On a basic-license stack pass
+  `{ createMlJob: false }` — the upgrade conflict still reproduces (the diff is content-based and
+  does not depend on the job being installed).
+- To reset, import and call `teardownMlCoverageLossState({ esClient, kbnClient, log })`.
+- Then open Rule Management → Rule Updates: fixtures A & B show **Review** (coverage-loss warning on
+  `machine_learning_job_id`); the non-affected ML rule and the query rule update cleanly.
 
 ## Future Work
 
